@@ -2816,7 +2816,7 @@ def main(argv = None):
 		print '            -g | -cygwin     cygwin execute'
 		print '            -s | -cshell     cygwin shell'
 		print '            -i | -install    install emake on unix'
-		print '            -u | -update     update itself from google code'
+		print '            -u | -update     update itself from github'
 		print '            -h | -help       show help page'
 		return 0
 	
