@@ -2699,7 +2699,7 @@ def __update_file(name, content):
 
 def getemake():
 	import urllib2
-	url1 = 'http://easymake.googlecode.com/svn/trunk/emake.py'
+	url1 = 'http://skywind3000.github.io/emake/emake.py'
 	url2 = 'http://www.skywind.me/php/getemake.php'
 	success = True
 	content = ''
