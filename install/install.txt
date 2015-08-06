@@ -3,6 +3,7 @@
 目标系统 Debian7+
 
 [远程登录]
+
 查看 /etc/ssh/sshd_config 里面的各个选项，如果被注释就需要取消注释
 Port 22 更改为其他端口
 PermitRootLogin yes 或者 without-password 都需要改为 no
@@ -10,6 +11,12 @@ PermitEmptyPasswords yes 改为 no
 PasswordAuthentication yes 改为 no
 
 然后设置好 ~/.ssh/authorized_keys 后 service sshd restart 重启，
+
+
+[配置限制]
+
+查看 /etc/security/limits.conf 没有就新建，加入 core 和 nofile 的相关配置
+
 
 [网卡优化]
 
