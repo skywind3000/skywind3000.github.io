@@ -531,7 +531,7 @@ class configure(object):
 					sys.stderr.flush()
 				else:
 					self.config['default']['home'] = dirhome
-			for exename in ('gcc', 'ld', 'ar', 'dllwrap'):
+			for exename in ('gcc', 'ld', 'ar', 'as', 'nasm', 'yasm', 'dllwrap'):
 				if not exename in config['default']:
 					continue
 				self.exename[exename] = config['default'][exename]
@@ -592,7 +592,7 @@ class configure(object):
 			#sys.stderr.write('warning: %s cannot be open\n'%(self.ininame))
 			sys.stderr.flush()
 		defined = self.exename.get('gcc', None) and True or False
-		for name in ('gcc', 'ar', 'ld', 'dllwrap'):
+		for name in ('gcc', 'ar', 'ld', 'as', 'nasm', 'yasm', 'dllwrap'):
 			exename = self.exename.get(name, name)
 			if not self.unix:
 				elements = list(os.path.splitext(exename)) + ['', '']
@@ -965,6 +965,17 @@ class configure(object):
 				return True
 		return False
 	
+	# 取得可执行名称
+	def getname (self, binname):
+		exename = self.exename.get(binname, binname)
+		path = os.path.abspath(os.path.join(self.dirhome, exename))
+		if not self.unix:
+				name = self.pathshort(path)
+				if (not name) and os.path.exists(path + '.exe'):
+					name = self.pathshort(path + '.exe')
+				if name: path = name
+		return path
+	
 	# 执行GNU工具集
 	def execute (self, binname, parameters, printcmd = False, capture = False):
 		path = os.path.abspath(os.path.join(self.dirhome, binname))
@@ -995,6 +1006,10 @@ class configure(object):
 
 	# 编译
 	def compile (self, srcname, objname, printcmd = False, capture = False):
+		ext = os.path.splitext(srcname)[-1].lower()
+		if ext in ('.s', '.S'):
+			cmd = '%s -o %s'%(self.pathrel(srcname), self.pathrel(objname))
+			return self.execute(self.exename['as'], cmd, printcmd, capture)
 		cmd = '-c %s -o %s'%(self.pathrel(srcname), self.pathrel(objname))
 		return self.gcc(cmd, False, printcmd, capture)
 	
@@ -1663,6 +1678,8 @@ class coremake(object):
 		environ['EMOUTN'] = os.path.splitext(self._out)[0]
 		environ['EMOUTE'] = os.path.splitext(self._out)[1]
 		environ['EMOUTP'] = os.path.dirname(self._out)
+		for name in ('gcc', 'ar', 'ld', 'as', 'nasm', 'yasm', 'dllwrap'):
+			environ['EM' + name.upper()] = self.config.getname(name)
 		for k, v in environ.items():	# 展开宏
 			environ[k] = self.config._expand(environ, envsave, k, v)
 		for k, v in environ.items():
@@ -2746,7 +2763,7 @@ def update():
 	return 0
 
 def help():
-	print "Emake v3.37 Feb.16 2015"
+	print "Emake v3.38 Sep.01 2015"
 	print "By providing a completely new way to build your projects, Emake"
 	print "is a easy tool which controls the generation of executables and other"
 	print "non-source files of a program from the program's source files. "
@@ -2804,7 +2821,7 @@ def main(argv = None):
 			break
 
 	if len(argv) == 1:
-		version = '(emake v3.37 Jul.06 2015 %s)'%sys.platform
+		version = '(emake v3.38 Sep.01 2015 %s)'%sys.platform
 		print 'usage: "emake.py [option] srcfile" %s'%version
 		print 'options  :  -b | -build      build project'
 		print '            -c | -compile    compile project'
