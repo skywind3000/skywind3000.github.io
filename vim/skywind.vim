@@ -10,12 +10,12 @@ endfunc
 
 func! ExecuteFile()
 	exec "update"
-	exec "!./%"
+	exec "!%:p"
 endfunc
 
 func! ExecuteMain()
 	exec "update"
-	exec "!./%<"
+	exec "!%:p:h/%:t:r"
 endfunc
 
 func! ExecutePython()
@@ -68,7 +68,7 @@ func! CompileGcc()
 	if search("math\.h") != 0
 		let compileflag .= " -lm "
 	endif
-	let compileflag .= " -lstdc++ -lpthread -lrt "
+	let compileflag .= " -lstdc++ -lpthread "
 	exec "!gcc -Wall % -o %< ".compileflag
 endfunc
 
@@ -102,4 +102,6 @@ vmap <F9> <ESC>:call BuildEmake()<CR>
 map <F10> :call ExecuteEmake()<CR>
 imap <F10> <ESC>:call ExecuteEmake()<CR>
 vmap <F10> <ESC>:call ExecuteEmake()<CR>
+
+
 
