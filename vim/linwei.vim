@@ -39,6 +39,13 @@ if os =~ 'mac'
 	vmap ∆ <Down>
 	vmap ˚ <Up>
 	vmap ¬ <Right>
+	imap ≈ <Delete>
+	map ≈ <Delete>
+	vmap ≈ <Delete>
+	map ≤ <ESC>:tabp<CR>
+	map ≥ <ESC>:tabn<CR>
+	imap ≤ <ESC>:tabp<CR>
+	imap ≥ <ESC>:tabn<CR>
 else
 	imap <A-h> <Left>
 	imap <A-j> <Down>
@@ -52,6 +59,12 @@ else
 	vmap <A-j> <Down>
 	vmap <A-k> <Up>
 	vmap <A-l> <Right>
+	map <A-x> <Delete>
+	imap <A-x> <Delete>
+	map <A-,> <ESC>:tabp<CR>
+	map <A-.> <ESC>:tabn<CR>
+	imap <A-,> <ESC>:tabp<CR>
+	imap <A-.> <ESC>:tabn<CR>
 endif
 
 
