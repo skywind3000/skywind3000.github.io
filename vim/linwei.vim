@@ -26,45 +26,40 @@ endfunction
 
 let os=GetRunningOS()
 
-if os =~ 'mac'
-	imap ˙ <Left>
-	imap ∆ <Down>
-	imap ˚ <Up>
-	imap ¬ <Right>
-	map ˙ <Left>
-	map ∆ <Down>
-	map ˚ <Up>
-	map ¬ <Right>
-	vmap ˙ <Left>
-	vmap ∆ <Down>
-	vmap ˚ <Up>
-	vmap ¬ <Right>
-	imap ≈ <Delete>
-	map ≈ <Delete>
-	vmap ≈ <Delete>
-	map ≤ <ESC>:tabp<CR>
-	map ≥ <ESC>:tabn<CR>
-	imap ≤ <ESC>:tabp<CR>
-	imap ≥ <ESC>:tabn<CR>
-else
-	imap <A-h> <Left>
-	imap <A-j> <Down>
-	imap <A-k> <Up>
-	imap <A-l> <Right>
-	map <A-h> <Left>
-	map <A-j> <Down>
-	map <A-k> <Up>
-	map <A-l> <Right>
-	vmap <A-h> <Left>
-	vmap <A-j> <Down>
-	vmap <A-k> <Up>
-	vmap <A-l> <Right>
-	map <A-x> <Delete>
-	imap <A-x> <Delete>
-	map <A-,> <ESC>:tabp<CR>
-	map <A-.> <ESC>:tabn<CR>
-	imap <A-,> <ESC>:tabp<CR>
-	imap <A-.> <ESC>:tabn<CR>
-endif
+imap ˙ <Left>
+imap ∆ <Down>
+imap ˚ <Up>
+imap ¬ <Right>
+map ˙ <Left>
+map ∆ <Down>
+map ˚ <Up>
+map ¬ <Right>
+vmap ˙ <Left>
+vmap ∆ <Down>
+vmap ˚ <Up>
+vmap ¬ <Right>
+imap ≈ <Delete>
+map ≈ <Delete>
+vmap ≈ <Delete>
+map ≤ <ESC>:tabp<CR>
+map ≥ <ESC>:tabn<CR>
+imap ≤ <ESC>:tabp<CR>
+imap ≥ <ESC>:tabn<CR>
+
+imap <A-h> <Left>
+imap <A-j> <Down>
+imap <A-k> <Up>
+imap <A-l> <Right>
+map <A-h> <Left>
+map <A-j> <Down>
+map <A-k> <Up>
+map <A-l> <Right>
+vmap <A-h> <Left>
+vmap <A-j> <Down>
+vmap <A-k> <Up>
+vmap <A-l> <Right>
+map <A-x> <Delete>
+imap <A-x> <Delete>
+
 
 
