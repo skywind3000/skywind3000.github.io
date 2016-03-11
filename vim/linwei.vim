@@ -26,21 +26,20 @@ endfunction
 
 let os=GetRunningOS()
 
-imap ˙ <Left>
-imap ∆ <Down>
-imap ˚ <Up>
-imap ¬ <Right>
 map ˙ <Left>
 map ∆ <Down>
 map ˚ <Up>
 map ¬ <Right>
-vmap ˙ <Left>
-vmap ∆ <Down>
-vmap ˚ <Up>
-vmap ¬ <Right>
+map ˙ <Left>
+imap ∆ <Down>
+imap ˚ <Up>
+imap ¬ <Right>
 imap ≈ <Delete>
+
 map ≈ <Delete>
 vmap ≈ <Delete>
+
+
 map ≤ <ESC>:tabp<CR>
 map ≥ <ESC>:tabn<CR>
 imap ≤ <ESC>:tabp<CR>
@@ -54,12 +53,43 @@ map <A-h> <Left>
 map <A-j> <Down>
 map <A-k> <Up>
 map <A-l> <Right>
-vmap <A-h> <Left>
-vmap <A-j> <Down>
-vmap <A-k> <Up>
-vmap <A-l> <Right>
 map <A-x> <Delete>
 imap <A-x> <Delete>
+
+map ¡ <ESC>:tabn1<CR>
+imap ¡ <ESC>:tabn1<CR>
+map ™ <ESC>:tabn2<CR>
+imap ™ <ESC>:tabn2<CR>
+map £ <ESC>:tabn3<CR>
+imap £ <ESC>:tabn3<CR>
+map ¢ <ESC>:tabn4<CR>
+imap ¢ <ESC>:tabn4<CR>
+map ∞ <ESC>:tabn5<CR>
+imap ∞ <ESC>:tabn5<CR>
+map § <ESC>:tabn6<CR>
+imap § <ESC>:tabn6<CR>
+map ¶ <ESC>:tabn7<CR>
+imap ¶ <ESC>:tabn7<CR>
+map • <ESC>:tabn8<CR>
+nmap • <ESC>:tabn8<CR>
+imap • <ESC>:tabn8<CR>
+map ª <ESC>:tabn9<CR>
+imap ª <ESC>:tabn9<CR>
+map º <ESC>:tabn10<CR>
+imap º <ESC>:tabn10<CR>
+
+map <A-8> :tabn8<CR>
+imap <A-8> <ESC>:tabn8<CR>
+
+
+nmap <C-H> <C-W>h
+nmap <C-J> <C-W>j
+nmap <C-K> <C-W>k
+nmap <C-L> <C-W>l
+imap <C-H> <ESC><C-W>h
+imap <C-J> <ESC><C-W>j
+imap <C-K> <ESC><C-W>k
+imap <C-L> <ESC><C-W>L
 
 
 
