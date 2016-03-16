@@ -78,30 +78,23 @@ func! BuildEmake()
 endfunc
 
 
-map <F2> :call SaveFile()<CR>
-imap <F2> <ESC>:call SaveFile()<CR>
-vmap <F2> <ESC>:call SaveFile()<CR>
+noremap <F2> :call SaveFile()<CR>
+inoremap <F2> <ESC>:call SaveFile()<CR>
 
+noremap <F4> :call ExecuteFile()<CR>
+inoremap <F4> <ESC>:call ExecuteFile()<CR>
 
-map <F4> :call ExecuteFile()<CR>
-imap <F4> <ESC>:call ExecuteFile()<CR>
-vmap <F4> <ESC>:call ExecuteFile()<CR>
+noremap <F5> :call RunClever()<CR>
+inoremap <F5> <ESC>:call RunClever()<CR>
 
-map <F5> :call RunClever()<CR>
-imap <F5> <ESC>:call RunClever()<CR>
-vmap <F5> <ESC>:call RunClever()<CR>
+noremap <F8> :call CompileGcc()<CR>
+inoremap <F8> <ESC>:call CompileGcc()<CR>
 
-map <F8> :call CompileGcc()<CR>
-imap <F8> <ESC>:call CompileGcc()<CR>
-vmap <F8> <ESC>:call CompileGcc()<CR>
-
-map <F9> :call BuildEmake()<CR>
-imap <F9> <ESC>:call BuildEmake()<CR>
-vmap <F9> <ESC>:call BuildEmake()<CR>
+noremap <F9> :call BuildEmake()<CR>
+inoremap <F9> <ESC>:call BuildEmake()<CR>
 
 map <F10> :call ExecuteEmake()<CR>
 imap <F10> <ESC>:call ExecuteEmake()<CR>
-vmap <F10> <ESC>:call ExecuteEmake()<CR>
 
 
 
