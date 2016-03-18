@@ -1,9 +1,3 @@
-if(has("win32") || has("win64") || has("win95") || has("win16"))
-	let g:iswindows = 1
-else
-	let g:iswindows = 0
-endif
-
 func! SaveFile()
 	exec "w"
 endfunc
@@ -77,6 +71,17 @@ func! BuildEmake()
 	exec "!emake %"
 endfunc
 
+let s:winopen = 0
+
+func! ToggleQuickFix()
+	if s:winopen
+		exec "cclose"
+		let s:winopen = 0
+	else
+		exec "copen 5"
+		let s:winopen = 1
+	endif
+endfunc
 
 set makeprg=emake\ \"%\"
 set errorformat=%f:%l:%m
@@ -96,5 +101,10 @@ inoremap <F8> <C-o>:call CompileGcc()<CR>
 noremap <F9> :call ExecuteEmake()<CR>
 inoremap <F9> <C-o>:call ExecuteEmake()<CR>
 
+noremap <F10> :call ToggleQuickFix()<cr>
+inoremap <F10> <C-o>:call ToggleQuickFix()<cr>
+
+noremap <leader>cp :cp<cr>
+noremap <leader>cn :cn<cr>
 
 
