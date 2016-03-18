@@ -2,7 +2,7 @@
 # -*- coding: utf-8 -*-
 #======================================================================
 #
-# emake.py - emake version 3.61
+# emake.py - emake version 3.6.2
 #
 # history of this file:
 # 2009.08.20   skywind   create this file
@@ -2788,7 +2788,7 @@ def update():
 	return 0
 
 def help():
-	print "Emake v3.61 Jan.14 2016"
+	print "Emake v3.6.2 Jan.14 2016"
 	print "By providing a completely new way to build your projects, Emake"
 	print "is a easy tool which controls the generation of executables and other"
 	print "non-source files of a program from the program's source files. "
@@ -2846,7 +2846,7 @@ def main(argv = None):
 			break
 
 	if len(argv) == 1:
-		version = '(emake v3.61 Jan.14 2016 %s)'%sys.platform
+		version = '(emake v3.6.2 Feb.21 2016 %s)'%sys.platform
 		print 'usage: "emake.py [option] srcfile" %s'%version
 		print 'options  :  -b | -build      build project'
 		print '            -c | -compile    compile project'
@@ -2855,8 +2855,9 @@ def main(argv = None):
 		print '            -e | -execute    execute project'
 		print '            -o | -out        show output file name'
 		print '            -d | -cmdline    call cmdline tool in given environ'
-		print '            -g | -cygwin     cygwin execute'
-		print '            -s | -cshell     cygwin shell'
+		if sys.platform[:3] == 'win':
+			print '            -g | -cygwin     cygwin execute'
+			print '            -s | -cshell     cygwin shell'
 		print '            -i | -install    install emake on unix'
 		print '            -u | -update     update itself from github'
 		print '            -h | -help       show help page'
