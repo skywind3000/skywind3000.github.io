@@ -34,7 +34,6 @@ inoremap <C-k> <C-o>k
 inoremap <C-l> <C-o>l
 
 " use hotkey to save file
-noremap <leader>s :w<CR>
 noremap <F2> :w<CR>
 inoremap <F2> <C-o>:w<CR>
 
@@ -59,8 +58,15 @@ set statusline=\ %<%F[%1*%M%*%n%R%H]%=\ %y\ %0(%{&fileformat}\ [%{(&fenc==\"\"?&
 set listchars=tab:\|\ ,trail:.,extends:>,precedes:<
 set matchtime=5
 
-noremap <leader>w :w<cr>
+noremap <leader>s :w<cr>
 noremap <leader>q :q<cr>
+noremap <leader>c :close<cr>
+
+noremap <leader>h <c-w>h
+noremap <leader>j <c-w>j
+noremap <leader>k <c-w>k
+noremap <leader>l <c-w>l
+noremap <leader>w <c-w>w
 
 nnoremap <silent><C-a> ggvG$
 vnoremap <C-c> "+y

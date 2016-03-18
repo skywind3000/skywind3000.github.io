@@ -96,5 +96,11 @@ inoremap <F9> <ESC>:call BuildEmake()<CR>
 map <F10> :call ExecuteEmake()<CR>
 imap <F10> <ESC>:call ExecuteEmake()<CR>
 
+set makeprg=emake\ \"%\"
+set errorformat=%f:%l:%m
+
+noremap <F7> :make<CR>
+inoremap <F7> <C-o>:make<CR>
+
 
 
