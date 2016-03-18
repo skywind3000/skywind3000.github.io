@@ -78,29 +78,23 @@ func! BuildEmake()
 endfunc
 
 
-noremap <F2> :call SaveFile()<CR>
-inoremap <F2> <ESC>:call SaveFile()<CR>
-
-noremap <F4> :call ExecuteFile()<CR>
-inoremap <F4> <ESC>:call ExecuteFile()<CR>
-
-noremap <F5> :call RunClever()<CR>
-inoremap <F5> <ESC>:call RunClever()<CR>
-
-noremap <F8> :call CompileGcc()<CR>
-inoremap <F8> <ESC>:call CompileGcc()<CR>
-
-noremap <F9> :call BuildEmake()<CR>
-inoremap <F9> <ESC>:call BuildEmake()<CR>
-
-map <F10> :call ExecuteEmake()<CR>
-imap <F10> <ESC>:call ExecuteEmake()<CR>
-
 set makeprg=emake\ \"%\"
 set errorformat=%f:%l:%m
 
+noremap <F5> :call RunClever()<CR>
+inoremap <F5> <C-o>:call RunClever()<CR>
+
+noremap <F6> :call ExecuteFile()<CR>
+inoremap <F6> <C-o>:call ExecuteFile()<CR>
+
 noremap <F7> :make<CR>
 inoremap <F7> <C-o>:make<CR>
+
+noremap <F8> :call CompileGcc()<CR>
+inoremap <F8> <C-o>:call CompileGcc()<CR>
+
+noremap <F9> :call ExecuteEmake()<CR>
+inoremap <F9> <C-o>:call ExecuteEmake()<CR>
 
 
 
