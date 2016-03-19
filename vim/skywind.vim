@@ -128,6 +128,8 @@ inoremap <F10> <C-o>:call ToggleQuickFix()<cr>
 
 noremap <leader>cp :cp<cr>
 noremap <leader>cn :cn<cr>
+noremap <leader>co :copen 5<cr>
+noremap <leader>cc :cclose<cr>
 
 noremap <leader><F1> :call ExecuteCommand("~/.vim/skywind.1")<cr>
 noremap <leader><F2> :call ExecuteCommand("~/.vim/skywind.2")<cr>
