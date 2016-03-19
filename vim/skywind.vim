@@ -1,28 +1,28 @@
-func! SaveFile()
+function! SaveFile()
 	exec "w"
 endfunc
 
-func! ExecuteFile()
+function! ExecuteFile()
 	exec "update"
 	exec "!%:p"
 endfunc
 
-func! ExecuteMain()
+function! ExecuteMain()
 	exec "update"
 	exec "!%:p:h/%:t:r"
 endfunc
 
-func! ExecutePython()
+function! ExecutePython()
 	exec "update"
 	exec "!python %"
 endfunc
 
-func! ExecuteEmake()
+function! ExecuteEmake()
 	exec "update"
 	exec "!emake -e %"
 endfunc
 
-func! RunClever()
+function! RunClever()
 	if &filetype == "cpp"
 		exec "call ExecuteMain()"
 	elseif &filetype == "c"
@@ -48,7 +48,7 @@ func! RunClever()
 	endif
 endfunc
 
-func! CompileGcc()
+function! CompileGcc()
 	exec "update"
 	let compileflag=" "
 	if search("mpi\.h") != 0
@@ -70,12 +70,12 @@ func! CompileGcc()
 	exec "!gcc -Wall % -o %< ".compileflag
 endfunc
 
-func! BuildEmake()
+function! BuildEmake()
 	exec "update"
 	exec "!emake %"
 endfunc
 
-func! ExecuteCommand(command)
+function! ExecuteCommand(command)
 	let $VIM_FILEPATH = expand("%:p")
 	let $VIM_FILENAME = expand("%:t")
 	let $VIM_FILEDIR = expand("%:p:h")
@@ -91,7 +91,7 @@ let s:winopen = 0
 set statusline=\ %<%F[%1*%M%*%n%R%H]%=\ %y\ %0(%{&fileformat}\ [%{(&fenc==\"\"?&enc:&fenc).(&bomb?\",BOM\":\"\")}]\ %c:%l/%L%)
 set laststatus=1
 
-function ToggleQuickFix()
+function! ToggleQuickFix()
 	if s:winopen == 0
 		exec "copen 5"
 		set laststatus=2
