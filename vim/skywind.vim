@@ -129,15 +129,16 @@ inoremap <F10> <C-o>:call ToggleQuickFix()<cr>
 noremap <leader>cp :cp<cr>
 noremap <leader>cn :cn<cr>
 
-noremap <leader>1 :call ExecuteCommand("~/.vim/skywind.1")<cr>
-noremap <leader>2 :call ExecuteCommand("~/.vim/skywind.2")<cr>
-noremap <leader>3 :call ExecuteCommand("~/.vim/skywind.3")<cr>
-noremap <leader>4 :call ExecuteCommand("~/.vim/skywind.4")<cr>
-noremap <leader>5 :call ExecuteCommand("~/.vim/skywind.5")<cr>
-noremap <leader>6 :call ExecuteCommand("~/.vim/skywind.6")<cr>
-noremap <leader>7 :call ExecuteCommand("~/.vim/skywind.7")<cr>
-noremap <leader>8 :call ExecuteCommand("~/.vim/skywind.8")<cr>
-noremap <leader>9 :call ExecuteCommand("~/.vim/skywind.9")<cr>
-noremap <leader>0 :call ExecuteCommand("~/.vim/skywind.0")<cr>
+noremap <leader><F1> :call ExecuteCommand("~/.vim/skywind.1")<cr>
+noremap <leader><F2> :call ExecuteCommand("~/.vim/skywind.2")<cr>
+noremap <leader><F3> :call ExecuteCommand("~/.vim/skywind.3")<cr>
+noremap <leader><F4> :call ExecuteCommand("~/.vim/skywind.4")<cr>
+noremap <leader><F5> :call ExecuteCommand("~/.vim/skywind.5")<cr>
+noremap <leader><F6> :call ExecuteCommand("~/.vim/skywind.6")<cr>
+noremap <leader><F7> :call ExecuteCommand("~/.vim/skywind.7")<cr>
+noremap <leader><F8> :call ExecuteCommand("~/.vim/skywind.8")<cr>
+noremap <leader><F9> :call ExecuteCommand("~/.vim/skywind.9")<cr>
+
+
 
 
