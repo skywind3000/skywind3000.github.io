@@ -49,7 +49,7 @@ inoremap <F3> <C-o>:bn<CR>
 " miscs
 " set scrolloff=3
 set scrolloff=3
-set laststatus=2
+set laststatus=1
 set showmatch
 set display=lastline
 " colorscheme evening

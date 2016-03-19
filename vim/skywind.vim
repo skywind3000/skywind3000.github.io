@@ -39,6 +39,10 @@ func! RunClever()
 		exec "call ExecuteEmake()"
 	elseif &filetype == "emake"
 		exec "call ExecuteEmake()"
+	elseif &filetype == "vim"
+		exec "source %"
+	elseif &filetype == "javascript"
+		exec "!node %"
 	else
 		exec "call ExecuteFile()"
 	endif
@@ -71,14 +75,32 @@ func! BuildEmake()
 	exec "!emake %"
 endfunc
 
-let s:winopen = 0
+func! ExecuteCommand(command)
+	let $VIM_FILEPATH = expand("%:p")
+	let $VIM_FILENAME = expand("%:t")
+	let $VIM_FILEDIR = expand("%:p:h")
+	let $VIM_FILENOEXT = expand("%:t:r")
+	let $VIM_FILEEXT = "." . expand("%:e")
+	let $VIM_CWD = expand("%:p:h:h")
+	let $VIM_RELDIR = expand("%:h")
+	let $VIM_RELNAME = expand("%:p:.")
+	exec "!" . a:command
+endfunc
 
-func! ToggleQuickFix()
-	if s:winopen
-		exec "cclose"
-		let s:winopen = 0
-	else
+let s:winopen = 0
+set statusline=\ %<%F[%1*%M%*%n%R%H]%=\ %y\ %0(%{&fileformat}\ [%{(&fenc==\"\"?&enc:&fenc).(&bomb?\",BOM\":\"\")}]\ %c:%l/%L%)
+set laststatus=1
+
+function ToggleQuickFix()
+	if s:winopen == 0
 		exec "copen 5"
+		set laststatus=2
+		let s:winopen = 2
+	elsei s:winopen == 1
+		exec "copen 5"
+		let s:winopen = 2
+	else
+		exec "cclose"
 		let s:winopen = 1
 	endif
 endfunc
@@ -106,5 +128,16 @@ inoremap <F10> <C-o>:call ToggleQuickFix()<cr>
 
 noremap <leader>cp :cp<cr>
 noremap <leader>cn :cn<cr>
+
+noremap <leader>1 :call ExecuteCommand("~/.vim/skywind.1")<cr>
+noremap <leader>2 :call ExecuteCommand("~/.vim/skywind.2")<cr>
+noremap <leader>3 :call ExecuteCommand("~/.vim/skywind.3")<cr>
+noremap <leader>4 :call ExecuteCommand("~/.vim/skywind.4")<cr>
+noremap <leader>5 :call ExecuteCommand("~/.vim/skywind.5")<cr>
+noremap <leader>6 :call ExecuteCommand("~/.vim/skywind.6")<cr>
+noremap <leader>7 :call ExecuteCommand("~/.vim/skywind.7")<cr>
+noremap <leader>8 :call ExecuteCommand("~/.vim/skywind.8")<cr>
+noremap <leader>9 :call ExecuteCommand("~/.vim/skywind.9")<cr>
+noremap <leader>0 :call ExecuteCommand("~/.vim/skywind.0")<cr>
 
 
