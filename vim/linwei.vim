@@ -51,6 +51,7 @@ noremap <tab>j <c-w>j
 noremap <tab>k <c-w>k
 noremap <tab>l <c-w>l
 noremap <tab>w <c-w>w
+noremap <silent><tab>p :ls<cr> 
 noremap <silent><tab>v :vs<cr>
 noremap <silent><tab>c :nohl<cr>
 
@@ -78,5 +79,20 @@ noremap <leader>w <c-w>w
 
 nnoremap <silent><C-a> ggvG$
 vnoremap <C-c> "+y
+
+" set number
+let s:need_number = 0
+
+function! ToggleNumberView()
+	if s:need_number == 0
+		set number
+		let s:need_number = 1
+	else
+		set nonumber
+		let s:nned_number = 0
+	endif
+endfunc
+
+noremap <silent><tab>n :call ToggleNumberView()<cr>
 
 

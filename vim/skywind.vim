@@ -94,6 +94,8 @@ set laststatus=1
 function! ToggleQuickFix()
 	if s:winopen == 0
 		exec "copen 5"
+		exec "wincmd k"
+		set number
 		set laststatus=2
 		let s:winopen = 2
 	elsei s:winopen == 1
