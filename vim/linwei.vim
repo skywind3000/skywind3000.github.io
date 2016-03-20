@@ -89,7 +89,7 @@ function! ToggleNumberView()
 		let s:need_number = 1
 	else
 		set nonumber
-		let s:nned_number = 0
+		let s:need_number = 0
 	endif
 endfunc
 
