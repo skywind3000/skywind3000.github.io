@@ -123,13 +123,13 @@ inoremap <F8> <C-o>:call CompileGcc()<CR>
 noremap <F9> :call ExecuteEmake()<CR>
 inoremap <F9> <C-o>:call ExecuteEmake()<CR>
 
-noremap <F10> :call ToggleQuickFix()<cr>
-inoremap <F10> <C-o>:call ToggleQuickFix()<cr>
+noremap <silent><F10> :call ToggleQuickFix()<cr>
+inoremap <silent><F10> <C-o>:call ToggleQuickFix()<cr>
 
-noremap <leader>cp :cp<cr>
-noremap <leader>cn :cn<cr>
-noremap <leader>co :copen 5<cr>
-noremap <leader>cc :cclose<cr>
+noremap <silent><leader>cp :cp<cr>
+noremap <silent><leader>cn :cn<cr>
+noremap <silent><leader>co :copen 5<cr>
+noremap <silent><leader>cc :cclose<cr>
 
 noremap <leader><F1> :call ExecuteCommand("~/.vim/skywind.1")<cr>
 noremap <leader><F2> :call ExecuteCommand("~/.vim/skywind.2")<cr>

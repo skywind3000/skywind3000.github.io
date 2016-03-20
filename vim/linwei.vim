@@ -38,13 +38,21 @@ noremap <F2> :w<CR>
 inoremap <F2> <C-o>:w<CR>
 
 " use hotkey to change buffer
-noremap <C-,> :bp<CR>
-noremap <C-.> :bn<CR>
-inoremap <C-,> <C-o>:bp<CR>
-inoremap <C-.> <C-o>:bn<CR>
 noremap <F3> :bn<CR>
 inoremap <F3> <C-o>:bn<CR>
-
+noremap <leader>bn :bn<cr>
+noremap <leader>bp :bp<cr>
+noremap <leader>bf :bf<cr>
+noremap <leader>bl :ls<cr>
+noremap <silent><tab>n :bn<cr>
+noremap <silent><tab>p :bp<cr>
+noremap <tab>h <c-w>h
+noremap <tab>j <c-w>j
+noremap <tab>k <c-w>k
+noremap <tab>l <c-w>l
+noremap <tab>w <c-w>w
+noremap <silent><tab>v :vs<cr>
+noremap <silent><tab>c :nohl<cr>
 
 " miscs
 " set scrolloff=3
