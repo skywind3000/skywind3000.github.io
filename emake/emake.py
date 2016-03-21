@@ -3037,7 +3037,7 @@ def main(argv = None):
 		make.info('home')
 	else:
 		sys.stderr.write('unknow command: %s\n'%cmd)
-		sys.stderr.fflush()
+		sys.stderr.flush()
 	return 0
 
 
