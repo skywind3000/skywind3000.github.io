@@ -117,7 +117,7 @@ function! CompileGcc()
 	endif
 	let l:compileflag = g:vimmake_cflags
 	let l:extname = expand("%:e")
-	if index(['cpp', 'cc', 'cxx', 'mm'])
+	if index(['cpp', 'cc', 'cxx', 'mm'], l:extname)
 		let l:compileflag .= ' -lstdc++'
 	endif
 	if !has("quickfix")
@@ -141,19 +141,19 @@ function! BuildEmake(filename, ininame, quickfix)
 	endif
 	if (!a:quickfix) || (!has("quickfix"))
 		if a:ininame == ''
-			exec '!emake ' . shellescape(a:filename) . ''
+			exec '!emake.py ' . shellescape(a:filename) . ''
 		else
-			exec '!emake "--ini=' . a:ininame . '" ' . shellescape(a:filename) . ''
+			exec '!emake.py "--ini=' . a:ininame . '" ' . shellescape(a:filename) . ''
 		endif
 	else
 		call s:MakeSave()
 		setlocal errorformat=%f:%l:%m
 		let l:fname = '\"' . fnameescape(a:filename) . '\"'
 		if a:ininame == ''
-			exec 'setlocal makeprg=emake\ ' . l:fname 
+			exec 'setlocal makeprg=emake.py\ ' . l:fname 
 			exec "make!"
 		else
-			exec 'setlocal makeprg=emake\ \"--ini=' . a:ininame . '\"\ ' . l:fname
+			exec 'setlocal makeprg=emake.py\ \"--ini=' . a:ininame . '\"\ ' . l:fname
 			exec "make!"
 		endif
 		call s:MakeRestore()
