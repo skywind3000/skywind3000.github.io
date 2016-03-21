@@ -33,24 +33,17 @@ inoremap <C-j> <C-o>j
 inoremap <C-k> <C-o>k
 inoremap <C-l> <C-o>l
 
-" use hotkey to save file
-noremap <F2> :w<CR>
-inoremap <F2> <C-o>:w<CR>
-
 " use hotkey to change buffer
-noremap <F3> :bn<CR>
-inoremap <F3> <C-o>:bn<CR>
+noremap <silent><F2> :bp<CR>
+noremap <silent><F3> :bn<CR>
+inoremap <silent><F2> <C-o>:bp<CR>
+inoremap <silent><F3> <C-o>:bn<CR>
 noremap <leader>bn :bn<cr>
 noremap <leader>bp :bp<cr>
 noremap <leader>bf :bf<cr>
 noremap <leader>bl :ls<cr>
 noremap <silent><tab>n :bn<cr>
 noremap <silent><tab>p :bp<cr>
-noremap <tab>h <c-w>h
-noremap <tab>j <c-w>j
-noremap <tab>k <c-w>k
-noremap <tab>l <c-w>l
-noremap <tab>w <c-w>w
 noremap <silent><tab>p :ls<cr> 
 noremap <silent><tab>v :vs<cr>
 noremap <silent><tab>c :nohl<cr>
@@ -67,16 +60,25 @@ set statusline=\ %<%F[%1*%M%*%n%R%H]%=\ %y\ %0(%{&fileformat}\ [%{(&fenc==\"\"?&
 set listchars=tab:\|\ ,trail:.,extends:>,precedes:<
 set matchtime=5
 
-noremap <leader>s :w<cr>
+" leader definition
+noremap <leader>w :w<cr>
 noremap <leader>q :q<cr>
 noremap <leader>c :close<cr>
 
+" window management
 noremap <leader>h <c-w>h
 noremap <leader>j <c-w>j
 noremap <leader>k <c-w>k
 noremap <leader>l <c-w>l
-noremap <leader>w <c-w>w
+noremap <tab>h <c-w>h
+noremap <tab>j <c-w>j
+noremap <tab>k <c-w>k
+noremap <tab>l <c-w>l
+noremap <tab>w <c-w>w
+noremap <F4> <c-w>w
+inoremap <F4> <C-o><c-w>w
 
+" copy & paste
 nnoremap <silent><C-a> ggvG$
 vnoremap <C-c> "+y
 
@@ -94,5 +96,10 @@ function! ToggleNumberView()
 endfunc
 
 noremap <silent><tab>n :call ToggleNumberView()<cr>
+
+" ctrl-enter to insert a empty line below, shift-enter to insert above
+noremap <C-Enter> o<ESC>
+noremap <S-Enter> O<ESC>
+
 
 

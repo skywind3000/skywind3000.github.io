@@ -1,81 +1,98 @@
+" Build system for vim
+"
+" Maintainer: skywind3000 (at) gmail.com
+" Last change: 2016.3.20
+"
 function! SaveFile()
 	exec "w"
 endfunc
 
 function! ExecuteFile()
-	exec "update"
-	exec "!%:p"
+	exec '!"%:p"'
 endfunc
 
 function! ExecuteMain()
-	exec "update"
-	exec "!%:p:h/%:t:r"
+	exec '!"%:p:h/%:t:r"'
 endfunc
 
 function! ExecutePython()
 	exec "update"
-	exec "!python %"
+	exec '!python "%"'
 endfunc
 
 function! ExecuteEmake()
-	exec "update"
-	exec "!emake -e %"
+	exec '!emake -e "%"'
+endfunc
+
+function! BuildEmake(filename, ininame, quickfix)
+	if (!a:quickfix) || (!has("quickfix"))
+		if a:ininame == ''
+			exec '!emake "' . a:filename . '"'
+		else
+			exec '!emake "--ini=' . a:ininame . '" "' . a:filename . '"'
+		endif
+	else
+		if a:ininame == ''
+			set makeprg=emake\ \"%\"
+			exec "make"
+		else
+			exec 'set makeprg=emake\ \"--ini=' . a:ininame . '\"\ \"%\"'
+			exec "make"
+		endif
+	endif
 endfunc
 
 function! RunClever()
-	if &filetype == "cpp"
+	let l:ext = expand("%:e")
+	let l:cpp = ['c', 'cpp', 'cc', 'm', 'mm', 'cxx']
+	let l:pys = ['py', 'pyw', 'pyc', 'pyo']
+	let l:emk = ['mak', 'emake']
+	if index(l:cpp, l:ext) >= 0
 		exec "call ExecuteMain()"
-	elseif &filetype == "c"
-		exec "call ExecuteMain()"
-	elseif &filetype == "cc"
-		exec "call ExecuteMain()"
-	elseif &filetype == "cpp"
-		exec "call ExecuteMain()"
-	elseif &filetype == "py"
-		exec "call ExecutePython()"
-	elseif &filetype == "python"
-		exec "call ExecutePython()"
-	elseif &filetype == "mak"
-		exec "call ExecuteEmake()"
-	elseif &filetype == "emake"
+	elseif index(l:pys, l:ext) >= 0
+		exec '!python "%"'
+	elseif index(l:emk, l:ext) >= 0
 		exec "call ExecuteEmake()"
 	elseif &filetype == "vim"
-		exec "source %"
-	elseif &filetype == "javascript"
-		exec "!node %"
+		exec 'source %'
+	elseif l:ext  == "js"
+		exec '!node "%"'
+	elseif l:ext == 'sh'
+		exec '!sh "%"'
+	elseif l:ext == 'lua'
+		exec '!lua "%"'
+	elseif l:ext == 'pl'
+		exec '!perl "%"'
+	elseif l:ext == 'rb'
+		exec '!ruby "%"'
+	elseif l:ext == 'php'
+		exec '!php "%"'
 	else
 		exec "call ExecuteFile()"
 	endif
 endfunc
 
+let g:skywind_flags = ''
+
 function! CompileGcc()
-	exec "update"
-	let compileflag=" "
-	if search("mpi\.h") != 0
-		let compilecmd = "!mpicc "
+	exec 'w'
+	let l:compileflag = g:skywind_flags
+	let l:extname = expand("%:e")
+	if index(['cpp', 'cc', 'cxx', 'mm'])
+		let l:compileflag .= ' -lstdc++'
 	endif
-	if search("glut\.h") != 0
-		let compileflag .= " -lglut -lGLU -lGL "
+	if !has("quickfix")
+		exec '!gcc -Wall "%" -o "%<" ' . l:compileflag
+	else
+		exec 'set makeprg=emake\ \"--ini=' . a:ininame . '\"\ \"%\"'
+		let l:cflags = substitute(l:compileflag, ' ', '\\ ', 'g')
+		let l:cflags = substitute(l:cflags, '"', '\\"', 'g')
+		exec 'set makeprg=gcc\ -Wall\ \"%\"\ -o\ \"%<\"\ ' . l:cflags
+		exec 'make'
 	endif
-	if search("cv\.h") != 0
-		let compileflag .= " -lcv -lhighgui -lcvaux "
-	endif
-	if search("omp\.h") != 0
-		let compileflag .= " -fopenmp "
-	endif
-	if search("math\.h") != 0
-		let compileflag .= " -lm "
-	endif
-	let compileflag .= " -lstdc++ -lpthread "
-	exec "!gcc -Wall % -o %< ".compileflag
 endfunc
 
-function! BuildEmake()
-	exec "update"
-	exec "!emake %"
-endfunc
-
-function! ExecuteCommand(command)
+function! ExecuteCommand(command, quickfix)
 	let $VIM_FILEPATH = expand("%:p")
 	let $VIM_FILENAME = expand("%:t")
 	let $VIM_FILEDIR = expand("%:p:h")
@@ -84,7 +101,12 @@ function! ExecuteCommand(command)
 	let $VIM_CWD = expand("%:p:h:h")
 	let $VIM_RELDIR = expand("%:h")
 	let $VIM_RELNAME = expand("%:p:.")
-	exec "!" . a:command
+	if (!a:quickfix) || (!has("quickfix"))
+		exec '!"' . a:command . '"'
+	else
+		exec "set makeprg=" . a:command
+		exec "make"
+	endif
 endfunc
 
 let s:winopen = 0
@@ -107,7 +129,6 @@ function! ToggleQuickFix()
 	endif
 endfunc
 
-set makeprg=emake\ \"%\"
 set errorformat=%f:%l:%m
 
 noremap <F5> :call RunClever()<CR>
@@ -116,8 +137,8 @@ inoremap <F5> <C-o>:call RunClever()<CR>
 noremap <F6> :call ExecuteFile()<CR>
 inoremap <F6> <C-o>:call ExecuteFile()<CR>
 
-noremap <F7> :make<CR>
-inoremap <F7> <C-o>:make<CR>
+noremap <F7> :call BuildEmake(expand("%"), "", 1)<CR>
+inoremap <F7> <C-o>:call BuildEmake(expand("%"), "", 1)<CR>
 
 noremap <F8> :call CompileGcc()<CR>
 inoremap <F8> <C-o>:call CompileGcc()<CR>
@@ -133,15 +154,20 @@ noremap <silent><leader>cn :cn<cr>
 noremap <silent><leader>co :copen 5<cr>
 noremap <silent><leader>cc :cclose<cr>
 
-noremap <leader><F1> :call ExecuteCommand("~/.vim/skywind.1")<cr>
-noremap <leader><F2> :call ExecuteCommand("~/.vim/skywind.2")<cr>
-noremap <leader><F3> :call ExecuteCommand("~/.vim/skywind.3")<cr>
-noremap <leader><F4> :call ExecuteCommand("~/.vim/skywind.4")<cr>
-noremap <leader><F5> :call ExecuteCommand("~/.vim/skywind.5")<cr>
-noremap <leader><F6> :call ExecuteCommand("~/.vim/skywind.6")<cr>
-noremap <leader><F7> :call ExecuteCommand("~/.vim/skywind.7")<cr>
-noremap <leader><F8> :call ExecuteCommand("~/.vim/skywind.8")<cr>
-noremap <leader><F9> :call ExecuteCommand("~/.vim/skywind.9")<cr>
+for s:i in range(10)
+	let s:name = '<F' . s:i . '>'
+	if s:i == 0
+		let s:name = '<F10>'
+	endif
+	let s:cm1 = 'noremap <silent><leader>' . s:name . ' :call '
+	let s:cm2 = 'noremap <silent><tab>' . s:name . ' :call '
+	let s:run = expand('~/.vim/skywind.') . s:i
+	let s:cm1 = s:cm1 . 'ExecuteCommand("' . s:run . '", 0)<cr>'
+	let s:cm2 = s:cm2 . 'ExecuteCommand("' . s:run . '", 1)<cr>'
+	exec s:cm1
+	exec s:cm2
+endfor
+
 
 
 
