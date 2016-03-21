@@ -3035,6 +3035,9 @@ def main(argv = None):
 	elif cmd in ('home', '-home'):
 		make.open(name)
 		make.info('home')
+	else:
+		sys.stderr.write('unknow command: %s\n'%cmd)
+		sys.stderr.fflush()
 	return 0
 
 
