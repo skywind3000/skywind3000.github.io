@@ -9,6 +9,17 @@
 " Execute customize tools in quickfix mode:
 "     <tab><F1-F9> execute ~/.vim/vimmake.1 - ~/.vim/vimmake.9
 "
+" Environment variables are set to below before executing:
+"     $VIM_FILEPATH  - File name of current buffer with full path
+"     $VIM_FILENAME  - File name of current buffer without path
+"     $VIM_FILEDIR   - Full path of current buffer without the file name
+"     $VIM_FILEEXT   - File extension of current buffer
+"     $VIM_FILENOEXT - File name of current buffer without path and extension
+"     $VIM_CWD       - Current directory
+"     $VIM_RELDIR    - File path relativize to current directory
+"     $VIM_RELNAME   - File name relativize to current directory 
+"
+"
 " Execute customize tools: ~/.vim/vimmake.{name} directly:
 "     :Vimexec {name}
 "
