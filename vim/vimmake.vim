@@ -277,7 +277,7 @@ function! s:GrepCode(text)
 endfunc
 
 
-command! -nargs=1 Grep call s:GrepCode(<f-args>)
+command! -nargs=1 GrepCode call s:GrepCode(<f-args>)
 
 
 
