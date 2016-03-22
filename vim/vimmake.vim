@@ -266,17 +266,18 @@ endfor
 
 
 " grep code
+let g:vimmake_grepinc = ['c', 'cpp', 'cc', 'h', 'hpp', 'hh', 'm', 'mm', 'py', 'js']
+
 function! s:GrepCode(text)
 	let l:inc = ''
-	let l:ext = [ 'c', 'cpp', 'cc', 'h', 'hpp', 'hh', 'py', 'pyw', 'm', 'mm', 'js' ]
-	for l:item in l:ext
-		let l:inc .= ' --include *.' . l:item
+	for l:item in g:vimmake_grepinc
+		let l:inc .= " --include \\*." . l:item
 	endfor
 	exec 'grep -R ' . shellescape(a:text) . l:inc. ' *'
 endfunc
 
 
-command! -nargs=1 GrepCode call s:GrepCode(<f-args>)
+command! -nargs=1 Grep call s:GrepCode(<f-args>)
 
 
 
