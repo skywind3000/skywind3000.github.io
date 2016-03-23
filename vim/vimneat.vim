@@ -38,18 +38,14 @@ noremap <silent><F2> :bp<CR>
 noremap <silent><F3> :bn<CR>
 inoremap <silent><F2> <C-o>:bp<CR>
 inoremap <silent><F3> <C-o>:bn<CR>
-noremap <leader>bn :bn<cr>
-noremap <leader>bp :bp<cr>
-noremap <leader>bf :bf<cr>
-noremap <leader>bl :ls<cr>
 noremap <silent><tab>n :bn<cr>
 noremap <silent><tab>p :bp<cr>
-noremap <silent><tab>p :ls<cr> 
+noremap <silent><tab>m :bm<cr>
 noremap <silent><tab>v :vs<cr>
 noremap <silent><tab>c :nohl<cr>
+noremap <silent><S-tab> :bn<cr>
 
 " miscs
-" set scrolloff=3
 set scrolloff=3
 set laststatus=1
 set showmatch
@@ -58,7 +54,7 @@ set display=lastline
 set statusline=\ %<%F[%1*%M%*%n%R%H]%=\ %y\ %0(%{&fileformat}\ [%{(&fenc==\"\"?&enc:&fenc).(&bomb?\",BOM\":\"\")}]\ %c:%l/%L%)
 
 set listchars=tab:\|\ ,trail:.,extends:>,precedes:<
-set matchtime=5
+set matchtime=3
 
 " leader definition
 noremap <leader>w :w<cr>
@@ -91,12 +87,9 @@ function! ToggleNumberView()
 	endif
 endfunc
 
-noremap <silent><tab>n :call ToggleNumberView()<cr>
+noremap <silent><leader>n :call ToggleNumberView()<cr>
 
 " ctrl-enter to insert a empty line below, shift-enter to insert above
-noremap <C-Enter> o<ESC>
-noremap <S-Enter> O<ESC>
 noremap <tab>o o<ESC>
 noremap <tab>O O<ESC>
-
 

@@ -21,10 +21,10 @@
 "
 "
 " Execute customize tools: ~/.vim/vimmake.{name} directly:
-"     :Vimexec {name}
+"     :Vimmake {name}
 "
 " Execute customize tools: ~/.vim/vimmake.{name} in quickfix mode:
-"     :Vimmake {name}
+"     :Vimmake! {name}
 "
 " Support:
 "     <F5>  Run current file by detecting file type
@@ -97,29 +97,22 @@ endfunc
 let g:vimmake_cflags = ''
 let g:vimmake_save = 0
 
-" Execute ~/.vim/vimmake.{command} directly 
-function! s:VimMake1(command)
+" Execute ~/.vim/vimmake.{command} 
+function! s:VimMake(bang, command)
 	if g:vimmake_save
 		exec "w"
 	endif
 	let l:fullname = "~/.vim/vimmake." . a:command
 	let l:fullname = expand(l:fullname)
-	call ExecuteCommand(l:fullname, 0)
-endfunc
-
-" Execute ~/.vim/vimmake.{command} directly 
-function! s:VimMake2(command)
-	if g:vimmake_save
-		exec "w"
+	if a:bang == ''
+		call ExecuteCommand(l:fullname, 0)
+	else
+		call ExecuteCommand(l:fullname, 1)
 	endif
-	let l:fullname = "~/.vim/vimmake." . a:command
-	let l:fullname = expand(l:fullname)
-	call ExecuteCommand(l:fullname, 1)
 endfunc
 
 " command definition
-command! -nargs=1 Vimexec call s:VimMake1(<f-args>)
-command! -nargs=1 Vimmake call s:VimMake2(<f-args>)
+command! -bang -nargs=1 Vimmake call s:VimMake('<bang>', <f-args>)
 
 " build via gcc
 function! CompileGcc()
@@ -227,20 +220,20 @@ function! ToggleQuickFix()
 endfunc
 
 
-noremap <F5> :call RunClever()<CR>
-inoremap <F5> <C-o>:call RunClever()<CR>
+noremap <silent><F5> :call RunClever()<CR>
+inoremap <silent><F5> <C-o>:call RunClever()<CR>
 
-noremap <F6> :call ExecuteFile()<CR>
-inoremap <F6> <C-o>:call ExecuteFile()<CR>
+noremap <silent><F6> :call ExecuteFile()<CR>
+inoremap <silent><F6> <C-o>:call ExecuteFile()<CR>
 
-noremap <F7> :call BuildEmake(expand("%"), "", 1)<CR>
-inoremap <F7> <C-o>:call BuildEmake(expand("%"), "", 1)<CR>
+noremap <silent><F7> :call BuildEmake(expand("%"), "", 1)<CR>
+inoremap <silent><F7> <C-o>:call BuildEmake(expand("%"), "", 1)<CR>
 
-noremap <F8> :call ExecuteEmake()<CR>
-inoremap <F8> <C-o>:call ExecuteEmake()<CR>
+noremap <silent><F8> :call ExecuteEmake()<CR>
+inoremap <silent><F8> <C-o>:call ExecuteEmake()<CR>
 
-noremap <F9> :call CompileGcc()<CR>
-inoremap <F9> <C-o>:call CompileGcc()<CR>
+noremap <silent><F9> :call CompileGcc()<CR>
+inoremap <silent><F9> <C-o>:call CompileGcc()<CR>
 
 noremap <silent><F10> :call ToggleQuickFix()<cr>
 inoremap <silent><F10> <C-o>:call ToggleQuickFix()<cr>
@@ -260,8 +253,8 @@ for s:i in range(10)
 	if s:i == 0
 		let s:name = '<F10>'
 	endif
-	exec 'noremap <silent><leader>' . s:name . ' :Vimexec ' . s:i . '<cr>'
-	exec 'noremap <silent><tab>' . s:name . ' :Vimmake ' . s:i . '<cr>'
+	exec 'noremap <silent><leader>' . s:name . ' :Vimmake ' . s:i . '<cr>'
+	exec 'noremap <silent><tab>' . s:name . ' :Vimmake! ' . s:i . '<cr>'
 endfor
 
 
