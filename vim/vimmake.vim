@@ -49,7 +49,7 @@ endfunc
 
 " Execute current filename without extname
 function! ExecuteMain()
-	exec '!' . shellescape(expand("%:p:h") . "/" . expand("%:t:r"))
+	exec '!' . shellescape(expand("%:p:r"))
 endfunc
 
 " Execute executable of current emake project
