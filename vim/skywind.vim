@@ -1,5 +1,6 @@
 let &tags .= ',.tags,' . expand('~/.vim/tags/standard.tags')
 
+
 function! SwitchHeader()
 	let l:main = expand('%:p:r')
 	let l:fext = expand('%:e')
@@ -115,6 +116,10 @@ endfunc
 noremap <F10> :call ToggleDevelop(0)<cr>
 inoremap <F10> <ESC>:call ToggleDevelop(0)<cr>
 
+function! SkywindUpdateCTags()
+	exec '!ctags -R -f .tags *'
+endfunc
+
 noremap <leader>f1 :FirstExplorerWindow<cr>
 noremap <leader>f2 :BottomExplorerWindow<cr>
 noremap <leader>f3 :call WMFocusEdit(0)<cr>
@@ -122,6 +127,8 @@ noremap <leader>f4 :call WMFocusEdit(1)<cr>
 noremap <leader>f0 :call WMFocusQuickfix()<cr>
 noremap <leader>fm :call ToggleDevelop(0)<cr>
 noremap <leader>fn :call ToggleDevelop(1)<cr>
+noremap <leader>ft :call SkywindUpdateCTags()<cr>
+
 
 noremap ¡ :tabn1<cr>
 noremap ™ :tabn2<cr>
