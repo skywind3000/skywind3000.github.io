@@ -43,7 +43,6 @@ noremap <silent><tab>p :bp<cr>
 noremap <silent><tab>m :bm<cr>
 noremap <silent><tab>v :vs<cr>
 noremap <silent><tab>c :nohl<cr>
-noremap <silent><S-tab> :bn<cr>
 
 " use hotkey to operate tab
 noremap <silent><leader>t :tabnew<cr>
