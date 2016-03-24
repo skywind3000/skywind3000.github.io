@@ -30,18 +30,50 @@ let g:netrw_winsize = 25
 let g:netrw_list_hide= '.*\.swp$,.*\.pyc,*\.o,*\.bak,\.git,\.svn'
 
 let g:bufExplorerWidth=30
-let g:winManagerWindowLayout = "TagList|FileExplorer"
+let g:winManagerWindowLayout = "FileExplorer|TagList"
+"let g:winManagerWindowLayout = "FileExplorer|Tagbar"
 let g:winManagerWidth=30
 
-let s:screenw = &columns
-let s:screenh = &lines
 
-function! ToggleDevelop()
+let g:Tagbar_title = "[Tagbar]"
+let g:tagbar_vertical = 30
+" let g:tagbar_left = 1
+function! Tagbar_Start()
+    exe 'TagbarOpen'
+    exe 'q' 
+endfunction
+ 
+function! Tagbar_IsValid()
+    return 1
+endfunction
+
+function! WMResize()
+	exec "FirstExplorerWindow"
+	exec "vertical resize 30"	
+	exec "wincmd l"
+endfunc
+
+function! WMFocusEdit(n)
+	exec "FirstExplorerWindow"
+	exec "wincmd l"
+	if a:n > 0
+		exec "wincmd l"
+	endif
+endfunc
+
+function! WMFocusQuickfix()
+	exec "FirstExplorerWindow"
+	exec "wincmd l"
+	exec "wincmd j"
+endfunc
+
+function! ToggleDevelop(layout)
 	if s:enter == 0
 		set showtabline=2
 		let s:enter = 1
 	endif
-	if s:enter == 1
+	if a:layout == 0
+		set nonumber
 		exec 'copen 6'
 		exec 'wincmd k'
 		exec 'wincmd l'
@@ -50,8 +82,9 @@ function! ToggleDevelop()
 		let s:screenw = &columns
 		let s:screenh = &lines
 		let s:size = (s:screenw - 32) / 2
+		exec 'set number'
+		call WMResize()
 		if s:size >= 65
-			exec 'set number'
 			exec 'vs'
 			exec 'wincmd h'
 			exec 'wincmd h'
@@ -60,13 +93,35 @@ function! ToggleDevelop()
 			exec 'vertical resize ' . s:size
 		endif
 		"let s:enter = 1
-	else
-		
+	elseif a:layout == 1
+		set nonumber
+		exec 'copen'
+		exec 'wincmd k'
+		exec 'wincmd l'
+		exec 'WMToggle'
+		exec 'wincmd l'
+		exec 'TagbarOpen'
+		call WMResize()
+		exec 'wincmd l'
+		exec 'wincmd l'
+		exec 'vertical resize 30'
+		exec 'wincmd h'
+		set number
+		let s:size = (&columns - 62)
+		exec 'vertical resize ' . s:size
 	endif
 endfunc
 
-noremap <F10> :call ToggleDevelop()<cr>
-inoremap <F10> <ESC>:call ToggleDevelop()<cr>
+noremap <F10> :call ToggleDevelop(0)<cr>
+inoremap <F10> <ESC>:call ToggleDevelop(0)<cr>
+
+noremap <leader>f1 :FirstExplorerWindow<cr>
+noremap <leader>f2 :BottomExplorerWindow<cr>
+noremap <leader>f3 :call WMFocusEdit(0)<cr>
+noremap <leader>f4 :call WMFocusEdit(1)<cr>
+noremap <leader>f0 :call WMFocusQuickfix()<cr>
+noremap <leader>fm :call ToggleDevelop(0)<cr>
+noremap <leader>fn :call ToggleDevelop(1)<cr>
 
 noremap ¡ :tabn1<cr>
 noremap ™ :tabn2<cr>
