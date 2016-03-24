@@ -81,6 +81,7 @@ function! ExecuteCommand(command, quickfix)
 	let $VIM_CWD = expand("%:p:h:h")
 	let $VIM_RELDIR = expand("%:h")
 	let $VIM_RELNAME = expand("%:p:.")
+	let $VIM_CWORD = expand("<cword>")
 	if (!a:quickfix) || (!has("quickfix"))
 		exec '!' . shellescape(a:command)
 	else
