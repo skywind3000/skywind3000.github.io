@@ -45,6 +45,19 @@ noremap <silent><tab>v :vs<cr>
 noremap <silent><tab>c :nohl<cr>
 noremap <silent><S-tab> :bn<cr>
 
+" use hotkey to operate tab
+noremap <silent><leader>t :tabnew<cr>
+noremap <silent><leader>g :tabclose<cr>
+for s:index in range(10)
+	let s:cmd = ':tabn ' . s:index . '<cr>'
+	if s:index == 0
+		let s:cmd = ':tabn 10<cr>'
+	endif
+	exec 'noremap <leader>' . s:index . ' ' . s:cmd
+	exec 'noremap <M-' . s:index . '> ' . s:cmd
+	exec 'inoremap <M-' . s:index . '> <c-o>' . s:cmd
+endfor
+
 " miscs
 set scrolloff=3
 set laststatus=1
