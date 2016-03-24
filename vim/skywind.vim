@@ -96,7 +96,7 @@ function! ToggleDevelop(layout)
 		"let s:enter = 1
 	elseif a:layout == 1
 		set nonumber
-		exec 'copen'
+		exec 'copen 6'
 		exec 'wincmd k'
 		exec 'wincmd l'
 		exec 'WMToggle'
