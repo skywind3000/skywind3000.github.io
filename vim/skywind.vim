@@ -47,6 +47,8 @@ function! ToggleDevelop()
 		exec 'wincmd l'
 		exec 'WMToggle'
 		exec 'wincmd l'
+		let s:screenw = &columns
+		let s:screenh = &lines
 		let s:size = (s:screenw - 32) / 2
 		if s:size >= 65
 			exec 'set number'
