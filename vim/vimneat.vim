@@ -62,14 +62,6 @@ noremap <silent><leader>8 :tabn 8<cr>
 noremap <silent><leader>9 :tabn 9<cr>
 noremap <silent><leader>0 :tabn 10<cr>
 
-for s:index in range(10)
-	let s:cmd = ':tabn ' . s:index . '<cr>'
-	if s:index == 0
-		let s:cmd = ':tabn 10<cr>'
-	endif
-	exec 'noremap <M-' . s:index . '> ' . s:cmd
-	exec 'inoremap <M-' . s:index . '> <c-o>' . s:cmd
-endfor
 
 " miscs
 set scrolloff=3

@@ -22,7 +22,8 @@ function! SwitchHeader()
 	echo 'switch failed, can not find another part of c/c++ source'
 endfunc
 
-noremap <silent><leader>b :call SwitchHeader()<cr>
+noremap <silent><leader>bs :call SwitchHeader()<cr>
+noremap <silent><leader>bl :ls<cr>
 noremap <tab>e :BD<cr>
 
 let s:enter = 0
@@ -30,14 +31,14 @@ let g:netrw_liststyle = 3
 let g:netrw_winsize = 25
 let g:netrw_list_hide= '.*\.swp$,.*\.pyc,*\.o,*\.bak,\.git,\.svn'
 
-let g:bufExplorerWidth=30
+let g:bufExplorerWidth=26
 let g:winManagerWindowLayout = "FileExplorer|TagList"
 "let g:winManagerWindowLayout = "FileExplorer|Tagbar"
-let g:winManagerWidth=30
+let g:winManagerWidth=26
 
 
 let g:Tagbar_title = "[Tagbar]"
-let g:tagbar_vertical = 30
+let g:tagbar_vertical = 28
 " let g:tagbar_left = 1
 function! Tagbar_Start()
     exe 'TagbarOpen'
@@ -50,7 +51,7 @@ endfunction
 
 function! WMResize()
 	exec "FirstExplorerWindow"
-	exec "vertical resize 30"	
+	exec "vertical resize 28"	
 	exec "wincmd l"
 endfunc
 
@@ -68,6 +69,16 @@ function! WMFocusQuickfix()
 	exec "wincmd j"
 endfunc
 
+function! s:TbInit()
+	if !filereadable(expand('~/.vim/tabbar2.vim'))
+		return 0
+	endif
+	source ~/.vim/tabbar2.vim
+	exec 'TbStart'
+	exec 'wincmd j'
+	return 1
+endfunc
+
 function! ToggleDevelop(layout)
 	if s:enter == 0
 		set showtabline=2
@@ -82,19 +93,19 @@ function! ToggleDevelop(layout)
 		exec 'wincmd l'
 		let s:screenw = &columns
 		let s:screenh = &lines
-		let s:size = (s:screenw - 32) / 2
+		let s:size = (s:screenw - 28) / 2
 		exec 'set number'
 		call WMResize()
 		if s:size >= 65
 			exec 'vs'
 			exec 'wincmd h'
 			exec 'wincmd h'
-			exec 'vertical resize 30'
+			exec 'vertical resize 28'
 			exec 'wincmd l'
 			exec 'vertical resize ' . s:size
 		endif
 		"let s:enter = 1
-	elseif a:layout == 1
+	elseif a:layout == 1 || a:layout == 2
 		set nonumber
 		exec 'copen 6'
 		exec 'wincmd k'
@@ -105,11 +116,16 @@ function! ToggleDevelop(layout)
 		call WMResize()
 		exec 'wincmd l'
 		exec 'wincmd l'
-		exec 'vertical resize 30'
+		exec 'vertical resize 28'
 		exec 'wincmd h'
 		set number
-		let s:size = (&columns - 62)
+		let s:size = (&columns - 58)
 		exec 'vertical resize ' . s:size
+		if a:layout == 2
+			if s:TbInit()
+				set showtabline=1
+			endif
+		endif
 	endif
 endfunc
 
@@ -128,21 +144,22 @@ noremap <leader>f0 :call WMFocusQuickfix()<cr>
 noremap <leader>fm :call ToggleDevelop(0)<cr>
 noremap <leader>fn :call ToggleDevelop(1)<cr>
 noremap <leader>ft :call SkywindUpdateCTags()<cr>
+noremap <leader>fb :call ToggleDevelop(2)<cr>
 
-
-noremap ¡ :tabn1<cr>
-noremap ™ :tabn2<cr>
-noremap £ :tabn3<cr>
-noremap ¢ :tabn4<cr>
-noremap ∞ :tabn5<cr>
-noremap § :tabn6<cr>
-inoremap ¡ <esc>:tabn1<cr>
-inoremap ™ <esc>:tabn2<cr>
-inoremap £ <esc>:tabn3<cr>
-inoremap ¢ <esc>:tabn4<cr>
-inoremap ∞ <esc>:tabn5<cr>
-inoremap § <esc>:tabn6<cr>
-
+if 0
+	noremap ¡ :tabn1<cr>
+	noremap ™ :tabn2<cr>
+	noremap £ :tabn3<cr>
+	noremap ¢ :tabn4<cr>
+	noremap ∞ :tabn5<cr>
+	noremap § :tabn6<cr>
+	inoremap ¡ <esc>:tabn1<cr>
+	inoremap ™ <esc>:tabn2<cr>
+	inoremap £ <esc>:tabn3<cr>
+	inoremap ¢ <esc>:tabn4<cr>
+	inoremap ∞ <esc>:tabn5<cr>
+	inoremap § <esc>:tabn6<cr>
+endif
 
 
 
