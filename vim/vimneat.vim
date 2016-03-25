@@ -85,14 +85,10 @@ set matchtime=3
 " leader definition
 noremap <silent><leader>w :w<cr>
 noremap <silent><leader>q :q<cr>
-noremap <silent><leader>c :close<cr>
+noremap <silent><leader>l :close<cr>
 noremap <silent><leader>d :bp\|bd #<CR>
 
 " window management
-noremap <leader>h <c-w>h
-noremap <leader>j <c-w>j
-noremap <leader>k <c-w>k
-noremap <leader>l <c-w>l
 noremap <tab>h <c-w>h
 noremap <tab>j <c-w>j
 noremap <tab>k <c-w>k
