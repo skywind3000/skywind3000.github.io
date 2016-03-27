@@ -106,6 +106,14 @@ noremap <silent><leader>n :call ToggleNumberView()<cr>
 noremap <tab>o o<ESC>
 noremap <tab>O O<ESC>
 
+" faster insert mode
+inoremap <c-x> <del>
+inoremap <c-c> <bs>
+inoremap <c-\> <c-k>
+
+" faster command mode
+
+
 " delete buffer keep window
 let loaded_bclose = 1
 if !exists('bclose_multiple')
