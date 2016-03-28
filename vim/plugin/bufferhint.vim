@@ -612,12 +612,20 @@ fu! s:KillByIndex(idx)
 
     bwipeout
 
+	if getbufvar(bid, '&modified')
+		echohl ErrorMsg
+		echomsg "No write since last change"
+		echohl NONE
+		return
+	endif
+
     " kill buffer
 	if !g:bufferhint_KeepWindow
-    	exe "silent bdelete " . bid
+    	exe "silent bdelete! " . bid
 	else
-		call bufferhint#BufferKill('', bid)
+		call bufferhint#BufferKill('!', bid)
 	endif
+
     call remove(bids, a:idx)
 
     " update LRU
