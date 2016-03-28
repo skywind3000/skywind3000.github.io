@@ -115,73 +115,98 @@ inoremap <c-\> <c-k>
 
 
 " delete buffer keep window
-let loaded_bclose = 1
-if !exists('bclose_multiple')
-  let bclose_multiple = 1
-endif
-
-" Display an error message.
-function! s:Warn(msg)
-  echohl ErrorMsg
-  echomsg a:msg
-  echohl NONE
+function! s:BufferClose(bang, buffer)
+	let l:bufcount = bufnr('$')
+	let l:switch = 0 	" window which contains target buffer will be switched
+	if empty(a:buffer)
+		let l:target = bufnr('%')
+	elseif a:buffer =~ '^\d\+$'
+		let l:target = bufnr(str2nr(a:buffer))
+	else
+		let l:target = bufnr(a:buffer)
+	endif
+	if l:target <= 0
+		echohl ErrorMsg
+		echomsg "cannot find buffer: '" . a:buffer . "'"
+		echohl NONE
+		return 0
+	endif
+	if !getbufvar(l:target, "&modifiable")
+		echohl ErrorMsg
+		echomsg "Cannot close a non-modifiable buffer"
+		echohl NONE
+		return 0
+	endif
+	if empty(a:bang) && getbufvar(l:target, '&modified')
+		echohl ErrorMsg
+		echomsg "No write since last change (use :BufferClose!)"
+		echohl NONE
+		return 0
+	endif
+	if bufnr('#') > 0	" check alternative buffer
+		let l:aid = bufnr('#')
+		if l:aid != l:target && buflisted(l:aid) && getbufvar(l:aid, "&modifiable")
+			let l:switch = l:aid	" switch to alternative buffer
+		endif
+	endif
+	if l:switch == 0	" check non-scratch buffers
+		let l:index = l:bufcount
+		while l:index >= 0
+			if buflisted(l:index) && getbufvar(l:index, "&modifiable")
+				if strlen(bufname(l:index)) > 0 && l:index != l:target
+					let l:switch = l:index	" switch to that buffer
+					break
+				endif
+			endif
+			let l:index = l:index - 1	
+		endwhile
+	endif
+	if l:switch == 0	" check scratch buffers
+		let l:index = l:bufcount
+		while l:index >= 0
+			if buflisted(l:index) && getbufvar(l:index, "&modifiable")
+				if l:index != l:target
+					let l:switch = l:index	" switch to a scratch
+					break
+				endif
+			endif
+			let l:index = l:index - 1
+		endwhile
+	endif
+	if l:switch  == 0	" check if only one scratch left
+		if strlen(bufname(l:target)) == 0 && (!getbufvar(l:target, "&modified"))
+			echo "This is the last scratch" 
+			return 0
+		endif
+	endif
+	let l:ntabs = tabpagenr('$')
+	let l:tabcc = tabpagenr()
+	let l:wincc = winnr()
+	let l:index = 1
+	while l:index <= l:ntabs
+		exec 'tabn '.l:index
+		while 1
+			let l:wid = bufwinnr(l:target)
+			if l:wid <= 0 | break | endif
+			exec l:wid.'wincmd w'
+			if l:switch == 0
+				exec 'enew!'
+				let l:switch = bufnr('%')
+			else
+				exec 'buffer '.l:switch
+			endif
+		endwhile
+		let l:index += 1
+	endwhile
+	exec 'tabn ' . l:tabcc
+	exec l:wincc . 'wincmd w'
+	exec 'bdelete! '.l:target
+	return 1
 endfunction
 
-" Command ':BufClose' executes ':bd' to delete buffer in current window.
-" The window will show the alternate buffer (Ctrl-^) if it exists,
-" or the previous buffer (:bp), or a blank buffer if no previous.
-" Command ':Bclose!' is the same, but executes ':bd!' (discard changes).
-" An optional argument can specify which buffer to close (name or number).
-function! s:BufClose(bang, buffer)
-  if empty(a:buffer)
-    let btarget = bufnr('%')
-  elseif a:buffer =~ '^\d\+$'
-    let btarget = bufnr(str2nr(a:buffer))
-  else
-    let btarget = bufnr(a:buffer)
-  endif
-  if btarget < 0
-    call s:Warn('No matching buffer for '.a:buffer)
-    return
-  endif
-  if empty(a:bang) && getbufvar(btarget, '&modified')
-    call s:Warn('No write since last change for buffer '.btarget.' (use :BufClose!)')
-    return
-  endif
-  " Numbers of windows that view target buffer which we will delete.
-  let wnums = filter(range(1, winnr('$')), 'winbufnr(v:val) == btarget')
-  if !g:bclose_multiple && len(wnums) > 1
-    call s:Warn('Buffer is in multiple windows (use ":let bclose_multiple=1")')
-    return
-  endif
-  let wcurrent = winnr()
-  for w in wnums
-    execute w.'wincmd w'
-    let prevbuf = bufnr('#')
-    if prevbuf > 0 && buflisted(prevbuf) && prevbuf != w
-      buffer #
-    else
-      bprevious
-    endif
-    if btarget == bufnr('%')
-      " Numbers of listed buffers which are not the target to be deleted.
-      let blisted = filter(range(1, bufnr('$')), 'buflisted(v:val) && v:val != btarget')
-      " Listed, not target, and not displayed.
-      let bhidden = filter(copy(blisted), 'bufwinnr(v:val) < 0')
-      " Take the first buffer, if any (could be more intelligent).
-      let bjump = (bhidden + blisted + [-1])[0]
-      if bjump > 0
-        execute 'buffer '.bjump
-      else
-        execute 'enew'.a:bang
-      endif
-    endif
-  endfor
-  execute 'bdelete'.a:bang.' '.btarget
-  execute wcurrent.'wincmd w'
-endfunction
-command! -bang -complete=buffer -nargs=? BufClose call s:BufClose('<bang>', '<args>')
-nnoremap <silent><leader>e :BufClose<CR>
+command! -bang -nargs=? BufferClose call s:BufferClose('<bang>', '<args>')
+
+noremap <silent><leader>e :BufferClose<cr>
 
 
 
