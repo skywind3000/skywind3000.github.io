@@ -50,16 +50,17 @@ function! Tagbar_IsValid()
 endfunction
 
 function! WMResize()
-	exec "FirstExplorerWindow"
-	exec "vertical resize 28"	
-	exec "wincmd l"
+	FirstExplorerWindow
+	vertical resize 28
+	set winfixwidth
+	wincmd l
 endfunc
 
 function! WMFocusEdit(n)
-	exec "FirstExplorerWindow"
-	exec "wincmd l"
+	FirstExplorerWindow
+	wincmd l
 	if a:n > 0
-		exec "wincmd l"
+		wincmd l
 	endif
 endfunc
 
@@ -82,12 +83,16 @@ endfunc
 function! ToggleDevelop(layout)
 	if s:enter == 0
 		set showtabline=2
+		set equalalways
 		let s:enter = 1
 	endif
+	set equalalways
 	if a:layout == 0
 		set nonumber
 		exec 'copen 6'
-		exec 'wincmd k'
+		wincmd j
+		set winfixheight
+		wincmd k
 		exec 'wincmd l'
 		exec 'WMToggle'
 		exec 'wincmd l'
@@ -101,6 +106,7 @@ function! ToggleDevelop(layout)
 			exec 'wincmd h'
 			exec 'wincmd h'
 			exec 'vertical resize 28'
+			set winfixwidth
 			exec 'wincmd l'
 			exec 'vertical resize ' . s:size
 		endif
@@ -108,7 +114,9 @@ function! ToggleDevelop(layout)
 	elseif a:layout == 1 || a:layout == 2
 		set nonumber
 		exec 'copen 6'
-		exec 'wincmd k'
+		wincmd j
+		set winfixheight
+		wincmd k
 		exec 'wincmd l'
 		exec 'WMToggle'
 		exec 'wincmd l'
@@ -117,6 +125,7 @@ function! ToggleDevelop(layout)
 		exec 'wincmd l'
 		exec 'wincmd l'
 		exec 'vertical resize 28'
+		set winfixwidth
 		exec 'wincmd h'
 		set number
 		let s:size = (&columns - 58)
@@ -125,6 +134,22 @@ function! ToggleDevelop(layout)
 			if s:TbInit()
 				set showtabline=1
 			endif
+		endif
+	elseif a:layout == 3 || a:layout == 4
+		set nonumber
+		copen 6
+		wincmd j
+		set winfixheight
+		wincmd k
+		TagbarOpen
+		wincmd l
+		vertical resize 28
+		wincmd h
+		set number
+		if a:layout == 4
+			vs
+			wincmd h
+			set winfixwidth
 		endif
 	endif
 endfunc
@@ -142,6 +167,8 @@ noremap <leader>f4 :call WMFocusEdit(1)<cr>
 noremap <leader>f0 :call WMFocusQuickfix()<cr>
 noremap <leader>fm :call ToggleDevelop(0)<cr>
 noremap <leader>fn :call ToggleDevelop(1)<cr>
+noremap <leader>fs :call ToggleDevelop(3)<cr>
+noremap <leader>fd :call ToggleDevelop(4)<cr>
 noremap <leader>ft :call SkywindUpdateCTags()<cr>
 noremap <leader>fb :call ToggleDevelop(2)<cr>
 noremap <leader>fa :TagbarOpen<cr>
