@@ -36,6 +36,8 @@ let g:winManagerWindowLayout = "FileExplorer|TagList"
 "let g:winManagerWindowLayout = "FileExplorer|Tagbar"
 let g:winManagerWidth=26
 
+let g:bufferhint_KeepWindow = 1
+
 
 let g:Tagbar_title = "[Tagbar]"
 let g:tagbar_vertical = 28
@@ -152,6 +154,7 @@ function! ToggleDevelop(layout)
 			set winfixwidth
 		endif
 	endif
+	highlight LineNr term=bold cterm=NONE ctermfg=DarkGrey ctermbg=NONE gui=NONE guifg=DarkGrey guibg=NONE
 endfunc
 
 
