@@ -129,8 +129,7 @@ function! ToggleDevelop(layout)
 	endif
 endfunc
 
-noremap <F10> :call ToggleDevelop(0)<cr>
-inoremap <F10> <ESC>:call ToggleDevelop(0)<cr>
+
 
 function! SkywindUpdateCTags()
 	exec '!ctags -R -f .tags *'
@@ -145,6 +144,7 @@ noremap <leader>fm :call ToggleDevelop(0)<cr>
 noremap <leader>fn :call ToggleDevelop(1)<cr>
 noremap <leader>ft :call SkywindUpdateCTags()<cr>
 noremap <leader>fb :call ToggleDevelop(2)<cr>
+noremap <leader>fa :TagbarOpen<cr>
 
 if 0
 	noremap ¡ :tabn1<cr>
@@ -161,5 +161,27 @@ if 0
 	inoremap § <esc>:tabn6<cr>
 endif
 
+let g:skywind_name = 'skywind3000 (at) google.com'
+function! CopyrightSource()
+	let l:filename = expand("%:t")
+	let l:comment = '//'
+	while strlen(l:comment) < 72
+		let l:comment .= '='
+	endwhile
+	call append(line(".") - 1, l:comment)
+	call append(line(".") - 1, '//')
+	call append(line(".") - 1, '// '. l:filename . ' - '.g:skywind_name)
+	call append(line(".") - 1, '// ')
+	call append(line(".") - 1, '// NOTE:')
+	call append(line(".") - 1, '// This file is created by skywind in '. strftime("%c"))
+	call append(line(".") - 1, '// For more information, please see the readme file.')
+	call append(line(".") - 1, '//')
+	call append(line(".") - 1, l:comment)
+endfunc
+
+
+
+nnoremap - :call bufferhint#Popup()<CR>
+nnoremap <leader>p :call bufferhint#LoadPrevious()<CR>
 
 
