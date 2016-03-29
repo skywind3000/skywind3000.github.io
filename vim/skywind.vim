@@ -84,7 +84,7 @@ endfunc
 
 function! ToggleDevelop(layout)
 	if s:enter == 0
-		set showtabline=2
+		"set showtabline=2
 		set equalalways
 		let s:enter = 1
 	endif
