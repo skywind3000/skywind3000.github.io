@@ -160,7 +160,7 @@ endfunc
 
 
 function! SkywindUpdateCTags()
-	exec '!ctags -R -f .tags –c++-kinds=+px –fields=+iaS –extra=+q .'
+	exec '!ctags -R -f .tags --fields=+iaS --extra=+q --c++-kinds=+px .'
 endfunc
 
 noremap <leader>f1 :FirstExplorerWindow<cr>
