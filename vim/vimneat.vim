@@ -13,14 +13,16 @@ set showtabline=1
 set mouse=c
 set winaltkeys=no
 set hidden
-set nobackup
-set nowritebackup
 set nowrap
 set wildignore=*.swp,*.bak,*.pyc,*.obj,*.o,*.class
 set backspace=eol,start,indent
 set cmdheight=1
 set ruler
 set nopaste
+
+"set nobackup
+"set nowritebackup
+"set noswapfile
 
 
 " map CTRL_HJKL to move cursor in all mode

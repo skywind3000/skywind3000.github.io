@@ -37,7 +37,7 @@ let g:winManagerWindowLayout = "FileExplorer|TagList"
 let g:winManagerWidth=26
 
 let g:bufferhint_KeepWindow = 1
-
+set completeopt=menu
 
 let g:Tagbar_title = "[Tagbar]"
 let g:tagbar_vertical = 28
@@ -160,7 +160,7 @@ endfunc
 
 
 function! SkywindUpdateCTags()
-	exec '!ctags -R -f .tags *'
+	exec '!ctags -R -f .tags –c++-kinds=+px –fields=+iaS –extra=+q .'
 endfunc
 
 noremap <leader>f1 :FirstExplorerWindow<cr>
