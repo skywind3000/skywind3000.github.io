@@ -299,22 +299,20 @@ function! Vimmake_Update_FileList(outname)
 endfunc
 
 function! Vimmake_Update_Tags(ctags, cscope)
-	call Vimmake_Update_FileList('.filelist')
 	echo "update tags"
 	if a:ctags != "" 
 		if filereadable(a:ctags) | call delete(a:ctags) | endif
 		let l:parameters = ' --fields=+iaS --extra=+q --c++-kinds=+px '
-		exec '!ctags -R -f '.a:ctags. l:parameters . '-L .filelist'
+		exec '!ctags -R -f '.a:ctags. l:parameters . ' .'
 	endif
 	if has("cscope") && a:cscope != ""
 		silent! exec "cs kill -1"
 		if filereadable(a:cscope) | call delete(a:cscope) | endif
-		exec '!cscope -b -f '.a:cscope.' -i.filelist'
+		exec '!cscope -b -R -f '.a:cscope
 		if filereadable(a:cscope)
 			exec 'cs add '.a:cscope
 		endif
 	endif
-	if filereadable('.filelist') | call delete('.filelist') | endif
 	redraw!
 endfunc
 
