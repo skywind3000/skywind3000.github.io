@@ -18,6 +18,7 @@
 "     $VIM_CWD       - Current directory
 "     $VIM_RELDIR    - File path relativize to current directory
 "     $VIM_RELNAME   - File name relativize to current directory 
+"     $VIM_CWORD     - Current word in the buffer
 "
 "
 " Execute customize tools: ~/.vim/vimmake.{name} directly:
@@ -205,13 +206,13 @@ set laststatus=1
 
 function! ToggleQuickFix()
 	if s:winopen == 0
-		exec "copen 5"
+		exec "copen 6"
 		exec "wincmd k"
 		set number
 		set laststatus=2
 		let s:winopen = 2
 	elsei s:winopen == 1
-		exec "copen 5"
+		exec "copen 6"
 		exec "wincmd k"
 		let s:winopen = 2
 	else
@@ -246,8 +247,8 @@ inoremap <silent><F12> <C-o>:cn<cr>
 
 noremap <silent><leader>cp :cp<cr>
 noremap <silent><leader>cn :cn<cr>
-noremap <silent><leader>co :copen 5<cr>
-noremap <silent><leader>cc :cclose<cr>
+noremap <silent><leader>co :copen 6<cr>
+noremap <silent><leader>cl :cclose<cr>
 
 for s:i in range(10)
 	let s:name = '<F' . s:i . '>'
@@ -267,11 +268,48 @@ function! s:GrepCode(text)
 	for l:item in g:vimmake_grepinc
 		let l:inc .= " --include \\*." . l:item
 	endfor
-	exec 'grep -R ' . shellescape(a:text) . l:inc. ' *'
+	exec 'grep! -R ' . shellescape(a:text) . l:inc. ' *'
 endfunc
 
 
 command! -nargs=1 GrepCode call s:GrepCode(<f-args>)
+
+" set keymap to GrepCode 
+noremap <silent><leader>cr :GrepCode <C-R>=expand("<cword>")<cr><cr>
+
+" ctags update
+function! Vimmake_Update_CTags(outname)
+	let l:out = 'tags'
+	if a:outname != "" | let l:out = a:outname | endif
+	exec '!ctags -R -f '.l:out.' --fields=+iaS --extra=+q --c++-kinds=+px .'
+endfunc
+
+" cscope update
+function! Vimmake_Update_CScope(outname)
+	let l:out = 'cscope.out'
+	if a:outname != "" | let l:out = a:outname | endif
+	exec '!cscope -b -f '.l:out.' '
+endfunc
+
+" set keymap to cscope
+if has("cscope")
+	noremap <leader>cs :cs find s <C-R>=expand("<cword>")<CR><CR>
+	noremap <leader>cg :cs find g <C-R>=expand("<cword>")<CR><CR>
+	noremap <leader>cc :cs find c <C-R>=expand("<cword>")<CR><CR>
+	noremap <leader>cc :cs find c <C-R>=expand("<cword>")<CR><CR>
+	noremap <leader>ct :cs find t <C-R>=expand("<cword>")<CR><CR>
+	noremap <leader>ce :cs find e <C-R>=expand("<cword>")<CR><CR>
+	noremap <leader>cf :cs find f <C-R>=expand("<cword>")<CR><CR>
+	noremap <leader>ci :cs find i <C-R>=expand("<cword>")<CR><CR>
+	noremap <leader>cd :cs find d <C-R>=expand("<cword>")<CR><CR>
+	noremap <leader>ca :call Vimmake_Update_CTags('.tags')<cr>
+	noremap <leader>cm :call Vimmake_Update_CScope('.cscope')<cr>
+    set cscopequickfix=s-,c-,d-,i-,t-,e-
+    set csto=0
+    set cst
+    set csverb
+endif
+
 
 
 
