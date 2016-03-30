@@ -1,30 +1,7 @@
 let &tags .= ',.tags,' . expand('~/.vim/tags/standard.tags')
 
 
-function! SwitchHeader()
-	let l:main = expand('%:p:r')
-	let l:fext = expand('%:e')
-	if index(['c', 'cpp', 'm', 'mm', 'cc'], l:fext) >= 0
-		let l:altnames = ['h', 'hpp', 'hh']
-	elseif index(['h', 'hh', 'hpp'], l:fext) >= 0
-		let l:altnames = ['c', 'cpp', 'cc', 'm', 'mm']
-	else
-		echo 'switch failed, not a c/c++ source'
-		return
-	endif
-	for l:next in l:altnames
-		let l:newname = l:main . '.' . l:next
-		if filereadable(l:newname)
-			exec 'e ' . fnameescape(l:newname)
-			return
-		endif
-	endfor
-	echo 'switch failed, can not find another part of c/c++ source'
-endfunc
-
-noremap <silent><leader>bs :call SwitchHeader()<cr>
 noremap <silent><leader>bl :ls<cr>
-noremap <tab>e :BD<cr>
 
 let s:enter = 0
 let g:netrw_liststyle = 3
@@ -157,7 +134,26 @@ function! ToggleDevelop(layout)
 	highlight LineNr term=bold cterm=NONE ctermfg=DarkGrey ctermbg=NONE gui=NONE guifg=DarkGrey guibg=NONE
 endfunc
 
-
+function! Tags_UpdateFileList()
+	let l:names = ['*.c', '*.cpp', '*.cc', '*.cxx']
+	let l:names += ['*.h', '*.hpp', '*.hh', '*.py', '*.pyw', '*.java', '*.js']
+	if has('win32')
+		silent! exec '!dir /b ' . join(l:names, ',') . ' > .filelist'
+	else
+		let l:cmd = ''
+		let l:ccc = 1
+		for l:name in l:names
+			if l:ccc == 1
+				let l:cmd .= ' -name "'.l:name . '"'
+				let l:ccc = 0
+			else
+				let l:cmd .= ' -o -name "'.l:name. '"'
+			endif
+		endfor
+		silent! exec '!find . ' . l:cmd . ' > .filelist'
+	endif
+	redraw!
+endfunc
 
 function! SkywindUpdateCTags()
 	exec '!ctags -R -f .tags --fields=+iaS --extra=+q --c++-kinds=+px .'
