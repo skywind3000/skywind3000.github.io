@@ -360,6 +360,6 @@ function! Vimmake_Switch_Header()
 endfunc
 
 noremap <leader>ch :call Vimmake_Switch_Header()<cr>
-
+noremap <leader>cw :!man -S 3:2:1 <C-R>=expand("<cword>")<CR><CR>
 
 
