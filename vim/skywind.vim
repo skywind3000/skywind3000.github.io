@@ -134,30 +134,6 @@ function! ToggleDevelop(layout)
 	highlight LineNr term=bold cterm=NONE ctermfg=DarkGrey ctermbg=NONE gui=NONE guifg=DarkGrey guibg=NONE
 endfunc
 
-function! Tags_UpdateFileList()
-	let l:names = ['*.c', '*.cpp', '*.cc', '*.cxx']
-	let l:names += ['*.h', '*.hpp', '*.hh', '*.py', '*.pyw', '*.java', '*.js']
-	if has('win32')
-		silent! exec '!dir /b ' . join(l:names, ',') . ' > .filelist'
-	else
-		let l:cmd = ''
-		let l:ccc = 1
-		for l:name in l:names
-			if l:ccc == 1
-				let l:cmd .= ' -name "'.l:name . '"'
-				let l:ccc = 0
-			else
-				let l:cmd .= ' -o -name "'.l:name. '"'
-			endif
-		endfor
-		silent! exec '!find . ' . l:cmd . ' > .filelist'
-	endif
-	redraw!
-endfunc
-
-function! SkywindUpdateCTags()
-	exec '!ctags -R -f .tags --fields=+iaS --extra=+q --c++-kinds=+px .'
-endfunc
 
 noremap <leader>f1 :FirstExplorerWindow<cr>
 noremap <leader>f2 :BottomExplorerWindow<cr>
@@ -168,7 +144,6 @@ noremap <leader>fm :call ToggleDevelop(0)<cr>
 noremap <leader>fn :call ToggleDevelop(1)<cr>
 noremap <leader>fs :call ToggleDevelop(3)<cr>
 noremap <leader>fd :call ToggleDevelop(4)<cr>
-noremap <leader>ft :call SkywindUpdateCTags()<cr>
 noremap <leader>fb :call ToggleDevelop(2)<cr>
 noremap <leader>fa :TagbarOpen<cr>
 
