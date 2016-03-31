@@ -11,7 +11,7 @@ ln -s $DIR/backup.vim ~/.vim/backup.vim
 ln -s $DIR/plugin ~/.vim/plugin
 ln -s $DIR/autoload ~/.vim/autoload
 ln -s $DIR/doc ~/.vim/doc
-ln -s $DIR/color ~/.vim/color
+ln -s $DIR/colors ~/.vim/colors
 ln -s $DIR/syntax ~/.vim/syntax
 
 
