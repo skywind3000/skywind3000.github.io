@@ -43,6 +43,11 @@
 "
 "
 
+" default tool location is ~/.vim which could be changed by g:vimmake_home
+if !exists("g:vimmake_home")
+	let g:vimmake_home = "~/.vim"
+endif
+
 " Execute current filename directly
 function! ExecuteFile()
 	exec '!' . shellescape(expand("%:p"))
@@ -99,13 +104,34 @@ endfunc
 let g:vimmake_cflags = ''
 let g:vimmake_save = 0
 
+" join two path
+function! s:PathJoin(home, name)
+    let l:size = strlen(a:home)
+    if l:size == 0 | return a:name | endif
+    let l:last = strpart(a:home, l:size - 1, 1)
+    if has("win32") || has("win64") || has("win16") || has("windows")
+        if l:last == "/" || l:last == "\\"
+            return a:home . a:name
+        else
+            return a:home . '/' . a:name
+        endif
+    else
+        if l:last == "/"
+            return a:home . a:name
+        else
+            return a:home . '/' . a:name
+        endif
+    endif
+endfunc
+
 " Execute ~/.vim/vimmake.{command} 
 function! s:VimMake(bang, command)
 	if g:vimmake_save
 		exec "w"
 	endif
-	let l:fullname = "~/.vim/vimmake." . a:command
-	let l:fullname = expand(l:fullname)
+	let l:home = expand(g:vimmake_home)
+	let l:fullname = "vimmake." . a:command
+	let l:fullname = s:PathJoin(l:home, l:fullname)
 	if a:bang == ''
 		call ExecuteCommand(l:fullname, 0)
 	else
