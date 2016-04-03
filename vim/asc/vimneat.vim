@@ -51,8 +51,8 @@ noremap <silent><leader>t :tabnew<cr>
 noremap <silent><leader>g :tabclose<cr>
 noremap <silent><F3> :tabp<cr>
 noremap <silent><F4> :tabn<cr>
-inoremap <silent><F3> <c-o>:tabp<cr>
-inoremap <silent><F4> <c-o>:tabn<cr>
+inoremap <silent><F3> <ESC>:tabp<cr>
+inoremap <silent><F4> <ESC>:tabn<cr>
 noremap <silent><leader>1 :tabn 1<cr>
 noremap <silent><leader>2 :tabn 2<cr>
 noremap <silent><leader>3 :tabn 3<cr>
