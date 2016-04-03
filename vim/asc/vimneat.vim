@@ -26,14 +26,14 @@ set nopaste
 
 
 " map CTRL_HJKL to move cursor in all mode
-noremap <C-h> h
-noremap <C-j> j
-noremap <C-k> k
-noremap <C-l> l
-inoremap <C-h> <C-o>h
-inoremap <C-j> <C-o>j
-inoremap <C-k> <C-o>k
-inoremap <C-l> <C-o>l
+noremap <C-h> <left>
+noremap <C-j> <down>
+noremap <C-k> <up>
+noremap <C-l> <right>
+inoremap <C-h> <left>
+inoremap <C-j> <down>
+inoremap <C-k> <up>
+inoremap <C-l> <right>
 
 " use hotkey to change buffer
 noremap <silent><F1> :bp<CR>
@@ -112,6 +112,12 @@ noremap <tab>O O<ESC>
 inoremap <c-x> <del>
 inoremap <c-c> <bs>
 inoremap <c-\> <c-k>
+
+" as emacs
+inoremap <c-a> <home>
+inoremap <c-e> <end>
+inoremap <c-d> <del>
+vnoremap <c-c> "+y
 
 " faster command mode
 
