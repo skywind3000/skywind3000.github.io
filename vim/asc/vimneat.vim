@@ -130,6 +130,9 @@ cnoremap <c-f> <right>
 cnoremap <c-b> <left>
 cnoremap <c-p> <up>
 cnoremap <c-n> <down>
+cnoremap <c-d> <del>
+cnoremap <c-x> <del>
+cnoremap <c-c> <bs>
 
 " delete buffer keep window
 function! s:BufferClose(bang, buffer)
