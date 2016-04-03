@@ -9,9 +9,14 @@ for s:index in range(10)
 	exec 'noremap <tab>'.s:key.' :Vimmake! ' . s:key . '<cr>'
 endfor
 
-noremap <space>sc :!svn co -m ""<cr>
+" svn shortcut
+noremap <space>sc :!svn co -m "update from vim"<cr>
 noremap <space>su :!svn up<cr>
 noremap <space>st :!svn st<cr>
+
+" toggle plugins
+noremap <space>tt :TagbarToggle<cr>
+noremap <space>tq :call ToggleQuickFix()<cr>
 
 
 
