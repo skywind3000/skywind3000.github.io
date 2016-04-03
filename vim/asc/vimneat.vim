@@ -120,7 +120,16 @@ inoremap <c-d> <del>
 vnoremap <c-c> "+y
 
 " faster command mode
-
+cnoremap <c-h> <left>
+cnoremap <c-j> <down>
+cnoremap <c-k> <up>
+cnoremap <c-l> <right>
+cnoremap <c-a> <home>
+cnoremap <c-e> <end>
+cnoremap <c-f> <right>
+cnoremap <c-b> <left>
+cnoremap <c-p> <up>
+cnoremap <c-n> <down>
 
 " delete buffer keep window
 function! s:BufferClose(bang, buffer)

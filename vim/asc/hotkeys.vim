@@ -1,3 +1,6 @@
+" different from keymap in vimneat.vim
+" this file of keymaps is more personality with using <space> leader
+
 
 for s:index in range(10)
 	let s:key = '' . s:index

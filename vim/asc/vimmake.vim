@@ -378,7 +378,7 @@ function! Vimmake_Switch_Header()
 	for l:next in l:altnames
 		let l:newname = l:main . '.' . l:next
 		if filereadable(l:newname)
-			exec 'e ' . fnameescape(l:newname)
+			exec 'vs ' . fnameescape(l:newname)
 			return
 		endif
 	endfor
