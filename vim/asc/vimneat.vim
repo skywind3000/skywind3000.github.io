@@ -70,9 +70,6 @@ set scrolloff=3
 set laststatus=1
 set showmatch
 set display=lastline
-" colorscheme evening
-set statusline=\ %<%F[%1*%M%*%n%R%H]%=\ %y\ %0(%{&fileformat}\ [%{(&fenc==\"\"?&enc:&fenc).(&bomb?\",BOM\":\"\")}]\ %c:%l/%L%)
-
 set listchars=tab:\|\ ,trail:.,extends:>,precedes:<
 set matchtime=3
 
