@@ -21,6 +21,7 @@
 # 2014.04.15   skywind   new 'arglink' and 'argcc' config
 # 2015.09.03   skywind   new replace in config.parameters()
 # 2016.01.14   skywind   new compile flags with different source file
+# 2016.04.27   skywind   exit non-zero when error occurs
 #
 #======================================================================
 import sys, time, os
@@ -2538,7 +2539,7 @@ class emake (object):
 	
 	def compile (self, printmode = -1):
 		if not self.loaded:
-			return -10
+			return 1
 		dirty = 0
 		for src in self.parser:
 			if src in self.dependence._dirty:
@@ -2553,13 +2554,13 @@ class emake (object):
 		if self.cpus >= 0:
 			cpus = self.cpus
 		retval = self.coremake.compile(True, self.parser.info, cpus)
-		return retval
+		if retval != 0:
+			return 2
+		return 0
 	
 	def link (self, printmode = -1):
 		if not self.loaded:
-			return -10
-		if not self.loaded:
-			return ''
+			return 1
 		update = False
 		outname = self.parser.out
 		outtime = self.dependence.mtime(outname)
@@ -2575,22 +2576,23 @@ class emake (object):
 		retval = self.coremake.link(True, self.parser.info)
 		if retval:
 			self.coremake.event(self.parser.events.get('postbuild', []))
-		return retval
+			return 0
+		return 3
 	
 	def build (self, printmode = -1):
 		if not self.loaded:
-			return -10
+			return 1
 		retval = self.compile(printmode)
 		if retval != 0:
-			return retval
+			return 2
 		retval = self.link(printmode)
-		if not retval:
-			return -20
+		if retval != 0:
+			return 3
 		return 0
 	
 	def clean (self):
 		if not self.loaded:
-			return -10
+			return 1
 		for src in self.parser:
 			obj = self.parser[src]
 			if obj != src:
@@ -2601,28 +2603,28 @@ class emake (object):
 	
 	def rebuild (self, printmode = -1):
 		if not self.loaded:
-			return -10
+			return 1
 		self.clean()
 		return self.build(printmode)
 
 	def execute (self):
 		if not self.loaded:
-			return -10
+			return 1
 		outname = os.path.abspath(self.parser.out)
 		if not self.parser.mode in ('exe', 'win'):
 			sys.stderr.write('cannot execute: \'%s\'\n'%outname)
 			sys.stderr.flush()
-			return -1
+			return 8
 		if not os.path.exists(outname):
 			sys.stderr.write('cannot find: \'%s\'\n'%outname)
 			sys.stderr.flush()
-			return -2
+			return 9
 		os.system('"%s"'%outname)
 		return 0
 	
 	def call (self, cmdline):
 		if not self.loaded:
-			return -10
+			return 1
 		self.coremake.event([cmdline])
 		return 0
 		
@@ -2787,7 +2789,7 @@ def update():
 	return 0
 
 def help():
-	print "Emake 3.6.2 Jan.14 2016"
+	print "Emake 3.6.2 Apr.27 2016"
 	print "By providing a completely new way to build your projects, Emake"
 	print "is a easy tool which controls the generation of executables and other"
 	print "non-source files of a program from the program's source files. "
@@ -2845,7 +2847,7 @@ def main(argv = None):
 			break
 
 	if len(argv) == 1:
-		version = '(emake 3.6.2 Feb.21 2016 %s)'%sys.platform
+		version = '(emake 3.6.2 Apr.27 2016 %s)'%sys.platform
 		print 'usage: "emake.py [option] srcfile" %s'%version
 		print 'options  :  -b | -build      build project'
 		print '            -c | -compile    compile project'
@@ -3002,27 +3004,29 @@ def main(argv = None):
 		sys.stderr.flush()
 		return -1
 
+	retval = 0
+
 	if cmd in ('b', '-b', '--b', 'build', '-build', '--build'):
 		make.open(name)
-		make.build(printmode)
+		retval = make.build(printmode)
 	elif cmd in ('c', '-c', '--c', 'compile', '-compile', '--compile'):
 		make.open(name)
-		make.compile(printmode)
+		retval = make.compile(printmode)
 	elif cmd in ('l', '-l', '--l', 'link', '-link', '--link'):
 		make.open(name)
-		make.link(printmode)
+		retval = make.link(printmode)
 	elif cmd in ('clean', '-clean', '--clean'):
 		make.open(name)
-		make.clean()
+		retval = make.clean()
 	elif cmd in ('r', '-r', '--r', 'rebuild', '-rebuild', '--rebuild'):
 		make.open(name)
-		make.rebuild(printmode)
+		retval = make.rebuild(printmode)
 	elif cmd in ('e', '-e', '--e', 'execute', '-execute', '--execute'):
 		make.open(name)
-		make.execute()
+		retval = make.execute()
 	elif cmd in ('a', '-a', '--a', 'call', '-call', '--call'):
 		make.open(name)
-		make.call(' '.join(argv[3:]))
+		retval = make.call(' '.join(argv[3:]))
 	elif cmd in ('o', '-o', '--o', 'out', '-out', '--out'):
 		make.open(name)
 		make.info('outname');
@@ -3038,7 +3042,8 @@ def main(argv = None):
 	else:
 		sys.stderr.write('unknow command: %s\n'%cmd)
 		sys.stderr.flush()
-	return 0
+		retval = 127
+	return retval
 
 
 #----------------------------------------------------------------------
@@ -3107,7 +3112,7 @@ if __name__ == '__main__':
 		main()
 	
 	#test10()
-	main()
+	sys.exit( main() )
 	#install()
 
 
