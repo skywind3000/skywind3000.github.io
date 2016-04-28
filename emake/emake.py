@@ -1640,7 +1640,7 @@ class coremake(object):
 			print 'linking ...'
 		output = self._out
 		if skipexist and os.path.exists(output):
-			return 0
+			return output
 		self.remove(output)
 		self.mkdir(os.path.split(output)[0])
 		if self._mode == 'exe':
