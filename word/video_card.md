@@ -94,10 +94,12 @@ int display_enter_graph(int mode)
 
 ![](http://skywind3000.github.io/word/images/vga1.jpg)
 
+图中用到的指令为：
+
 ```text
-mov ax, 13 ; 设置  ah=0（0号函数上面有说明）, al=0x13（0x13模式，320x200）
-int 10 ; 调用显卡中断
-int 20 ; DOS命令：退出程序
+mov ax, 13            ; 设置  ah=0（0号函数上面有说明）, al=0x13（0x13模式，320x200）
+int 10                ; 调用显卡中断
+int 20                ; DOS命令：退出程序
 ```
 
 输入空行后退出编辑模式，然后使用 'g' 命令运行刚才的这个小程序：
@@ -109,6 +111,8 @@ int 20 ; DOS命令：退出程序
 接下来我们编辑显存，使用 e命令，进行内存编辑（0xa00000L），注意这里我们还是实模式，显存需要拆分成段地址：0xa000，和偏移0000 来访问：
 
 	-e a000:0000
+
+出现下面的画面：
 
 ![](http://skywind3000.github.io/word/images/vga3.jpg)
 
