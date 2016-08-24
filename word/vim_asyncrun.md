@@ -53,7 +53,7 @@
 
 宏 `%:p:h` 代表当前文件的目录
 
-更多用法：查询 man page，异步 git push ，以及把设置 F7异步编译当前文件
+查询 man page，异步 git push ，以及把设置 F7异步编译当前文件：
 
 ```text
 :AsyncRun! man -S 3:2:1 <cword> 
