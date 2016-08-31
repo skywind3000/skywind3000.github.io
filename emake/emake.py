@@ -2324,6 +2324,8 @@ class iparser (object):
 	
 	# 设置终端颜色
 	def console (self, color):
+		if not os.isatty(sys.stdout.fileno()):
+			return False
 		if sys.platform[:3] == 'win':
 			try: import ctypes
 			except: return 0
