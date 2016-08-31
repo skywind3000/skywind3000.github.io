@@ -22,6 +22,7 @@
 # 2015.09.03   skywind   new replace in config.parameters()
 # 2016.01.14   skywind   new compile flags with different source file
 # 2016.04.27   skywind   exit non-zero when error occurs
+# 2016.09.01   skywind   new lib composite method
 #
 #======================================================================
 import sys, time, os
@@ -709,8 +710,8 @@ class configure(object):
 			return name
 		current = os.getcwd().replace('\\', '/')
 		if len(current) > 0:
-				if current[-1] != '/':
-						current += '/'
+			if current[-1] != '/':
+				current += '/'
 		name = self.path(name).replace('\\', '/')
 		size = len(current)
 		if name[:size] == current:
@@ -1032,9 +1033,16 @@ class configure(object):
 	
 	# 生成lib库
 	def makelib (self, output, objs = [], printcmd = False, capture = False):
-		name = ' '.join([ self.pathrel(n) for n in objs ])
-		parameters = 'crv %s %s'%(self.pathrel(output), name)
-		return self.execute(self.exename['ar'], parameters, printcmd, capture)
+		if 0:
+			name = ' '.join([ self.pathrel(n) for n in objs ])
+			parameters = 'crv %s %s'%(self.pathrel(output), name)
+			return self.execute(self.exename['ar'], parameters, printcmd, capture)
+		objs = [ n for n in objs ]
+		for link in self.sequence(self.wlnk):
+			if link[-2:] in ('.a', '.o'):
+				if os.path.exists(link):
+					objs.append(link)
+		return self.composite(output, objs, printcmd, capture)
 	
 	# 生成动态链接：dll 或者 so
 	def makedll (self, output, objs = [], param = '', printcmd = False, capture = False):
@@ -1059,6 +1067,57 @@ class configure(object):
 			name = '-Xlinker "-(" ' + name + ' -Xlinker "-)"'
 		parameters = '-o %s %s %s'%(self.pathrel(output), param, name)
 		return self.gcc(parameters, True, printcmd, capture)
+
+	# 合并.o .a文件为新的 .a文件 
+	def composite (self, output, objs = [], printcmd = False, capture = False):
+		import os, tempfile, shutil
+		cwd = os.getcwd()
+		temp = tempfile.mkdtemp('.int', 'lib')
+		output = os.path.abspath(output)
+		libname = []
+		for name in [ os.path.abspath(n) for n in objs ]:
+			if not name in libname:
+				libname.append(name)
+		outpath = os.path.join(temp, 'out')
+		srcpath = os.path.join(temp, 'src')
+		os.mkdir(outpath)
+		os.mkdir(srcpath)
+		os.chdir(srcpath)
+		names = {}
+		for source in libname:
+			os.chdir(srcpath)
+			for fn in [ n for n in os.listdir('.') ]:
+				os.remove(fn)
+			files = []
+			filetype = os.path.splitext(source)[-1].lower()
+			if filetype == '.o':
+				files.append(source)
+			else:
+				args = '-x %s'%self.pathrel(source)
+				self.execute(self.exename['ar'], args, printcmd, capture)
+				for fn in os.listdir('.'):
+					files.append(os.path.abspath(fn))
+			for fn in files:
+				name = os.path.split(fn)[-1]
+				part = os.path.splitext(name)
+				last = None
+				for i in xrange(1000):
+					newname = (i > 0) and (part[0] + '_%d'%i + part[1]) or name
+					if not newname in names:
+						last = newname
+						break
+				if last and os.path.exists(fn):
+					names[last] = 1
+					shutil.copyfile(fn, os.path.join(outpath, last))
+		os.chdir(outpath)
+		args = ['crv', self.pathrel(output)]
+		args = ' '.join(args + [self.pathrel(n) for n in names])
+		try: os.remove(output)
+		except: pass
+		self.execute(self.exename['ar'], args, printcmd, capture)
+		os.chdir(cwd)
+		shutil.rmtree(temp)
+		return 0
 
 	# 运行工具
 	def cmdtool (self, sectname, exename, parameters, printcmd = False):
@@ -2024,13 +2083,16 @@ class iparser (object):
 		ext1 = ('.c', '.cpp', '.cc', '.cxx', '.asm')
 		ext2 = ('.s', '.o', '.obj', '.m', '.mm')
 		pos = textline.find(':')
+		body, options = textline, ''
+		pos = textline.find(':')
 		if pos >= 0:
-			body = textline[:pos]
-			options = ''
-			options = textline[pos + 1:].strip('\r\n\t ')
-		else:
-			body = textline
-			options = ''
+			split = (sys.platform[:3] != 'win') and True or False
+			if sys.platform[:3] == 'win':
+				if not textline[pos:pos + 2] in (':/', ':\\'):
+					split = True
+			if split:
+				body = textline[:pos].strip('\r\n\t ')
+				options = textline[pos + 1:].strip('\r\n\t ')
 		for name in body.replace(';', ',').split(','):
 			srcname = self.pathconf(name)
 			if not srcname:
@@ -2789,7 +2851,7 @@ def update():
 	return 0
 
 def help():
-	print "Emake 3.6.2 Apr.27 2016"
+	print "Emake 3.6.3 Sep.1 2016"
 	print "By providing a completely new way to build your projects, Emake"
 	print "is a easy tool which controls the generation of executables and other"
 	print "non-source files of a program from the program's source files. "
@@ -2847,7 +2909,7 @@ def main(argv = None):
 			break
 
 	if len(argv) == 1:
-		version = '(emake 3.6.2 Apr.27 2016 %s)'%sys.platform
+		version = '(emake 3.6.3 Sep.1 2016 %s)'%sys.platform
 		print 'usage: "emake.py [option] srcfile" %s'%version
 		print 'options  :  -b | -build      build project'
 		print '            -c | -compile    compile project'
