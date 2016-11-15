@@ -2840,7 +2840,7 @@ def getemake():
 			print 'failed '
 			print e
 		head = content.split('\n')[0].strip('\r\n\t ')
-		if head != '#! /usr/bin/env python':
+		if head[:22] != '#! /usr/bin/env python':
 			if success:
 				print 'error'
 			success = False
