@@ -10,7 +10,7 @@
 "TextAttach : 
 "========== Content ==========
 
-如何正确映射：
+很多人习惯在配置文件中映射 CTRL+HJKL 为光标移动，却碰到了一些问题：
 
 ```text
 inoremap <c-h> <left>
@@ -36,23 +36,35 @@ $ stty -a
 
 现在所有 Linux服务器的 erase （bs）基本都是 ^? 了（如果链接到非 Linux老操作系统 erase不是这个的话，需要改一下，可以在系统层改，也可以vim里面 set t_kb=...），Vim里面也是认可 ^?的，可老旧的终端软件却默认发送 ^H，不过好在他们都支持修改：
 
+<!--more-->
+
 **Xshell 老版本的修改方法**
+
+![](http://skywind3000.github.io/word/images/vim_mapch_1.png)
 
 Properties -> Terminal -> Keyboard 里，把`<BS>`设置成 127，而 `<DEL>`设置成 VT220 Del
 
 **SecureCRT 6 的设置方法**
 
+![](http://skywind3000.github.io/word/images/vim_mapch_2.png)
+
 Session Options -> Terminal -> Emulation -> Mapped Keys, 勾选 Backspace sends delete
 
 **Putty 设置方法**
+
+![](http://skywind3000.github.io/word/images/vim_mapch_3.png)
 
 好像默认是 ^? 的不过需要到：Configuration -> Terminal -> Keyboard 下面下确认下 The Backspace key 是 Control-? (127)
 
 **Terminal.app**
 
+![](http://skywind3000.github.io/word/images/vim_mapch_4.jpg)
+
 Mac 下面的 Terminal.app 默认是发送 ^? 的，你也可以到 Profiles Advanced 下面确认下 “Delete sends Control-H” 没有勾选。
 
 **iTerm2**
+
+![](http://skywind3000.github.io/word/images/vim_mapch_5.png)
 
 iTerm2 下面默认也是发送 ^? 的，可以到 Profiles -> Keys下面确认一下 “Delete key sends ^H” 没有被勾选。
 
