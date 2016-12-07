@@ -1,6 +1,6 @@
 "=========== Meta ============
 "StrID : 1857
-"Title : Vim 里如何映射 <c-h> 为 <left> ?
+"Title : Vim 里如何映射 CTRL-h 为 left ?
 "Slug  : 
 "Cats  : 随笔
 "Tags  : Vim
