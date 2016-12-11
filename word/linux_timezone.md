@@ -10,7 +10,7 @@
 "TextAttach : 
 "========== Content ==========
 
-前端时间折腾家中 Nas的虚拟化服务，有时候虚拟机系统时间总是快8个小时。Guest这边设好了，到了 物理机就会慢8个小时。网上说只要修改/etc/default/rcS中的 UTC=no就行了，但还是没反映，没办法，一步步找问题。发现在/etc/rcS.d/S05hwclock.sh有这样一段话：
+前段时间折腾家中 Nas的虚拟化服务，有时候虚拟机系统时间总是快8个小时。Guest这边设好了，到了 物理机就会慢8个小时。网上说只要修改/etc/default/rcS中的 UTC=no就行了，但还是没反映，没办法，一步步找问题。发现在/etc/rcS.d/S05hwclock.sh有这样一段话：
 
 ```text
 # 2012-02-16 Roger Leigh rleigh@debian.org
