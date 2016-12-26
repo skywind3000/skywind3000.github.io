@@ -9,7 +9,7 @@
 "EditFormat : Markdown
 "TextAttach : 
 "========== Content ==========
-生命在于折腾，折腾完了 Atom Editor，开始跟着陈斌大婶和 purecell的配置折腾 Emacs，比较下。很多人都在比较键位，比较插件，这是十分肤浅的，我们比较点深入的东西：
+生命在于折腾，折腾完了 Atom Editor，开始跟着陈斌大婶和 purcell的配置折腾 Emacs，比较下。很多人都在比较键位，比较插件，这是十分肤浅的，我们比较点深入的东西：
 
 **代码结构**
 
