@@ -11,7 +11,7 @@ KCP is focusing on concurrent messaging, where messages are required to deliver 
 
 [kcptun](https://github.com/xtaci/kcptun/blob/master/README.en.md) is a kcp+udp tunnel who uses KCP to speed up the transmission rate of traditional TCP applications. People far away from U.S. can use it with some proxy in their linode to watch 1080p videos from youtube, where they can only watch some 320p poor quality videos before by using TCP directly.
 
-Kcptun is a popular in China:
+Kcptun is a popular:
 
 ![](http://skywind3000.github.io/word/images/kcp/kcptun2.jpg)
 
@@ -102,7 +102,7 @@ Fast action games usually use a Lockstep or Dead Reckoning like strategy to sync
 
 Many developer from different teams asked me how to tune KCP options to get better performance and their told me they had replaced tcp or libenet with KCP because they found KCP is far  better than them, but they don't like to tell me the name of their titles or their titles are  still in progress.
 
-Here is the one I known:
+Here is the one I know:
 
 ![](http://skywind3000.github.io/word/images/kcp/game-1.jpg) ![](http://skywind3000.github.io/word/images/kcp/game-2.jpg)
 
