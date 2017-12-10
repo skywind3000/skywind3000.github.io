@@ -171,7 +171,7 @@ node = (key < node->key)? node->left : node->right;
 
 删除操作都比较费时，unordered_map 在三万个节点时基本接近1.6秒，而我们的树表混合结构耗时只有少许增加。
 
-相关代码：[skywind3000/avlmini](https://github.com/skywind3000/avlmini)
+相关代码：[https://github.com/skywind3000/avlmini](https://github.com/skywind3000/avlmini)
 
 
 通过上面的工作，我们得到了这个最不坏的哈希表，我们用它做一个类似 redis / mq 的服务，存储百万级别的键值不用太过在意数据哈希值分布不均匀所带来的问题了，也不用担心碰撞攻击会让其性能跌落到深渊。
