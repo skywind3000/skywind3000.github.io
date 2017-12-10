@@ -143,7 +143,7 @@ node = (key < node->key)? node->left : node->right;
 
 上面的 avl-hash 是我们上面实现的树表混合结构，二叉平衡树我用的是 AVL，这是个人习惯问题了，关于 avl / rbtree 的性能其实是差不多的，我以前讨论过，这里不展开了：
 
-韦易笑：AVL树，红黑树，B树，B+树，Trie树都分别应用在哪些现实场景中？
+[韦易笑：AVL树，红黑树，B树，B+树，Trie树都分别应用在哪些现实场景中？](https://www.zhihu.com/question/30527705/answer/259948086)
 
 你也可以用 rbtree 代替，这里纯粹一个个人口味问题，下面比较了 Windows / Linux 下面vc和 gcc 自带的 std::unordered_map ，从查询时间看，两个差不多，avl-hash 略微领先一些，后面插入时间和删除时间 std::unordered_map 很吃亏，因为我们的树表混合结构里自己管理了节点内存分配，而 unordered_map 却使用了默认内存分配器（会用系统默认的内存分配），所以排除内存分配开销，二者差距应该没上面那么大，比如 ubuntu 下面 libc 内存分配器对于 128 字节以内的对象分配直接使用 fastbin (一种freelist），性能比windows下的好很多，接近 avl-hash 内部自己管理内存的速度，因此性能差距会比 windows 小不少。
 
@@ -171,6 +171,9 @@ node = (key < node->key)? node->left : node->right;
 
 删除操作都比较费时，unordered_map 在三万个节点时基本接近1.6秒，而我们的树表混合结构耗时只有少许增加。
 
+相关代码：[skywind3000/avlmini](https://github.com/skywind3000/avlmini)
+
+
 通过上面的工作，我们得到了这个最不坏的哈希表，我们用它做一个类似 redis / mq 的服务，存储百万级别的键值不用太过在意数据哈希值分布不均匀所带来的问题了，也不用担心碰撞攻击会让其性能跌落到深渊。
 
 我们没法完全依赖哈希函数，当哈希函数靠不住时，还得靠哈希表本身，这叫打铁还需自身硬嘛，最终测试基本符合我们的初衷和预期。
@@ -180,8 +183,4 @@ node = (key < node->key)? node->left : node->right;
 （完）
 
 
-
-好吧，大家要的代码：
-
-[skywind3000/avlmini](https://github.com/skywind3000/avlmini)
 
