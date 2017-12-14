@@ -48,7 +48,7 @@ index_pos = hash(key) % index_size;
 
 传统的封闭寻址哈希表，也是 Linux / STL 等大部分哈希表的实现，碰到碰撞时链表一长就挂掉，所谓哈希表+平衡二叉树就是：
 
-![](http://skywind3000.github.io/word/images/avl/avl_hash_1.jpg)
+![](http://skywind3000.github.io/word/images/avl/avl_hash_2.jpg)
 
 将原来的链表（有序或者无序）换成平衡二叉树，这是复杂度最高的做法，同时也是最可靠的做法。发生碰撞时能将时间复杂度由 O(N) 降低到 O(logN)，10个节点，链表的复杂度就是 10，而使用平衡二叉树的复杂度是 3；100个节点前者的时间是100，后者只有6.6 越往后差距约明显。
 
