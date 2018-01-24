@@ -3,9 +3,9 @@
 adduser --disabled-password --gecos "" skywind
 cd ~skywind
 
-mkdir .ssh .vim
-mkdir software github work document develop 
-mkdir tmp
+mkdir -p .ssh .vim
+mkdir -p software github work document develop 
+mkdir -p tmp
 
 chown -R skywind:skywind .ssh .vim *
 chmod 700 .ssh

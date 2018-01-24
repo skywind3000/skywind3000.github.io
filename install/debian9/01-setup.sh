@@ -31,14 +31,14 @@ pip3 install requests flask
 pip install requests flask
 
 cd ~root
-mkdir software github tmp install
-mkdir /home/data
+mkdir -p software github tmp install
+mkdir -p /home/data
 
 cd /home/data
-mkdir script software var lib
+mkdir -p script software var lib
 
 cd ~root
-mkdir .vim
+mkdir -p .vim
 cd .vim
 
 git clone https://github.com/skywind3000/vim.git
