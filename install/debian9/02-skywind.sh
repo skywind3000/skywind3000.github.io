@@ -19,6 +19,8 @@ su skywind -c "sh ~/.vim/vim/etc/init.sh"
 su skywind -c "touch ~/.vimrc"
 su skywind -c "sh ~/.vim/vim/etc/update.sh"
 
+cd ~skywind
+
 echo "so ~/.vim/vim/vimrc.unix" >> .vimrc
 echo "" >> .bashrc
 echo "source ~/.local/etc/init.sh" >> .bashrc
