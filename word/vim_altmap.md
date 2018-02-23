@@ -7,7 +7,7 @@
 "=============================
 "EditType   : post
 "EditFormat : Markdown
-"TextAttach : 
+"TextAttach : vimpress_5a8fba3f_mkd.txt
 "========== Content ==========
 
 最简单的做法是：首先将终端软件的 “使用 Alt键作为 Meta键” 的功能打开，其次将 Alt的模式改为 **ESC+字母**，意思是如果你在终端下按下 ALT+X，那么终端软件将会发送 `<ESC>x` 两个字节过去，字节码为：0x27, 0x78。如果你使用过 NeoVim 或者 Emacs的话，这一步应该早就做过了。
@@ -158,3 +158,13 @@ AS	VK_D                	"\033D"
 可以到 [这里](https://github.com/skywind3000/vim/blob/master/tools/conf/securecrt.key) 下载现成的，在 keymap editor 窗口中加载进去即可。
 
 这份keymap配置除了保留了 SecureCRT 常用的 ALT_1 - ALT_9 ，ALT_B, ALT_R 和 ALT_I 外，其他的 alt 组合都设置成了 +ESC x 的 meta 键序列。并且将 ALT_SHIFT_1 到 ALT_SHIFT_9 映射到了终端里的 +ESC 1 到 +ESC 9 ，也就是说你的 ALT+数字 被保留给软件切换TAB用了，而 ALT+SHIFT+数字 被映射成了终端链接中的 ALT+数字，这样在终端里碰到需要 ALT+数字 的地方，可以用 ALT+SHIFT+数字 来代替。
+
+设置好以后，你可以在终端下使用命令：
+
+```text
+showkey -a
+```
+
+来查看自己的设置正确不，是不是按下 ALT_a 后正确发送了 0x1b, 0x61 两个字节过去了？
+
+
