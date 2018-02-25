@@ -20,7 +20,7 @@ echo "command=/usr/bin/python2 /home/data/software/ssr/shadowsocks/server.py -p 
 echo "autorestart=true" >> ssr-test.conf
 echo "user=nobody" >> ssr-test.conf
 
-supervisorctl reload
+# supervisorctl reload
 
 cd /etc/cron.d
 echo "32 6 * * *      root    /usr/bin/supervisorctl restart ssr" > restart
