@@ -28,7 +28,7 @@ echo "source ~/.local/etc/init.sh" >> .bashrc
 chown skywind:skywind .vimrc .bashrc
 
 echo "ssh-rsa AAAAB3NzaC1yc2EAAAABJQAAAIEA2yNZF/SKiYaFKHlpi4HoSxDMIDJfJsjL4+ZbdkNxxscSY02O95txYkwNrQJNLRPVCMy+d5027AuKvT/yKptzJ1POszxUGXqCE/cAb8idAptYu2r1FpWvPzdK1l7UmDrUzr0frvk64hlyeOPjvQ7bFko96NI5UuCFnCpFcC8oTnM= LinWei" > ~skywind/.ssh/authorized_keys
-echo "skywind ALL=(ALL) /sbin/shutdown, /sbin/reboot, /sbin/ifconfig, /usr/bin/apt-get, /usr/local/bin/emake, /usr/bin/easy_install, /usr/bin/aptitude, /bin/netstat, /bin/mount, /bin/umount, /usr/sbin/tcpkill, /usr/bin/pip, /usr/bin/docker, /usr/local/bin/pip, /usr/sbin/apache2ctl, /usr/bin/apt, /usr/bin/docker, /usr/local/bin/pip3, /usr/bin/npm, /usr/bin/aptitude" > /etc/sudoers.d/skywind
+echo "skywind ALL=(ALL) /sbin/shutdown, /sbin/reboot, /sbin/ifconfig, /usr/bin/apt-get, /usr/local/bin/emake, /usr/bin/easy_install, /usr/bin/aptitude, /bin/netstat, /bin/mount, /bin/umount, /usr/sbin/tcpkill, /usr/bin/pip, /usr/bin/docker, /usr/local/bin/pip, /usr/sbin/apache2ctl, /usr/bin/apt, /usr/bin/docker, /usr/local/bin/pip3, /usr/bin/npm, /usr/bin/aptitude, /usr/bin/gem" > /etc/sudoers.d/skywind
 
 chown skywind:skywind .ssh/authorized_keys
 

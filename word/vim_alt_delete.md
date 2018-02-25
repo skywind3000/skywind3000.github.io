@@ -138,7 +138,7 @@ call Terminal_MetaMode(0)
 
 然后你就可以正确在 Vim 映射 ALT 键了，具体原理见 `:help set-termcap` 以及：
 
-http://www.skywind.me/blog/archives/1846
+[http://www.skywind.me/blog/archives/1846](http://www.skywind.me/blog/archives/1846)
 
 其他的诸如 emacs, nano 和 neovim 等都不需要额外设置。
 
