@@ -6,7 +6,7 @@ git clone https://github.com/skywind3000/ssr.git
 cd /etc/supervisor/conf.d
 
 echo "[program:ssr]" > ssr.conf
-echo "command=/usr/bin/python2 /home/data/software/ssr/shadowsocks/server.py -p XXXX -k XXXXXXX -m aes-128-cfb -O auth_aes128_md5 -o tls1.2_ticket_auth_compatible --fast-open --workers 2" >> ssr.conf
+echo "command=/usr/bin/python2 /home/data/software/ssr/shadowsocks/server.py -p XXXX -k XXXXXXX -m aes-256-cfb -O auth_aes128_sha1 -o tls1.2_ticket_auth_compatible --fast-open --workers 2" >> ssr.conf
 echo "autorestart=true" >> ssr.conf
 echo "user=nobody" >> ssr.conf
 
