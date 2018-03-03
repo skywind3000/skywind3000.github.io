@@ -16,7 +16,7 @@ echo "autorestart=true" >> ssr-km.disable
 echo "user=nobody" >> ssr-km.disable
 
 echo "[program:ssr-test]" > ssr-test.disable
-echo "command=/usr/bin/python2 /home/data/software/ssr/shadowsocks/server.py -p XXXX -k XXXXXXX -m aes-256-cfb -O origin -o plain --fast-open --workers 2" >> ssr.disable
+echo "command=/usr/bin/python2 /home/data/software/ssr/shadowsocks/server.py -p XXXX -k XXXXXXX -m aes-256-cfb -O origin -o plain --fast-open --workers 2" >> ssr-test.disable
 echo "autorestart=true" >> ssr-test.disable
 echo "user=nobody" >> ssr-test.disable
 
