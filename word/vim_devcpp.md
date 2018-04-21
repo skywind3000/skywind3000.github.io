@@ -138,7 +138,7 @@ nnoremap <silent> <F5> :AsyncRun -raw -cwd=$(VIM_FILEDIR) "$(VIM_FILEDIR)/$(VIM_
 接下来是项目的编译，不管你直接使用 make 还是 cmake，都是对一群文件做点什么，都需要定位到文件所属项目的目录，AsyncRun 识别当前文件的项目目录方式和 gutentags相同，从文件所在目录向上递归，直到找到名为 `.git`, `.svn`, `.hg` 或者 `.root` 文件或者目录，如果递归到根目录还没找到，那么文件所在目录就被当作项目目录，你重新定义项目标志：
 
 ```text
-let g:asyncrun_rootmarks = ['.svn', '.git', '.root', '.bzr', '_darcs', 'build.xml'] 
+let g:asyncrun_rootmarks = ['.svn', '.git', '.root', '_darcs', 'build.xml'] 
 ```
 
 然后在 AsyncRun 命令行中，用 `<root>` 或者 `$(VIM_ROOT)` 来表示项目所在路径，于是我们可以定义按 F7 编译整个项目：
@@ -185,3 +185,6 @@ nnoremap <silent> <F8> :AsyncRun -cwd=<root> -mode=4 make run <cr>
 恩，编译和运行基本和 NotePad++ / GEdit 的体验差不多了。如果你重度使用 cmake 的话，你还可以写点小脚本，将 F4 和 F7 的功能合并，检测 CMakeLists.txt 文件改变的话先执行 cmake 更新一下 Makefile，然后再执行 make，否则直接执行 make，这样更自动化些。
 
 
+### 代码补全
+
+传统的 Vim 代码补全基本以 omni 系列补全和符号补全为主，omni 补全系统是 Vim 自带的针对不同文件类型编写不同的补全函数的基础语义补全系统，搭配 neocomplete 可以很方便的对所有补全结果（omni补全/符号补全/字典补全）进行一个合成并且自动弹出补全框，虽然赶不上 IDE 的补全，但是已经比大部分编辑器补全好用很多了。然而传统 Vim 补全还是有两个迈不过去的坎：语义补全太弱，其次是补全无法再后台运行，对大项目而言，某些复杂符号的补全会拖慢你的打字速度。
