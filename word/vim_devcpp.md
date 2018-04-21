@@ -9,9 +9,9 @@
 "EditFormat : Markdown
 "TextAttach : 
 "========== Content ==========
-2018 年了，网上很多 Vim 下开发 C/C++ 的文章都太过老旧，且不成体系。目前各大 Linux 发行版和 Mac OS X自带的 Vim 都已经跟进到 8了，少数老旧系统也可以下载最新代码重新编译一下。那如何高效的再 Vim 8 中开发 C/C++ 项目呢？
+挺多人问怎么在 Vim 中搭建 C/C++ 开发环境，我本来想找篇文章发给人家，结果网上看了一圈，要不就是内容太过陈旧，要不就是太过零碎，不成体系。2018 年了，Vim 8 发布已经一年半，各大 Linux 发行版和 Mac OS X自带的 Vim 都已经跟进到 8了，不少文章还在介绍一些淘汰的老方法。于是有了这篇文章。
 
-假设你已经有一定 Vim 使用经验，并且折腾过 Vim 配置，能够相对舒适的在 Vim 中编写其他代码的时候，准备在 Vim 开始 C/C++ 项目开发，或者你已经用 Vim 编写了几年 C/C++ 代码，想要更进一步，让自己的工作更加顺畅的话，本文就是为你准备的：
+那如何高效的再 Vim 8 中开发 C/C++ 项目呢？假设你已经有一定 Vim 使用经验，并且折腾过 Vim 配置，能够相对舒适的在 Vim 中编写其他代码的时候，准备在 Vim 开始 C/C++ 项目开发，或者你已经用 Vim 编写了几年 C/C++ 代码，想要更进一步，让自己的工作更加顺畅的话，本文就是为你准备的：
 
 ### 插件管理
 
@@ -184,7 +184,43 @@ nnoremap <silent> <F8> :AsyncRun -cwd=<root> -mode=4 make run <cr>
 
 恩，编译和运行基本和 NotePad++ / GEdit 的体验差不多了。如果你重度使用 cmake 的话，你还可以写点小脚本，将 F4 和 F7 的功能合并，检测 CMakeLists.txt 文件改变的话先执行 cmake 更新一下 Makefile，然后再执行 make，否则直接执行 make，这样更自动化些。
 
+### 静态检查
+
+静态检查是个好东西，让你在编辑文字的同时就帮你把潜在错误标注出来，不用等到编译或者运行了才发现。我很奇怪 2018 年了，为啥网上还在到处介绍老旧的 [syntastic](https://github.com/vim-syntastic/syntastic)，但凡见到介绍这个插件的文章基本都可以不看了。
 
 ### 代码补全
 
-传统的 Vim 代码补全基本以 omni 系列补全和符号补全为主，omni 补全系统是 Vim 自带的针对不同文件类型编写不同的补全函数的基础语义补全系统，搭配 neocomplete 可以很方便的对所有补全结果（omni补全/符号补全/字典补全）进行一个合成并且自动弹出补全框，虽然赶不上 IDE 的补全，但是已经比大部分编辑器补全好用很多了。然而传统 Vim 补全还是有两个迈不过去的坎：语义补全太弱，其次是补全无法再后台运行，对大项目而言，某些复杂符号的补全会拖慢你的打字速度。
+传统的 Vim 代码补全基本以 omni 系列补全和符号补全为主，omni 补全系统是 Vim 自带的针对不同文件类型编写不同的补全函数的基础语义补全系统，搭配 neocomplete 可以很方便的对所有补全结果（omni补全/符号补全/字典补全）进行一个合成并且自动弹出补全框，虽然赶不上 IDE 的补全，但是已经比大部分编辑器补全好用很多了。然而传统 Vim 补全还是有两个迈不过去的坎：语义补全太弱，其次是补全分析无法再后台运行，对大项目而言，某些复杂符号的补全会拖慢你的打字速度。
+
+新一代的 Vim 补全系统，[YouCompleteMe](https://github.com/Valloric/YouCompleteMe) 和 [Deoplete](https://github.com/Shougo/deoplete.nvim)，都支持异步补全和基于 clang 的语义补全，前者集成度高，后者扩展方便。对于 C/C++ 的话，我推荐 YCM，因为 deoplete 的 clang 补全插件不够稳定，太吃内存，并且反应比较慢。所以 C/C++ 的补全的话，请直接使用 YCM，没有之一，而使用 YCM的话，需要进行一些简单的调教：
+
+```text
+let g:ycm_add_preview_to_completeopt = 0
+let g:ycm_show_diagnostics_ui = 0
+let g:ycm_server_log_level = 'info'
+let g:ycm_min_num_identifier_candidate_chars = 2
+let g:ycm_collect_identifiers_from_comments_and_strings = 1
+let g:ycm_complete_in_strings=1
+let g:ycm_key_invoke_completion = '<c-z>'
+set completeopt=menu,menuone
+
+noremap <c-z> <NOP>
+
+let g:ycm_semantic_triggers =  {
+			\ 'c,cpp,python,java,go,erlang,perl': ['re!\w{2}'],
+			\ 'cs,lua,javascript': ['re!\w{2}'],
+			\ }
+```
+
+这样可以输入两个字符就自动弹出义补全，不用等到 `.` 或者 `->` 才触发，同时关闭了预览窗口和代码诊断这些 YCM 花边功能，保持清静，对于原型预览和静态诊断我们后面有更好的解决方法，YCM这两项功能干扰太大。
+
+上面这几行配置具体每行的含义，可以见：[YouCompleteMe 中容易忽略的配置](https://zhuanlan.zhihu.com/p/33046090)。另外我在 Windows 下编译了一个版本，你用 Windows 的话无需下载VS编译，点击 [这里](https://www.zhihu.com/question/25437050/answer/95662340)。
+
+最后我们再定义一个快捷键 F3 使用 clang 语义分析版本的定义跳转：
+
+```text
+nnoremap <silent> <F3> :YcmCompleter GoToDefinition <cr>
+```
+
+我日常开发使用 YCM 辅助编写 C/C++, Python 和 Go 代码，基本能提供 IDE 级别的补全。
+
