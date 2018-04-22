@@ -165,7 +165,9 @@ nnoremap <silent> <F6> :AsyncRun -cwd=<root> -raw make test <cr>
 nnoremap <silent> <F4> :AsyncRun -cwd=<root> cmake . <cr>
 ```
 
-如果你在 Windows 下使用 GVim 的话，可以弹出新的 cmd.exe 窗口来运行刚才的程序：
+由于 C/C++ 标准库的实现方式是发现在后台运行时会缓存标准输出直到程序退出，你想实时看到 printf 输出的话需要 `fflush(stdout)` 一下，或者程序开头关闭缓存：`setbuf(stdout, NULL);` 即可。
+
+同时，如果你开发 C++ 程序使用 `std::cout` 的话，后面直接加一个 `std::endl` 就强制刷新缓存了，不需要弄其他。而如果你在 Windows 下使用 GVim 的话，可以弹出新的 cmd.exe 窗口来运行刚才的程序：
 
 ```text
 nnoremap <silent> <F5> :AsyncRun -cwd=$(VIM_FILEDIR) -mode=4 "$(VIM_FILEDIR)/$(VIM_FILENOEXT)" <cr>
@@ -184,9 +186,91 @@ nnoremap <silent> <F8> :AsyncRun -cwd=<root> -mode=4 make run <cr>
 
 恩，编译和运行基本和 NotePad++ / GEdit 的体验差不多了。如果你重度使用 cmake 的话，你还可以写点小脚本，将 F4 和 F7 的功能合并，检测 CMakeLists.txt 文件改变的话先执行 cmake 更新一下 Makefile，然后再执行 make，否则直接执行 make，这样更自动化些。
 
-### 静态检查
 
-静态检查是个好东西，让你在编辑文字的同时就帮你把潜在错误标注出来，不用等到编译或者运行了才发现。我很奇怪 2018 年了，为啥网上还在到处介绍老旧的 [syntastic](https://github.com/vim-syntastic/syntastic)，但凡见到介绍这个插件的文章基本都可以不看了。
+### 动态检查
+
+代码检查是个好东西，让你在编辑文字的同时就帮你把潜在错误标注出来，不用等到编译或者运行了才发现。我很奇怪 2018 年了，为啥网上还在到处介绍老旧的 [syntastic](https://github.com/vim-syntastic/syntastic)，但凡见到介绍这个插件的文章基本都可以不看了。老的 syntastic 基本没法用，不能实时检查，一保存文件就运行检查器并且等待半天，所以请用实时 linting 工具 [ALE](https://github.com/w0rp/ale)：
+
+![](http://skywind3000.github.io/word/images/vim/ale.png)
+
+大概长这个样子，随着你不断的编辑新代码，有语法错误的地方会实时帮你标注出来，侧边会标注本行有错，光标移动过去的时候下面会显示错误原因，而具体错误的符号下面会有红色波浪线提醒。Ale 支持多种语言的各种代码分析器，就 C/C++ 而言，就支持：gcc, clang, cppcheck 以及 clang-format 等，需要另行安装并放入 PATH下面，ALE能在你修改了文本后自动调用这些 linter 来分析最新代码，然后将各种 linter 的结果进行汇总并显示再界面上。
+
+同样，我们也需要简单配置一下：
+
+```text
+let g:ale_linters_explicit = 1
+let g:ale_completion_delay = 500
+let g:ale_echo_delay = 20
+let g:ale_lint_delay = 500
+let g:ale_echo_msg_format = '[%linter%] %code: %%s'
+let g:ale_lint_on_text_changed = 'normal'
+let g:ale_lint_on_insert_leave = 1
+let g:airline#extensions#ale#enabled = 1
+
+let g:ale_c_gcc_options = '-Wall -O2 -std=c99'
+let g:ale_cpp_gcc_options = '-Wall -O2 -std=c++14'
+let g:ale_c_cppcheck_options = ''
+let g:ale_cpp_cppcheck_options = ''
+
+```
+
+基本上就是定义了一下运行规则，信息显示格式以及几个 linter 的运行参数，其中 6，7 两行比较重要，它规定了如果 normal 模式下文字改变以及离开 insert 模式的时候运行 linter，这是相对保守的做法，如果没有的话，会导致 YouCompleteMe 的补全对话框频繁刷新。
+
+默认错误和警告的风格都太难看了，你需要修改一下，比如我使用 GVim，就重新定义了警告和错误的样式，去除默认难看的红色背景，代码正文使用干净的波浪下划线表示：
+
+```text
+let g:ale_sign_error = "\ue009\ue009"
+hi! clear SpellBad
+hi! clear SpellCap
+hi! clear SpellRare
+hi! SpellBad gui=undercurl guisp=red
+hi! SpellCap gui=undercurl guisp=blue
+hi! SpellRare gui=undercurl guisp=magenta
+```
+
+不同项目之间如果评测标准不一样还可以具体单独制定 linter 的参数，具体见 ALE 帮助文档了。我基本使用两个检查器：gcc 和 cppcheck，都可以在 ALE 中进行详细配置，前者主要检查有无语法错误，后者主要会给出一些编码建议，和对危险写法的警告。
+
+我之前用 syntastic 时就用了两天就彻底删除了，而开始用 ALE 后，一用上就停不下来，头两天我还一度觉得它就是个可有可无的点缀，但是第三天它帮我找出两个潜在的 bug 的时候，我开始觉得没白安装，用上一段时间以后，让我编写 C/C++ 代码时充满了惬意的感觉。
+
+
+### 修改比较
+
+这是个小功能，在侧边栏显示一个修改状态，对比当前文本和 git/svn 仓库里的版本，在侧边栏显示修改情况，以前 Vim 做不到实时显示修改状态，如今推荐使用 [vim-signify](https://github.com/mhinz/vim-signify) 来实时显示修改状态，它比 gitgutter 强，除了 git 外还支持 svn/mercurial/cvs 等十多种主流版本管理系统。
+
+没注意到它时，你可能觉得它不存在，当你有时真的看上两眼时，你会发现这个功能很贴心。最新版 signify 还有一个命令`:SignifyDiff`，可以左右分屏对比提交前后记录，比你命令行 svn/git diff 半天直观多了。并且对我这种同时工作在 subversion 和 git 环境下的情况契合的比较好。
+
+### 文本对象
+
+相信大家用 Vim 进行编辑时都很喜欢文本对象这个概念，`diw` 删除光标所在单词，`ciw` 改写单词，`vip` 选中段落等，`ci"`/`ci(` 改写引号/括号中的内容。而编写 C/C++ 代码时我推荐大家补充几个十分有用的文本对象，我使用 textobj-user 全家桶：
+
+```text
+Plug 'kana/vim-textobj-user'
+Plug 'kana/vim-textobj-indent'
+Plug 'kana/vim-textobj-syntax'
+Plug 'kana/vim-textobj-function', { 'for':['c', 'cpp', 'vim', 'java'] }
+Plug 'sgur/vim-textobj-parameter'
+Plug 'bps/vim-textobj-python', {'for': 'python'}
+Plug 'jceb/vim-textobj-uri'
+```
+
+它新定义的文本对象主要有：
+
+- `i,`, `a,` ：参数对象，写代码一半在修改，现在可以用 `di,` / `ci,` 一次性删除/改写当前参数
+- `ii`, `ai` ：缩进对象，同一个缩进层次的代码，可以用 `vii` 选中，`dii` / `cii` 删除或改写
+- `if`, `af` ：函数对象，可以用 `vif` / `dif` / `cif` 来选中/删除/改写函数的内容
+- `iy`, `iu` ：语法对象和 URL 对象。
+
+最开始我不太想用额外的文本对象，一直在坚持 Vim 固有的几个默认对象，生怕手练习惯了肌肉形成记忆到远端没有环境的 vim 下形成依赖改不过来，后来我慢慢发现挺有用的，比如改写参数，以前是比较麻烦的事情，这下流畅了很多，当我发现自己编码效率得到比较大的提升时，才发现习惯依赖不重要，行云流水才是真重要。以前看到过无数次都选择性忽略的东西，有时候试试可能会有新的发现。
+
+
+### 编辑辅助
+
+大家都知道 color 文件定义了众多不同语法元素的色彩，还有一个关键因素就是语法文件本身能否识别并标记得出众多不同的内容来？语法文件对某些东西没标注，你 color 文件确定了颜色也没用。因此 Vim 下面写 C/C++ 代码，语法高亮准确丰富的话能让你编码的心情好很多，这里推荐 [vim-cpp-enhanced-highlight](https://github.com/octol/vim-cpp-enhanced-highlight) 插件，提供比 Vim 自带语法文件更好的 C/C++ 语法标注，支持 cpp11/14/17。
+
+补全括号和引号这件事情因人而异，有人喜欢，有人不喜欢；我觉得用起来还是挺爽的，推荐 [delimitMate](https://github.com/Raimondi/delimitMate)。前面编译运行时需要频繁的操作 quickfix 窗口，ale差错时也需要快速再错误间跳转（location list），就连文件比较也会用到快速跳转到上/下一个差异处，[unimpaired](https://github.com/tpope/vim-unimpaired) 插件帮你定义了一系列方括号开头的快捷键，被称为官方 Vim 中丢失的快捷键。
+
+如果你和我一样喜欢用 mark 来跳转，那 [signature](https://github.com/kshenoy/vim-signature) 可以z
+
 
 ### 代码补全
 
@@ -212,7 +296,7 @@ let g:ycm_semantic_triggers =  {
 			\ }
 ```
 
-这样可以输入两个字符就自动弹出义补全，不用等到 `.` 或者 `->` 才触发，同时关闭了预览窗口和代码诊断这些 YCM 花边功能，保持清静，对于原型预览和静态诊断我们后面有更好的解决方法，YCM这两项功能干扰太大。
+这样可以输入两个字符就自动弹出义补全，不用等到 `.` 或者 `->` 才触发，同时关闭了预览窗口和代码诊断这些 YCM 花边功能，保持清静，对于原型预览和诊断我们后面有更好的解决方法，YCM这两项功能干扰太大。
 
 上面这几行配置具体每行的含义，可以见：[YouCompleteMe 中容易忽略的配置](https://zhuanlan.zhihu.com/p/33046090)。另外我在 Windows 下编译了一个版本，你用 Windows 的话无需下载VS编译，点击 [这里](https://www.zhihu.com/question/25437050/answer/95662340)。
 
