@@ -50,6 +50,8 @@ set tags=./.tags;,.tags
 
 前半部分 `./.tags;` 代表在文件的所在目录下（不是 `:pwd` 返回的 Vim 当前目录）查找名字为 `.tags` 的符号文件，后面一个分号代表查找不到的话向上递归到父目录，直到找到 `.tags` 文件或者递归到了根目录还没找到，这样对于复杂工程很友好，源代码都是分布在不同子目录中，而只需要在项目顶层目录放一个 `.tags`文件即可；逗号分隔的后半部分 `.tags` 是指同时在 Vim 的当前目录（`:pwd`命令返回的目录，可以用 `:cd ..`命令改变）下面查找 `.tags` 文件。
 
+最后请更新你的 ctags，不要再使用老旧的 Exuberant Ctags，这货停止更新快十年了，请使用最新的，活跃维护的 [Universal CTags](https://ctags.io) 代替之。
+
 ### 自动索引
 
 过去写几行代码又需要运行一下 ctags 来生成索引，每次生成耗费不少时间。如今 Vim 8 下面自动异步生成 tags 的工具有很多，这里推荐最好的一个：[vim-gutentags](https://github.com/ludovicchabant/vim-gutentags)，这个插件主要做两件事情：
@@ -249,8 +251,6 @@ Plug 'kana/vim-textobj-indent'
 Plug 'kana/vim-textobj-syntax'
 Plug 'kana/vim-textobj-function', { 'for':['c', 'cpp', 'vim', 'java'] }
 Plug 'sgur/vim-textobj-parameter'
-Plug 'bps/vim-textobj-python', {'for': 'python'}
-Plug 'jceb/vim-textobj-uri'
 ```
 
 它新定义的文本对象主要有：
@@ -258,7 +258,6 @@ Plug 'jceb/vim-textobj-uri'
 - `i,`, `a,` ：参数对象，写代码一半在修改，现在可以用 `di,` / `ci,` 一次性删除/改写当前参数
 - `ii`, `ai` ：缩进对象，同一个缩进层次的代码，可以用 `vii` 选中，`dii` / `cii` 删除或改写
 - `if`, `af` ：函数对象，可以用 `vif` / `dif` / `cif` 来选中/删除/改写函数的内容
-- `iy`, `iu` ：语法对象和 URL 对象。
 
 最开始我不太想用额外的文本对象，一直在坚持 Vim 固有的几个默认对象，生怕手练习惯了肌肉形成记忆到远端没有环境的 vim 下形成依赖改不过来，后来我慢慢发现挺有用的，比如改写参数，以前是比较麻烦的事情，这下流畅了很多，当我发现自己编码效率得到比较大的提升时，才发现习惯依赖不重要，行云流水才是真重要。以前看到过无数次都选择性忽略的东西，有时候试试可能会有新的发现。
 
@@ -267,9 +266,7 @@ Plug 'jceb/vim-textobj-uri'
 
 大家都知道 color 文件定义了众多不同语法元素的色彩，还有一个关键因素就是语法文件本身能否识别并标记得出众多不同的内容来？语法文件对某些东西没标注，你 color 文件确定了颜色也没用。因此 Vim 下面写 C/C++ 代码，语法高亮准确丰富的话能让你编码的心情好很多，这里推荐 [vim-cpp-enhanced-highlight](https://github.com/octol/vim-cpp-enhanced-highlight) 插件，提供比 Vim 自带语法文件更好的 C/C++ 语法标注，支持 cpp11/14/17。
 
-补全括号和引号这件事情因人而异，有人喜欢，有人不喜欢；我觉得用起来还是挺爽的，推荐 [delimitMate](https://github.com/Raimondi/delimitMate)。前面编译运行时需要频繁的操作 quickfix 窗口，ale差错时也需要快速再错误间跳转（location list），就连文件比较也会用到快速跳转到上/下一个差异处，[unimpaired](https://github.com/tpope/vim-unimpaired) 插件帮你定义了一系列方括号开头的快捷键，被称为官方 Vim 中丢失的快捷键。
-
-如果你和我一样喜欢用 mark 来跳转，那 [signature](https://github.com/kshenoy/vim-signature) 可以z
+前面编译运行时需要频繁的操作 quickfix 窗口，ale查错时也需要快速再错误间跳转（location list），就连文件比较也会用到快速跳转到上/下一个差异处，[unimpaired](https://github.com/tpope/vim-unimpaired) 插件帮你定义了一系列方括号开头的快捷键，被称为官方 Vim 中丢失的快捷键。
 
 
 ### 代码补全
@@ -308,3 +305,61 @@ nnoremap <silent> <F3> :YcmCompleter GoToDefinition <cr>
 
 我日常开发使用 YCM 辅助编写 C/C++, Python 和 Go 代码，基本能提供 IDE 级别的补全。
 
+
+### 函数列表
+
+不再建议使用 [tagbar](https://github.com/majutsushi/tagbar), 它会在你保存文件的时候以同步等待的方式运行 ctags （即便你没有打开 tagbar），导致vim操作变卡，特别是 windows下开了反病毒软件扫描的话，有时候保存文件卡5-6秒。2018年了，我们有更好的选择，比如使用国人开发的 [LeaderF](https://github.com/Yggdroot/LeaderF) 来显示函数列表：
+
+![](http://skywind3000.github.io/word/images/vim/LeaderfFunction.png)
+
+全异步显示文件函数列表，不用的时候不会占用你任何屏幕空间，将 ALT+P 绑定到 `:LeaderfFunction` 这个命令上，按 ALT+P 就弹出当前文件的函数列表，然后可以进行模糊匹配搜索，还可以按 TAB 进入列表选择窗口，上下移动光标选择，按回车立马完成跳转并同时关闭列表。
+
+Leaderf 的函数功能属于你想要它的时候它才会出来，不想要它的时候不会给你捣乱。
+
+
+### 文件切换
+
+文件/buffer模糊匹配快速切换的方式，比你打开一个对话框选择文件便捷不少，过去我们常用的 CtrlP 可以光荣下岗了，现在有更多速度更快，匹配更精准以及完美支持后台运行方式的文件模糊匹配工具，我自己用的是上面提到的 [LeaderF](https://github.com/Yggdroot/LeaderF)，除了提供函数列表外，还支持文件，MRU，Buffer名称搜索，完美代替 CtrlP，使用时需要简单调教下：
+
+```text
+let g:Lf_ShortcutF = '<c-p>'
+let g:Lf_ShortcutB = '<m-n>'
+noremap <c-n> :LeaderfMru<cr>
+noremap <m-p> :LeaderfFunction<cr>
+noremap <m-n> :LeaderfBuffer<cr>
+noremap <m-m> :LeaderfTag<cr>
+let g:Lf_StlSeparator = { 'left': '', 'right': '', 'font': '' }
+
+let g:Lf_RootMarkers = ['.project', '.root', '.svn', '.git']
+let g:Lf_WorkingDirectoryMode = 'Ac'
+let g:Lf_WindowHeight = 0.30
+let g:Lf_CacheDirectory = expand('~/.vim/cache')
+let g:Lf_ShowRelativePath = 0
+let g:Lf_HideHelp = 1
+let g:Lf_StlColorscheme = 'powerline'
+
+let g:Lf_NormalMap = {
+	\ "File":   [["<ESC>", ':exec g:Lf_py "fileExplManager.quit()"<CR>'],
+	\            ["<F6>", ':exec g:Lf_py "fileExplManager.quit()"<CR>']
+	\           ],
+	\ "Buffer": [["<ESC>", ':exec g:Lf_py "bufExplManager.quit()"<CR>'],
+	\            ["<F6>", ':exec g:Lf_py "bufExplManager.quit()"<CR>']
+	\           ],
+	\ "Mru":    [["<ESC>", ':exec g:Lf_py "mruExplManager.quit()"<CR>']],
+	\ "Tag":    [["<ESC>", ':exec g:Lf_py "tagExplManager.quit()"<CR>']],
+	\ "Function":    [["<ESC>", ':exec g:Lf_py "functionExplManager.quit()"<CR>']],
+	\ "Colorscheme":    [["<ESC>", ':exec g:Lf_py "colorschemeExplManager.quit()"<CR>']],
+	\ }
+```
+
+这里定义了 CTRL+P 在当前项目目录打开文件搜索，CTRL+N 打开 MRU搜索，搜索你最近打开的文件，这两项是我用的最频繁的功能。接着 ALT+P 打开函数搜索，ALT+N 打开 Buffer 搜索。
+
+LeaderF 是目前匹配效率最高的，高过 CtrlP/Fzf 不少，敲更少的字母就能把文件找出来，同时搜索很迅速，使用 Python 后台线程进行搜索匹配，还有一个 C模块可以加速匹配性能，需要手工编译下。LeaderF在模糊匹配模式下按 TAB 可以切换到匹配结果窗口用光标或者 Vim 搜索命令进一步筛选，这是 CtrlP/Fzf 不具备的，更多方便的功能见它的官方文档。
+
+文件/MRU 模糊匹配对于熟悉的项目效率是最高的，但对于一个新的项目，通常我们都不知道它有些什么文件，那就谈不上根据文件名匹配什么了，我们需要文件浏览功能。如果你喜欢把 Vim 伪装成 NotePad++ 之类的，那你该继续使用 [NERDTree](https://github.com/scrooloose/nerdtree) 进行文件浏览，但你想按照 Vim 的方式来，推荐阅读这篇文章：
+
+[Oil and vinegar - split windows and project drawer](http://vimcasts.org/blog/2013/01/oil-and-vinegar-split-windows-and-project-drawer/)
+
+然后向我一样开始使用 [vim-dirvish](https://github.com/justinmk/vim-dirvish)，进行一些配置，比如当前文档按 `-` 号就能不切窗口的情况下在当前窗口直接返回当前文档所在的目录，再按一次减号就返回上一级目录，按回车进入下一级目录或者再当前窗口打开光标下的文件。进一步映射 `<tab>7` , `<tab>8` 和 `<tab>9` 分别用于在新的 split, vsplit 和新标签打开当前文件所在目录，这样从一个文件如手，很容易找到和该文件相关的其他项目文件。
+
+最后一个是 C/C++ 的头文件/源文件快速切换功能，有现成的插件做这事情，比如 [a.vim](https://github.com/vim-scripts/a.vim)，我自己没用，因为这事情太简单，再我发现 a.vim 前我就觉得需要这个功能，然后自己两行 vim 脚本就搞定了。
