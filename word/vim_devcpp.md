@@ -241,6 +241,9 @@ hi! SpellRare gui=undercurl guisp=magenta
 
 没注意到它时，你可能觉得它不存在，当你有时真的看上两眼时，你会发现这个功能很贴心。最新版 signify 还有一个命令`:SignifyDiff`，可以左右分屏对比提交前后记录，比你命令行 svn/git diff 半天直观多了。并且对我这种同时工作在 subversion 和 git 环境下的情况契合的比较好。
 
+Signify 和前面的 ALE 都会在侧边栏显示一些标记，默认侧边栏会自动隐藏，有内容才会显示，不喜欢侧边栏时有时无的行为可设置强制显示侧边栏：`set signcolumn=yes` 。
+
+
 ### 文本对象
 
 相信大家用 Vim 进行编辑时都很喜欢文本对象这个概念，`diw` 删除光标所在单词，`ciw` 改写单词，`vip` 选中段落等，`ci"`/`ci(` 改写引号/括号中的内容。而编写 C/C++ 代码时我推荐大家补充几个十分有用的文本对象，我使用 textobj-user 全家桶：
@@ -268,7 +271,10 @@ Plug 'sgur/vim-textobj-parameter'
 
 前面编译运行时需要频繁的操作 quickfix 窗口，ale查错时也需要快速再错误间跳转（location list），就连文件比较也会用到快速跳转到上/下一个差异处，[unimpaired](https://github.com/tpope/vim-unimpaired) 插件帮你定义了一系列方括号开头的快捷键，被称为官方 Vim 中丢失的快捷键。
 
+我们好些地方用到了 quickfix / location 窗口，你在 quickfix 中回车选中一条错误的话，默认会把你当前窗口给切走，变成新文件，虽然按 CTRL+O 可以返回，但是如果不太喜欢这样切走当前文件的做法，可以设置 switchbuf，发现文件已在 Vim 中打开就跳过去，没打开过就新建窗口/标签打开，具体见帮助。
+
 Vim最爽的地方是把所有 ALT 键映射全部留给用户了，尽量使用 Vim 的 ALT键映射，可以让冗长的快捷键缩短很多，请参考：《[Vim和终端软件中支持ALT映射](http://www.skywind.me/blog/archives/2021)》。
+
 
 
 ### 代码补全
