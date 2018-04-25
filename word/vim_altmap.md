@@ -82,6 +82,12 @@ codes as you like: >
 
 ```text
 function! Terminal_MetaMode(mode)
+	set ttimeout
+	if $TMUX != ''
+		set ttimeoutlen=30
+	elseif &ttimeoutlen > 80 || &ttimeoutlen <= 0
+		set ttimeoutlen=80
+	endif
 	if has('nvim') || has('gui_running')
 		return
 	endif
@@ -113,12 +119,6 @@ function! Terminal_MetaMode(mode)
 		for c in ['?', ':', '-', '_']
 			call s:metacode(a:mode, c)
 		endfor
-	endif
-	set ttimeout
-	if $TMUX != ''
-		set ttimeoutlen=30
-	elseif &ttimeoutlen > 80 || &ttimeoutlen <= 0
-		set ttimeoutlen=80
 	endif
 endfunc
 
