@@ -52,6 +52,9 @@ set tags=./.tags;,.tags
 
 最后请更新你的 ctags，不要再使用老旧的 Exuberant Ctags，这货停止更新快十年了，请使用最新的  [Universal CTags](https://ctags.io) 代替之，它在 Exuberant Ctags 的基础上继续更新迭代了近十年，如今任然活跃的维护着，功能更强大，语言支持更多。
 
+（注意最新版 universal ctags 调用时需要加一个 --output-format=e-ctags，输出格式才和老的 exuberant ctags 兼容否则会有 windows 下路径名等小问题）。
+
+
 ### 自动索引
 
 过去写几行代码又需要运行一下 ctags 来生成索引，每次生成耗费不少时间。如今 Vim 8 下面自动异步生成 tags 的工具有很多，这里推荐最好的一个：[vim-gutentags](https://github.com/ludovicchabant/vim-gutentags)，这个插件主要做两件事情：
