@@ -152,7 +152,7 @@ let g:asyncrun_rootmarks = ['.svn', '.git', '.root', '_darcs', 'build.xml']
 nnoremap <silent> <F7> :AsyncRun -cwd=<root> make <cr>
 ```
 
-那么如果你有一个项目不在 svn 也不在 git 中怎么查找 `<root>` 呢？很简单，放一个空的 `.root` 文件到你的项目目录下就行了，前面配置过，识别 .root 文件。接着用 F8 运行当前项目：
+那么如果你有一个项目不在 svn 也不在 git 中怎么查找 `<root>` 呢？很简单，放一个空的 `.root` 文件到你的项目目录下就行了，前面配置过，识别 .root 文件。继续配置用 F8 运行当前项目：
 
 ```text
 nnoremap <silent> <F8> :AsyncRun -cwd=<root> -raw make run <cr>
