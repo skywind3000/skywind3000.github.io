@@ -80,10 +80,8 @@ let g:gutentags_ctags_extra_args = ['--fields=+niazS', '--extra=+q']
 let g:gutentags_ctags_extra_args += ['--c++-kinds=+px']
 let g:gutentags_ctags_extra_args += ['--c-kinds=+px']
 
-" 检测 ~/.cache/tags 不存在就新建
-if !isdirectory(s:vim_tags)
-	silent! call mkdir(s:vim_tags, 'p')
-endif
+" 如果使用 universal ctags 则需要下面这行
+" let g:gutentags_ctags_extra_args += ['--output-format=e-ctags']
 ```
 
 有了上面的设置，你平时基本感觉不到 tags 文件的生成过程了，只要文件修改过，gutentags 都在后台为你默默打点是否需要更新数据文件，你根本不用管，还会帮你：
