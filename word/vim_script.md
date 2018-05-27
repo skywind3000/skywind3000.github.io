@@ -235,16 +235,16 @@ endfunction
 Vim 没有原生的类的支持，但是你可以用字典模拟基本的类。为了定义一个类的方法，可以在函数声明时使用 `dict` 关键字来将内部字典暴露为 `self` 关键字：
 
 ```text
-let MyClass = {foo: "Foo"}
+let MyClass = {"foo": "Foo"}
 function MyClass.printFoo() dict
     echo self.foo
 endfunction
 ```
 
-类的实现更类似于 singleton，为了在 VimScript 中创建类的实例，我们对字典使用 `copy()` 方法进行拷贝：
+类的实现更类似于 singleton，为了在 VimScript 中创建类的实例，我们对字典使用 `deepcopy()` 方法进行拷贝：
 
 ```text
-:let myinstance = copy(MyClass)
+:let myinstance = deepcopy(MyClass)
 :call myinstance.printFoo()
 Foo
 :let myinstance.foo = "Bar"
