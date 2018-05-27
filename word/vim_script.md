@@ -261,7 +261,7 @@ Bar
 - [Vim 中文帮助文档（usr_41） - 编写 Vim 脚本](http://vimcdoc.sourceforge.net/doc/usr_41.html)
 - [IBM’s “Scripting the Vim Editor”](https://www.ibm.com/developerworks/linux/library/l-vim-script-1/index.html)
 - [Vim 脚本指北](https://github.com/lymslive/vimllearn)
-- [Vim 脚本开发规范](ms-appx-web:///assets/errorpages/tlserror.htm?SecureProtocol=672%23https://github.com/vim-china/vim-script-style-guide)
+- [Vim 脚本开发规范](https://github.com/vim-china/vim-script-style-guide)
 
 其他:
 
