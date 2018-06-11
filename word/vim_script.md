@@ -157,6 +157,8 @@ false
 
 **If, For, While, and Try/Catch**
 
+条件判断：
+
 ```text
 if <expression>
     ...
@@ -165,11 +167,18 @@ elseif <expression>
 else
     ...
 endif
+```
+
+循环：
+
+```text
 for <var> in <list>
     continue
     break
 endfor
 ```
+
+复杂循环：
 
 ```text
 for [var1, var2] in [[1, 2], [3, 4]]
@@ -178,10 +187,14 @@ for [var1, var2] in [[1, 2], [3, 4]]
 endfor
 ```
 
+While 循环：
+
 ```text
 while <expression>
 endwhile
 ```
+
+异常捕获：
 
 ```text
 try
