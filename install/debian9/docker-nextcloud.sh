@@ -1,6 +1,9 @@
 docker pull mariadb:10
 docker pull wonderfall/nextcloud
 
+mkdir -p /home/data/docker/nextcloud
+mkdir -p /home/data/docker/nextcloud/{db,data,config,apps,themes}
+
 docker run -d --name db_nextcloud --restart=always \
        -v /home/data/docker/nextcloud/db:/var/lib/mysql \
        -e MYSQL_ROOT_PASSWORD=supersecretpassword \
