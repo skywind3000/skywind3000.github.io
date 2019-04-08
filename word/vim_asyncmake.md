@@ -366,7 +366,7 @@ failure: 异步任务失败时被设置（工具脚本返回非 0的进程结束
 
 当你在 windows 的 gvim里面下使用 vimmake 来运行工具的话，默认的 normal模式每次都会打开一个新窗口来运行（使用 gvim里面的 `:!start`命令，而不是 windows 下面弱智的 `:!`命令）：
 
-![](http://skywind3000.github.io/word/images/screen2.gif)
+![](https://skywind3000.github.io/word/images/screen2.gif)
 
 但如果你跑在 ubuntu 下，就需要写几行代码了，新建并编辑脚本 "~/.vim/vimmake.1"：
 
@@ -394,7 +394,7 @@ let g:vimmake_mode['1']='bg'
 
 运行模式 ‘bg' 的意思前面意境提到过，vimmake.1 这个 python脚本会在后台执行并且忽略任何输出（并不需要新版本vim支持，只是使用传统的 system('...&') 实现），这样你运行它时从vim的界面上就不会看到任何变化，只是弹出了我们需要的 gnome-terminal 窗口并运行给定的命令，当然你也可以设置成 async 模式，然后输出一行：xxxx 正在 running的文字到 quickfix窗口：
 
-![](http://skywind3000.github.io/word/images/screen3.jpg)
+![](https://skywind3000.github.io/word/images/screen3.jpg)
 
 嗯，这样把 `:VimTool 1` 命令 map 到 F6后，我们就可以在 ubuntu 的 vim 里直接 F6弹出新的 gnome-terminal 来跑我们的程序了，就和 Visual Studio 运行控制台程序一样，即便是长时间运行的程序，也不需要额外再开一个终端窗口，然后每次重新输入运行命令那么笨重。
 
