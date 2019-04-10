@@ -2,30 +2,30 @@
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
     <title>随笔 on Skywind Inside</title>
-    <link>https://skywind3000.github.io/categories/%E9%9A%8F%E7%AC%94/</link>
+    <link>https://skywind3000.com/categories/%E9%9A%8F%E7%AC%94/</link>
     <description>Recent content in 随笔 on Skywind Inside</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>zh-cn</language>
     <lastBuildDate>Tue, 09 Apr 2019 12:23:23 +0800</lastBuildDate>
     
-	<atom:link href="https://skywind3000.github.io/categories/%E9%9A%8F%E7%AC%94/index.xml" rel="self" type="application/rss+xml" />
+	<atom:link href="https://skywind3000.com/categories/%E9%9A%8F%E7%AC%94/index.xml" rel="self" type="application/rss+xml" />
     
     
     <item>
       <title>About</title>
-      <link>https://skywind3000.github.io/about/</link>
+      <link>https://skywind3000.com/about/</link>
       <pubDate>Tue, 09 Apr 2019 12:23:23 +0800</pubDate>
       
-      <guid>https://skywind3000.github.io/about/</guid>
+      <guid>https://skywind3000.com/about/</guid>
       <description>这里是关于</description>
     </item>
     
     <item>
       <title>个人主页搬迁到新系统</title>
-      <link>https://skywind3000.github.io/posts/intro/</link>
+      <link>https://skywind3000.com/posts/intro/</link>
       <pubDate>Mon, 08 Apr 2019 19:23:23 +0800</pubDate>
       
-      <guid>https://skywind3000.github.io/posts/intro/</guid>
+      <guid>https://skywind3000.com/posts/intro/</guid>
       <description>&lt;p&gt;准备搬家 Hugo + github pages，WordPress 用的太蛋疼了，换成 Hugo 后，格式就清爽很多，比如内嵌代码：&lt;/p&gt;
 
 &lt;pre&gt;&lt;code class=&#34;language-cpp&#34;&gt;#include &amp;lt;stdio.h&amp;gt;
