@@ -62,17 +62,6 @@ int main(void)
     </item>
     
     <item>
-      <title>PL0 编译程序Turbo Pascal代码</title>
-      <link>https://skywind3000.com/blog/archives/71/</link>
-      <pubDate>Tue, 10 Apr 2001 16:08:23 +0800</pubDate>
-      
-      <guid>https://skywind3000.com/blog/archives/71/</guid>
-      <description>&lt;p&gt;麻雀虽小，五脏具全，对编译原理的代码以TPASCAL格式重新整理和排版，还原最原版的代码。&lt;/p&gt;
-
-&lt;p&gt;使用 Turbo Pascal 编译：&lt;/p&gt;</description>
-    </item>
-    
-    <item>
       <title>历史归档</title>
       <link>https://skywind3000.com/archives/</link>
       <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
