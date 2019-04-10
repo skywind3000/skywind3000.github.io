@@ -6,9 +6,19 @@
     <description>Recent content in Tags on Skywind Inside</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>zh-cn</language>
+    <lastBuildDate>Wed, 10 Apr 2019 16:08:23 +0800</lastBuildDate>
     
 	<atom:link href="https://skywind3000.github.io/tags/index.xml" rel="self" type="application/rss+xml" />
     
+    
+    <item>
+      <title>Shell</title>
+      <link>https://skywind3000.github.io/tags/shell/</link>
+      <pubDate>Wed, 10 Apr 2019 16:08:23 +0800</pubDate>
+      
+      <guid>https://skywind3000.github.io/tags/shell/</guid>
+      <description></description>
+    </item>
     
   </channel>
 </rss>

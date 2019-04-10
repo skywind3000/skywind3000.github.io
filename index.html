@@ -72,7 +72,34 @@
                         <article class="post">
                             <header>
                                 <h1 class="post-title">
-                                    <a href="https://skywind3000.github.io/posts/intro/" title="Intro" >Intro</a>
+                                    <a href="https://skywind3000.github.io/posts/2019/shell_init_sh/" title="提高效率从编写 init.sh 开始" >提高效率从编写 init.sh 开始</a>
+                                </h1>
+                            </header>
+                            <date class="post-meta meta-date">
+                                2019年4月10日
+                            </date>
+                            
+                            <div class="post-meta">
+                                <span>|</span>
+                                
+                                <span class="meta-category"><a href="https://skywind3000.github.io/categories/%E6%8A%98%E8%85%BE">折腾</a></span>
+                                
+                            </div>
+                            
+                            <div class="post-content">
+                                <p>有部分人不太愿意定制自己的终端配置，因为：“服务器太多，怎么可能每台都去定制，所以都用默认配置，习惯了就好”。其实道理很简单，算笔账就清楚了，除非你是 SA 每天管理上千台服务器，程序员的话，每天接触的开发服务器也就五台以内。既然 90% 的利益都在那三五台机器上，还在纠结 10% 的事情，这就叫不明智。</p>
+
+<p>还有人担心这 10% 的时间偶尔到裸环境下不适应了，所以拒绝 90% 的时间使用高级配置。这是我听过最荒谬的理由，我天天自己开车上下班，偶尔骑下自行车我也不会忘记怎么骑车。更不因为偶尔需要时怕不会骑了而把汽车卖了每天都坚持骑单车，或者干脆就拒绝学汽车驾驶，拒绝提高自己的车技。我路由器上连 bash 都没有，只有个 busybox 的残缺 shell ，照着理由我要去迁就路由器么？这种说法要不就是看不清楚自己核心利益在哪里，要不就是没体验过汽车快起来可以比单车快几倍。</p>
+
+<p>何况不管是程序员还是 SA，做好配置的同步工作也就行了。如果可以花固定的时间，让终端工作效率提升一倍以上，这种一次性的投资为何不做呢？所以接下来讨论下终端环境下各种配置应该如何管理，如何同步的。</p>……
+                            </div>
+                            <p class="readmore"><a href="https://skywind3000.github.io/posts/2019/shell_init_sh/">阅读全文</a></p>
+                        </article>
+                    
+                        <article class="post">
+                            <header>
+                                <h1 class="post-title">
+                                    <a href="https://skywind3000.github.io/posts/intro/" title="个人主页搬迁到新系统" >个人主页搬迁到新系统</a>
                                 </h1>
                             </header>
                             <date class="post-meta meta-date">
@@ -87,9 +114,26 @@
                             </div>
                             
                             <div class="post-content">
-                                准备搬家 Hugo，WordPress 用的太蛋疼了，换成 Hugo 后，格式就清爽很多，比如内嵌代码：
-#include &lt;stdio.h&gt; #include &lt;stdlib.h&gt; int main(void) { printf(&quot;Hello, World !!\n&quot;); return 0; }  比如表格：
-   Column1 Column2     Data 1 Data 2    ……
+                                <p>准备搬家 Hugo + github pages，WordPress 用的太蛋疼了，换成 Hugo 后，格式就清爽很多，比如内嵌代码：</p>
+
+<pre><code class="language-cpp">#include &lt;stdio.h&gt;
+#include &lt;stdlib.h&gt;
+
+int main(void)
+{
+    printf(&quot;Hello, World !!\n&quot;);
+    return 0;
+}
+</code></pre>
+
+<p>比如引用：</p>
+
+<blockquote>
+<p>世界上一成不变的东西，只有“任何事物都是在不断变化的”这条真理。
+    —— 斯里兰卡
+土地是以它的肥沃和收获而被估价的；才能也是土地，不过它生产的不是粮食，而是真理。如果只能滋生瞑想和幻想的话，即使再大的才能也只是砂地或盐池，那上面连小草也长不出来的。
+    —— 别林斯基</p>
+</blockquote>……
                             </div>
                             <p class="readmore"><a href="https://skywind3000.github.io/posts/intro/">阅读全文</a></p>
                         </article>
@@ -118,7 +162,11 @@
 <ul class="widget-list">
     
     <li>
-        <a href="https://skywind3000.github.io/posts/intro/" title="Intro">Intro</a>
+        <a href="https://skywind3000.github.io/posts/2019/shell_init_sh/" title="提高效率从编写 init.sh 开始">提高效率从编写 init.sh 开始</a>
+    </li>
+    
+    <li>
+        <a href="https://skywind3000.github.io/posts/intro/" title="个人主页搬迁到新系统">个人主页搬迁到新系统</a>
     </li>
     
 </ul>
@@ -131,7 +179,7 @@
 <ul class="widget-list">
     
     <li>
-        <a href="https://skywind3000.github.io/categories/%E7%BC%96%E7%A8%8B/">编程(1)</a>
+        <a href="https://skywind3000.github.io/categories/%E6%8A%98%E8%85%BE/">折腾(1)</a>
     </li>
     
     <li>
@@ -144,6 +192,8 @@
     <section class="widget">
         <h3 class="widget-title">标签</h3>
 <div class="tagcloud">
+    
+    <a href="https://skywind3000.github.io/tags/shell/">shell</a>
     
 </div>
     </section>

@@ -3,12 +3,18 @@
   xmlns:xhtml="http://www.w3.org/1999/xhtml">
   
   <url>
-    <loc>https://skywind3000.github.io/posts/intro/</loc>
-    <lastmod>2019-04-08T19:23:23+08:00</lastmod>
+    <loc>https://skywind3000.github.io/posts/2019/shell_init_sh/</loc>
+    <lastmod>2019-04-10T16:08:23+08:00</lastmod>
   </url>
   
   <url>
     <loc>https://skywind3000.github.io/about/</loc>
+    <lastmod>2019-04-09T12:23:23+08:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>https://skywind3000.github.io/posts/intro/</loc>
+    <lastmod>2019-04-08T19:23:23+08:00</lastmod>
   </url>
   
   <url>
@@ -18,18 +24,25 @@
   
   <url>
     <loc>https://skywind3000.github.io/posts/</loc>
-    <lastmod>2019-04-08T19:23:23+08:00</lastmod>
+    <lastmod>2019-04-10T16:08:23+08:00</lastmod>
+    <priority>0</priority>
+  </url>
+  
+  <url>
+    <loc>https://skywind3000.github.io/tags/shell/</loc>
+    <lastmod>2019-04-10T16:08:23+08:00</lastmod>
     <priority>0</priority>
   </url>
   
   <url>
     <loc>https://skywind3000.github.io/</loc>
-    <lastmod>2019-04-08T19:23:23+08:00</lastmod>
+    <lastmod>2019-04-10T16:08:23+08:00</lastmod>
     <priority>0</priority>
   </url>
   
   <url>
     <loc>https://skywind3000.github.io/tags/</loc>
+    <lastmod>2019-04-10T16:08:23+08:00</lastmod>
     <priority>0</priority>
   </url>
   
@@ -38,13 +51,14 @@
   </url>
   
   <url>
-    <loc>https://skywind3000.github.io/categories/%E7%BC%96%E7%A8%8B/</loc>
+    <loc>https://skywind3000.github.io/categories/%E6%8A%98%E8%85%BE/</loc>
+    <lastmod>2019-04-10T16:08:23+08:00</lastmod>
     <priority>0</priority>
   </url>
   
   <url>
     <loc>https://skywind3000.github.io/categories/%E9%9A%8F%E7%AC%94/</loc>
-    <lastmod>2019-04-08T19:23:23+08:00</lastmod>
+    <lastmod>2019-04-09T12:23:23+08:00</lastmod>
     <priority>0</priority>
   </url>
   
