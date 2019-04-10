@@ -17,22 +17,9 @@
       <pubDate>Mon, 08 Apr 2019 19:23:23 +0800</pubDate>
       
       <guid>https://skywind3000.github.io/posts/intro/</guid>
-      <description> 测试日志
-title 1 哈哈哈
-title 2 哈哈哈
-fuck
-#include &amp;lt;stdio.h&amp;gt; #include &amp;lt;stdlib.h&amp;gt; int main(void) { printf(&amp;quot;Hello, World !!\n&amp;quot;); return 0; }  </description>
-    </item>
-    
-    <item>
-      <title>好吃的食物</title>
-      <link>https://skywind3000.github.io/posts/food/</link>
-      <pubDate>Mon, 08 Apr 2019 19:23:23 +0800</pubDate>
-      
-      <guid>https://skywind3000.github.io/posts/food/</guid>
-      <description>不好吃
-   你好 我不好     1 2    haha
-我不知道 asdf</description>
+      <description>准备搬家 Hugo，WordPress 用的太蛋疼了，换成 Hugo 后，格式就清爽很多，比如内嵌代码：
+#include &amp;lt;stdio.h&amp;gt; #include &amp;lt;stdlib.h&amp;gt; int main(void) { printf(&amp;quot;Hello, World !!\n&amp;quot;); return 0; }  比如表格：
+   Column1 Column2     Data 1 Data 2    </description>
     </item>
     
     <item>
