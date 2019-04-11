@@ -1,0 +1,659 @@
+<!doctype html>
+<html lang="zh-cn">
+<head>
+
+    <meta charset="utf-8">
+    <meta name="generator" content="Hugo 0.54.0" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <title>汇编 | Skywind Inside</title>
+    <meta property="og:title" content="汇编 - Skywind Inside">
+    <meta property="og:type" content="article">
+        
+        
+    <meta name="Keywords" content="golang,go语言,go语言笔记,飞雪无情,java,android,博客,项目管理,python,软件架构,公众号,小程序">
+    <meta name="description" content="汇编">
+        
+    <meta name="author" content="skywind">
+    <meta property="og:url" content="https://skywind3000.com/tags/%E6%B1%87%E7%BC%96/">
+    <link rel="shortcut icon" href="/favicon.ico" type="image/x-icon">
+
+    <link rel="stylesheet" href="/css/normalize.css">
+    
+    <link rel="stylesheet" href="/css/style.css">
+    <link rel="alternate" type="application/rss+xml+xml" href="https://skywind3000.com/tags/%E6%B1%87%E7%BC%96/index.xml" title="Skywind Inside" />
+    <script type="text/javascript" src="//cdn.bootcss.com/jquery/3.2.1/jquery.min.js"></script>
+
+    
+
+
+    
+    
+</head>
+
+
+<body>
+<header id="header" class="clearfix">
+    <div class="container">
+        <div class="col-group">
+            <div class="site-name ">
+                
+                    <a id="logo" href="https://skywind3000.com/">
+                        Skywind Inside
+                    </a>
+                
+                <p class="description">写自己的代码，让别人猜去吧！</p>
+            </div>
+            <div>
+                <nav id="nav-menu" class="clearfix">
+                    <a class="" href="https://skywind3000.com/">首页</a>
+                    
+                    <a  href="https://skywind3000.com/categories/" title="文章分类">文章分类</a>
+                    
+                    <a  href="https://skywind3000.com/tags/" title="标签">标签</a>
+                    
+                    <a  href="https://skywind3000.com/archives/" title="归档">归档</a>
+                    
+                    <a  href="https://skywind3000.com/about/" title="关于">关于</a>
+                    
+                </nav>
+            </div>
+        </div>
+    </div>
+</header>
+
+
+<div id="body">
+    <div class="container">
+        <div class="col-group">
+
+            <div class="col-8" id="main">
+                <div class="res-cons">
+                    
+                    <h3 class="archive-title">
+                        包含标签
+                        <span class="keyword">汇编</span>
+                        的文章
+                    </h3>
+                    
+
+                    
+                        <article class="post">
+                            <header>
+                                <h1 class="post-title">
+                                    <a href="https://skywind3000.com/blog/archives/1774/">计算机底层是如何访问显卡的？</a>
+                                </h1>
+                            </header>
+                            <date class="post-meta meta-date">
+                                2016年6月17日
+                            </date>
+                            
+                            <div class="post-meta meta-category">
+                                |
+                                
+                                    <a href="https://skywind3000.com/categories/%E5%9B%BE%E5%BD%A2%E7%BC%96%E7%A8%8B">图形编程</a>
+                                
+                            </div>
+                            
+                            <div class="post-content">
+                                以前 DOS下做游戏，操作系统除了磁盘和文件管理外基本不管事情，所有游戏都是直接操作显卡和声卡的，用不了什么驱动。
+虽然没有驱动，但是硬件标准还是放在那里，VGA, SVGA, VESA, VESA2.0 之类的硬件标准，最起码，你只做320x200x256c的游戏，或者 ModeX 下 320x240x256c 的游戏的话，需要用到VGA和部分 SVGA标准，而要做真彩高彩，更高分辨率的游戏的话，就必须掌握 VESA的各项规范了。
+翻几段以前写的代码演示下：
+例子1： 初始化 VGA/VESA 显示模式
+基本是参考 VGA的编程手册来做：
+INT 10,0 - Set Video Mode AH = 00 AL = 00 40x25 B/W text (CGA,EGA,MCGA,VGA) = 01 40x25 16 color text (CGA,EGA,MCGA,VGA) = 02 80x25 16 shades of gray text (CGA,EGA,MCGA,VGA) = 03 80x25 16 color text (CGA,EGA,MCGA,VGA) = 04 320x200 4 color graphics (CGA,EGA,MCGA,VGA) = 05 320x200 4 color graphics (CGA,EGA,MCGA,VGA) = 06 640x200 B/W graphics (CGA,EGA,MCGA,VGA) = 07 80x25 Monochrome text (MDA,HERC,EGA,VGA) = 08 160x200 16 color graphics (PCjr) = 09 320x200 16 color graphics (PCjr) = 0A 640x200 4 color graphics (PCjr) = 0B Reserved (EGA BIOS function 11) = 0C Reserved (EGA BIOS function 11) = 0D 320x200 16 color graphics (EGA,VGA) = 0E 640x200 16 color graphics (EGA,VGA) = 0F 640x350 Monochrome graphics (EGA,VGA) = 10 640x350 16 color graphics (EGA or VGA with 128K) 640x350 4 color graphics (64K EGA) = 11 640x480 B/W graphics (MCGA,VGA) = 12 640x480 16 color graphics (VGA) = 13 320x200 256 color graphics (MCGA,VGA) = 8x EGA, MCGA or VGA ignore bit 7, see below = 9x EGA, MCGA or VGA ignore bit 7, see below - if AL bit 7=1, prevents EGA,MCGA &amp; VGA from clearing display - function updates byte at 40:49; bit 7 of byte 40:87 (EGA/VGA Display Data Area) is set to the value of AL bit 7  转换成代码的话，类似这样：……
+                                <p class="readmore"><a href="https://skywind3000.com/blog/archives/1774/">阅读全文</a></p>
+                            </div>
+                        </article>
+                    
+                        <article class="post">
+                            <header>
+                                <h1 class="post-title">
+                                    <a href="https://skywind3000.com/blog/archives/1683/">超越 SDL/DirectDraw/GDI 性能的位图库</a>
+                                </h1>
+                            </header>
+                            <date class="post-meta meta-date">
+                                2016年4月28日
+                            </date>
+                            
+                            <div class="post-meta meta-category">
+                                |
+                                
+                                    <a href="https://skywind3000.com/categories/%E5%9B%BE%E5%BD%A2%E7%BC%96%E7%A8%8B">图形编程</a>
+                                
+                            </div>
+                            
+                            <div class="post-content">
+                                开源一个高性能位图库，之前对我的二维图形库 pixellib 进行了精简和重写，最终形成一个只包含两个文件（BasicBitmap.h, BasicBitmap.cpp）的图形基础库。 在今天 GPU 绘制横行天下的时候，任然有很多时候需要使用到纯 CPU实现的图形库，比如图像处理，视频预处理与合成，界面，以及GPU无法使用的情况（比如某个应用把gpu占满了，或者无法通过gpu做一些十分灵活的事情时），纹理处理，简单图片加载保存等。 支持 SSE2/AVX 优化，比 DirectDraw 快 40%（全系统内存绘制），比 SDL 快 10%，比GDI快 38%。如果你需要一个方便的高性能位图库，足够高性能的同时保证足够紧凑。 如果你有上述需求，那么你和我一样需要用到 BasicBitmap，只需要把 BasicBitmap.h/.cpp 两个文件拷贝到你的代码中即可。我正是为了这个目的编写了这两个文件。
+特性介绍  高度优化的 C++ 代码，可以在任意平台编译并运行 多重像素格式，从8位到32位：A8R8G8B8, R8G8B8, A4R4G4B4, R5G6B5, A8, 等. Blit (Bit Blt) ，包含透明和非透明的模式。 像素格式快速转换 使用不同的 Compositor 进行 Blending 使用不同的过滤器进行缩放（nearest, linear, bilinear） 高质量位图重采样（Bicubic/Box） 支持从内存或者文件直接读取 BMP/TGA 文件 支持从内存或者文件直接读取 PNG/JPEG 文件（Windows下） 保存图片为 BMP/PPM 文件 核心绘制函数可以被外部实现通过设置函数指针重载（比如 SSE2实现） 比 DirectDraw 快 40% 的性能进行绘制（打开 AVX/SSE2支持） 比 GDI 的 AlphaBlend 函数快34%的性能进行混色 Self-contained, 不依赖任何其他第三方库 高度紧凑，只需要拷贝 BasicBitmap.h/.cpp 两个文件到你项目即可  项目地址  https://github.com/skywind3000/BasicBitmap  Blit 性能比较 Full window (800x600) blitting (both opacity and transparent), compare to GDI/SDL/DirectDraw:
+32 Bits Blit Opacity Transparent
+BasicBitmap C++
+fps=2325
+fps=1368
+BasicBitmap AVX/SSE2
+fps=2904
+fps=2531
+GDI
+fps=2333
+fps=1167
+SDL
+fps=2671
+fps=1015
+DirectDraw
+fps=2695
+fps=2090
+Note: use BltFast with DirectDrawSurface7 in System Memory to perform Opacity &amp; Transparent blit. BitBlt and TransparentBlt(msimg32.dll) are used in the GDI testing case.
+16 Bits Blit Opacity Transparent
+BasicBitmap C++
+fps=4494
+fps=1253
+BasicBitmap AVX/SSE2
+fps=9852
+fps=2909
+DirectDraw BltFast
+fps=5889
+fps=861
+Blitting performance in SDL &amp; GDI are slower than DirectDraw, just compare to ddraw as well.
+8 Bits Blit Opacity Transparent
+BasicBitmap C++
+fps=11142
+fps=1503
+BasicBitmap AVX/SSE2
+fps=18181
+fps=5449
+DirectDraw BltFast
+fps=14705
+fps=4832
+DirectDrawSurface in Video Memory takes the benefit of hardware acceleration which is definitely faster than BasicBitmap.……
+                                <p class="readmore"><a href="https://skywind3000.com/blog/archives/1683/">阅读全文</a></p>
+                            </div>
+                        </article>
+                    
+                        <article class="post">
+                            <header>
+                                <h1 class="post-title">
+                                    <a href="https://skywind3000.com/blog/archives/1587/">内存拷贝优化（3）-深入优化</a>
+                                </h1>
+                            </header>
+                            <date class="post-meta meta-date">
+                                2015年12月20日
+                            </date>
+                            
+                            <div class="post-meta meta-category">
+                                |
+                                
+                                    <a href="https://skywind3000.com/categories/%E7%BC%96%E7%A8%8B%E6%8A%80%E6%9C%AF">编程技术</a>
+                                
+                            </div>
+                            
+                            <div class="post-content">
+                                今天继续在原来内存拷贝代码上优化：
+1. 修改了小内存方案：由原来64字节扩大为128字节，由 int 改为 xmm，小内存性能提升 80%
+2. 修改了中内存方案：从4个xmm寄存器并行拷贝改为8个并行拷贝+prefetch，提升20%左右
+3. 去除目标地址头部对齐的分支判断，用一次xmm拷贝完成目标对齐，性能替升10%。
+4. 增加测试用例：为贴近实际，增加了随机访问，10MB空间内（绝对大于L2尺寸）随机位置和长度的测试
+为避免随机数生成影响结果，提前生成随机数，最终平均性能达到gcc4.9配套标准库的2倍以上：
+https://github.com/skywind3000/FastMemcpy
+最新代码测试结果（可以对比老的表看新版本性能是否有所提升）：
+ benchmark(size=32 bytes, times=16777216):
+result(dst aligned, src aligned): memcpy_fast=78ms memcpy=260 ms
+result(dst aligned, src unalign): memcpy_fast=78ms memcpy=250 ms
+result(dst unalign, src aligned): memcpy_fast=78ms memcpy=266 ms
+result(dst unalign, src unalign): memcpy_fast=78ms memcpy=234 ms
+benchmark(size=64 bytes, times=16777216):
+result(dst aligned, src aligned): memcpy_fast=109ms memcpy=281 ms
+result(dst aligned, src unalign): memcpy_fast=109ms memcpy=328 ms
+result(dst unalign, src aligned): memcpy_fast=109ms memcpy=343 ms
+result(dst unalign, src unalign): memcpy_fast=93ms memcpy=344 ms
+benchmark(size=512 bytes, times=8388608):
+result(dst aligned, src aligned): memcpy_fast=125ms memcpy=218 ms
+result(dst aligned, src unalign): memcpy_fast=156ms memcpy=484 ms
+result(dst unalign, src aligned): memcpy_fast=172ms memcpy=546 ms
+result(dst unalign, src unalign): memcpy_fast=172ms memcpy=515 ms
+benchmark(size=1024 bytes, times=4194304):
+result(dst aligned, src aligned): memcpy_fast=109ms memcpy=172 ms
+result(dst aligned, src unalign): memcpy_fast=187ms memcpy=453 ms
+result(dst unalign, src aligned): memcpy_fast=172ms memcpy=437 ms
+result(dst unalign, src unalign): memcpy_fast=156ms memcpy=452 ms
+benchmark(size=4096 bytes, times=524288):
+result(dst aligned, src aligned): memcpy_fast=62ms memcpy=78 ms
+result(dst aligned, src unalign): memcpy_fast=109ms memcpy=202 ms
+result(dst unalign, src aligned): memcpy_fast=94ms memcpy=203 ms
+result(dst unalign, src unalign): memcpy_fast=110ms memcpy=218 ms
+benchmark(size=8192 bytes, times=262144):
+result(dst aligned, src aligned): memcpy_fast=62ms memcpy=78 ms
+result(dst aligned, src unalign): memcpy_fast=78ms memcpy=202 ms
+result(dst unalign, src aligned): memcpy_fast=78ms memcpy=203 ms
+result(dst unalign, src unalign): memcpy_fast=94ms memcpy=203 ms……
+                                <p class="readmore"><a href="https://skywind3000.com/blog/archives/1587/">阅读全文</a></p>
+                            </div>
+                        </article>
+                    
+                        <article class="post">
+                            <header>
+                                <h1 class="post-title">
+                                    <a href="https://skywind3000.com/blog/archives/1573/">内存拷贝优化（2）-全尺寸拷贝优化</a>
+                                </h1>
+                            </header>
+                            <date class="post-meta meta-date">
+                                2015年12月18日
+                            </date>
+                            
+                            <div class="post-meta meta-category">
+                                |
+                                
+                                    <a href="https://skywind3000.com/categories/%E7%BC%96%E7%A8%8B%E6%8A%80%E6%9C%AF">编程技术</a>
+                                
+                            </div>
+                            
+                            <div class="post-content">
+                                四年前写过一篇小内存拷贝优化：http://www.skywind.me/blog/archives/143 纠结了一下还是把全尺寸拷贝优化代码发布出来吧，没啥好保密的， 如今总结一下全尺寸内存拷贝优化的要点： 1. 策略区别：64字节以内用小内存方案，64K以内用中尺寸方案，大于64K用大内存拷贝方案。 2. 查表跳转：拷贝不同小尺寸内存，直接跳转到相应地址解除循环。 3. 目标对齐：64字节以上拷贝的先用普通方法拷贝几个字节让目标地址对齐，好做后面的事情。 4. 矢量拷贝：并行一次性读入N个矢量到 sse2 寄存器，再并行写出。 5. 缓存预取：使用 prefetchnta ，提前预取数据，等到真的要用时数据已经到位。 6. 内存直写：使用 movntdq 来直写内存，避免缓存污染。 部分理论，见论文：《Using Block Prefetch for Optimized Memory Performance》 但论文考虑问题比较单一，所以实际代码写的比论文复杂不少，目前在各个尺寸上基本平均能够加速 40%，比较GCC 4.9, VS2012的 memcpy，不排除未来的 libc, crt库继续完善以后，能够达到下面代码的速度。但我看libc和crt的 memcpy代码已经很久没人更新了，不知道他们还愿意继续优化下去么？ 行了，具体实现各位读代码吧，需要 SSE2 指令集支持，gcc编译时需要 –msse2 一下，点击（more）展开代码，测试结果附在源文件最后注释部分：
+//===================================================================== // // FastMemcpy.c - skywind3000@163.com, 2012 // // feature: // 40% speed up in avg. vs standard memcpy (tested in vc2012/gcc4.9) // //===================================================================== #include &lt;stdio.h&gt; #include &lt;stdlib.h&gt; #include &lt;string.h&gt; #include &lt;time.h&gt; #include &lt;windows.h&gt; #include &lt;emmintrin.h&gt; void *memcpy_tiny(void *dst, const void *src, size_t len) { if (len &lt;= 64) { register unsigned char *dd = (unsigned char*)dst + len; register const unsigned char *ss = (const unsigned char*)src + len; switch (len) { case 68: *((int*)(dd - 68)) = *((int*)(ss - 68)); case 64: *((int*)(dd - 64)) = *((int*)(ss - 64)); case 60: *((int*)(dd - 60)) = *((int*)(ss - 60)); case 56: *((int*)(dd - 56)) = *((int*)(ss - 56)); case 52: *((int*)(dd - 52)) = *((int*)(ss - 52)); case 48: *((int*)(dd - 48)) = *((int*)(ss - 48)); case 44: *((int*)(dd - 44)) = *((int*)(ss - 44)); case 40: *((int*)(dd - 40)) = *((int*)(ss - 40)); case 36: *((int*)(dd - 36)) = *((int*)(ss - 36)); case 32: *((int*)(dd - 32)) = *((int*)(ss - 32)); case 28: *((int*)(dd - 28)) = *((int*)(ss - 28)); case 24: *((int*)(dd - 24)) = *((int*)(ss - 24)); case 20: *((int*)(dd - 20)) = *((int*)(ss - 20)); case 16: *((int*)(dd - 16)) = *((int*)(ss - 16)); case 12: *((int*)(dd - 12)) = *((int*)(ss - 12)); case 8: *((int*)(dd - 8)) = *((int*)(ss - 8)); case 4: *((int*)(dd - 4)) = *((int*)(ss - 4)); break; case 67: *((int*)(dd - 67)) = *((int*)(ss - 67)); case 63: *((int*)(dd - 63)) = *((int*)(ss - 63)); case 59: *((int*)(dd - 59)) = *((int*)(ss - 59)); case 55: *((int*)(dd - 55)) = *((int*)(ss - 55)); case 51: *((int*)(dd - 51)) = *((int*)(ss - 51)); case 47: *((int*)(dd - 47)) = *((int*)(ss - 47)); case 43: *((int*)(dd - 43)) = *((int*)(ss - 43)); case 39: *((int*)(dd - 39)) = *((int*)(ss - 39)); case 35: *((int*)(dd - 35)) = *((int*)(ss - 35)); case 31: *((int*)(dd - 31)) = *((int*)(ss - 31)); case 27: *((int*)(dd - 27)) = *((int*)(ss - 27)); case 23: *((int*)(dd - 23)) = *((int*)(ss - 23)); case 19: *((int*)(dd - 19)) = *((int*)(ss - 19)); case 15: *((int*)(dd - 15)) = *((int*)(ss - 15)); case 11: *((int*)(dd - 11)) = *((int*)(ss - 11)); case 7: *((int*)(dd - 7)) = *((int*)(ss - 7)); *((int*)(dd - 4)) = *((int*)(ss - 4)); break; case 3: *((short*)(dd - 3)) = *((short*)(ss - 3)); dd[-1] = ss[-1]; break; case 66: *((int*)(dd - 66)) = *((int*)(ss - 66)); case 62: *((int*)(dd - 62)) = *((int*)(ss - 62)); case 58: *((int*)(dd - 58)) = *((int*)(ss - 58)); case 54: *((int*)(dd - 54)) = *((int*)(ss - 54)); case 50: *((int*)(dd - 50)) = *((int*)(ss - 50)); case 46: *((int*)(dd - 46)) = *((int*)(ss - 46)); case 42: *((int*)(dd - 42)) = *((int*)(ss - 42)); case 38: *((int*)(dd - 38)) = *((int*)(ss - 38)); case 34: *((int*)(dd - 34)) = *((int*)(ss - 34)); case 30: *((int*)(dd - 30)) = *((int*)(ss - 30)); case 26: *((int*)(dd - 26)) = *((int*)(ss - 26)); case 22: *((int*)(dd - 22)) = *((int*)(ss - 22)); case 18: *((int*)(dd - 18)) = *((int*)(ss - 18)); case 14: *((int*)(dd - 14)) = *((int*)(ss - 14)); case 10: *((int*)(dd - 10)) = *((int*)(ss - 10)); case 6: *((int*)(dd - 6)) = *((int*)(ss - 6)); case 2: *((short*)(dd - 2)) = *((short*)(ss - 2)); break; case 65: *((int*)(dd - 65)) = *((int*)(ss - 65)); case 61: *((int*)(dd - 61)) = *((int*)(ss - 61)); case 57: *((int*)(dd - 57)) = *((int*)(ss - 57)); case 53: *((int*)(dd - 53)) = *((int*)(ss - 53)); case 49: *((int*)(dd - 49)) = *((int*)(ss - 49)); case 45: *((int*)(dd - 45)) = *((int*)(ss - 45)); case 41: *((int*)(dd - 41)) = *((int*)(ss - 41)); case 37: *((int*)(dd - 37)) = *((int*)(ss - 37)); case 33: *((int*)(dd - 33)) = *((int*)(ss - 33)); case 29: *((int*)(dd - 29)) = *((int*)(ss - 29)); case 25: *((int*)(dd - 25)) = *((int*)(ss - 25)); case 21: *((int*)(dd - 21)) = *((int*)(ss - 21)); case 17: *((int*)(dd - 17)) = *((int*)(ss - 17)); case 13: *((int*)(dd - 13)) = *((int*)(ss - 13)); case 9: *((int*)(dd - 9)) = *((int*)(ss - 9)); case 5: *((int*)(dd - 5)) = *((int*)(ss - 5)); case 1: dd[-1] = ss[-1]; break; case 0: default: break; } return dd; } else { return memcpy(dst, src, len); } } void* memcpy_fast(void *destination, const void *source, size_t size) { unsigned char *dst = (unsigned char*)destination; const unsigned char *src = (const unsigned char*)source; static size_t cachesize = 0x10000; size_t diff; // small memory copy if (size &lt; 64) { return memcpy_tiny(dst, src, size); } // align destination to 16 bytes boundary diff = (((size_t)dst + 15) &amp; (~15)) - ((size_t)dst); if (diff &gt; 0) { memcpy_tiny(dst, src, diff); dst += diff; src += diff; size -= diff; } // medium size copy if (size &lt;= cachesize) { __m128i c1, c2, c3, c4; if ((((size_t)src) &amp; 15) == 0) { // source aligned for (; size &gt;= 64; size -= 64) { c1 = _mm_load_si128(((const __m128i*)src) + 0); c2 = _mm_load_si128(((const __m128i*)src) + 1); c3 = _mm_load_si128(((const __m128i*)src) + 2); c4 = _mm_load_si128(((const __m128i*)src) + 3); src += 64; _mm_store_si128((((__m128i*)dst) + 0), c1); _mm_store_si128((((__m128i*)dst) + 1), c2); _mm_store_si128((((__m128i*)dst) + 2), c3); _mm_store_si128((((__m128i*)dst) + 3), c4); dst += 64; } } else { // source un-aligned for (; size &gt;= 64; size -= 64) { c1 = _mm_loadu_si128(((const __m128i*)src) + 0); c2 = _mm_loadu_si128(((const __m128i*)src) + 1); c3 = _mm_loadu_si128(((const __m128i*)src) + 2); c4 = _mm_loadu_si128(((const __m128i*)src) + 3); src += 64; _mm_store_si128((((__m128i*)dst) + 0), c1); _mm_store_si128((((__m128i*)dst) + 1), c2); _mm_store_si128((((__m128i*)dst) + 2), c3); _mm_store_si128((((__m128i*)dst) + 3), c4); dst += 64; } } } else { // big memory copy __m128i c1, c2, c3, c4; _mm_prefetch((const char*)(src), _MM_HINT_NTA); if ((((size_t)src) &amp; 15) == 0) { // source aligned for (; size &gt;= 64; size -= 64) { _mm_prefetch((const char*)(src + 128), _MM_HINT_NTA); c1 = _mm_load_si128(((const __m128i*)src) + 0); c2 = _mm_load_si128(((const __m128i*)src) + 1); c3 = _mm_load_si128(((const __m128i*)src) + 2); c4 = _mm_load_si128(((const __m128i*)src) + 3); src += 64; _mm_stream_si128((((__m128i*)dst) + 0), c1); _mm_stream_si128((((__m128i*)dst) + 1), c2); _mm_stream_si128((((__m128i*)dst) + 2), c3); _mm_stream_si128((((__m128i*)dst) + 3), c4); dst += 64; } } else { // source unaligned for (; size &gt;= 64; size -= 64) { _mm_prefetch((const char*)(src + 128), _MM_HINT_NTA); c1 = _mm_loadu_si128(((const __m128i*)src) + 0); c2 = _mm_loadu_si128(((const __m128i*)src) + 1); c3 = _mm_loadu_si128(((const __m128i*)src) + 2); c4 = _mm_loadu_si128(((const __m128i*)src) + 3); src += 64; _mm_stream_si128((((__m128i*)dst) + 0), c1); _mm_stream_si128((((__m128i*)dst) + 1), c2); _mm_stream_si128((((__m128i*)dst) + 2), c3); _mm_stream_si128((((__m128i*)dst) + 3), c4); dst += 64; } } _mm_sfence(); } return memcpy_tiny(dst, src, size); } void benchmark(int dstalign, int srcalign, size_t size, int times) { char *DATA1 = (char*)malloc(size + 64); char *DATA2 = (char*)malloc(size + 64); size_t LINEAR1 = ((size_t)DATA1); size_t LINEAR2 = ((size_t)DATA2); char *ALIGN1 = (char*)(((64 - (LINEAR1 &amp; 63)) &amp; 63) + LINEAR1); char *ALIGN2 = (char*)(((64 - (LINEAR2 &amp; 63)) &amp; 63) + LINEAR2); char *dst = (dstalign)?……
+                                <p class="readmore"><a href="https://skywind3000.com/blog/archives/1573/">阅读全文</a></p>
+                            </div>
+                        </article>
+                    
+                        <article class="post">
+                            <header>
+                                <h1 class="post-title">
+                                    <a href="https://skywind3000.com/blog/archives/1244/">转换 Intel汇编格式到 AT&amp;amp;T汇编风格</a>
+                                </h1>
+                            </header>
+                            <date class="post-meta meta-date">
+                                2015年4月10日
+                            </date>
+                            
+                            <div class="post-meta meta-category">
+                                |
+                                
+                                    <a href="https://skywind3000.com/categories/%E7%BC%96%E8%AF%91%E6%8A%80%E6%9C%AF">编译技术</a>
+                                
+                            </div>
+                            
+                            <div class="post-content">
+                                常用 MSVC写内嵌汇编需要兼容 GCC是一件头疼的事情，不是说你不会写 GCC的 AT&amp;T风格汇编，而是说同一份代码写两遍，还要调试两遍，是一件头疼的事情，特别是汇编写了上百行的时候。于是五年前写过一个小工具，可以方便的进行转换，能把 MSVC/MASM的汇编转成纯 AT&amp;T风格汇编，或者 GCC Inline风格汇编，自动识别寄存器和变量，还有跳转地址，并且自动导出。今天把他放上来，或许有用到的人吧。
+项目下载：https://github.com/skywind3000/Intel2GAS。
+支持GUI转换和命令行转换，GUI转换使用 intel2gui.py, 命令行使用 intel2gui.py，当年用 Python匆匆完成，代码写的比较烂，但是还是在我后面的项目中帮了比较大的忙，MSVC里面调试干净了，一次性转换到GCC，再也不用象以前一样人肉转换汇编，写两份代码了。……
+                                <p class="readmore"><a href="https://skywind3000.com/blog/archives/1244/">阅读全文</a></p>
+                            </div>
+                        </article>
+                    
+                        <article class="post">
+                            <header>
+                                <h1 class="post-title">
+                                    <a href="https://skywind3000.com/blog/archives/137/">[自制开源] 轻量级图形库 PixelLib</a>
+                                </h1>
+                            </header>
+                            <date class="post-meta meta-date">
+                                2010年1月9日
+                            </date>
+                            
+                            <div class="post-meta meta-category">
+                                |
+                                
+                                    <a href="https://skywind3000.com/categories/%E5%9B%BE%E5%BD%A2%E7%BC%96%E7%A8%8B">图形编程</a>
+                                
+                                    <a href="https://skywind3000.com/categories/%E5%BC%80%E6%BA%90%E9%A1%B9%E7%9B%AE">开源项目</a>
+                                
+                                    <a href="https://skywind3000.com/categories/%E6%B8%B8%E6%88%8F%E5%BC%80%E5%8F%91">游戏开发</a>
+                                
+                                    <a href="https://skywind3000.com/categories/%E7%BC%96%E7%A8%8B%E6%8A%80%E6%9C%AF">编程技术</a>
+                                
+                            </div>
+                            
+                            <div class="post-content">
+                                图像：64种不同的像素格式，色彩空间变换，多种图形图像变换。 质量：支持3种级别抗锯齿效果，高质量几何图形绘制。 实现：轻量级纯软件实现，100% C代码（仅700KB代码）。 优化：SSE2/MMX优化 地址：https://github.com/skywind3000/pixellib 1. 图像变换： 支持仿射变换和透视变换，提供大量图像变换操作接口。 2. 抗锯齿： 所有图形绘制支持3级不同程度的抗锯齿效果。 3. 图像绘制： 图像任意拉伸，旋转，3D旋转，并且同时进行色彩空间变换。全部采用浮点数坐标，图像移动更为平滑。 4. 几何作图： 全面的抗锯齿几何作图效果。 5. 图像扭曲： 在源图像上布置若干关键点，然后改变这些关键点在屏幕上的对于位置即可实现图像扭曲。 **使用 Pixellib 来渲染 iOS 风格的图标 ** ……
+                                <p class="readmore"><a href="https://skywind3000.com/blog/archives/137/">阅读全文</a></p>
+                            </div>
+                        </article>
+                    
+                        <article class="post">
+                            <header>
+                                <h1 class="post-title">
+                                    <a href="https://skywind3000.com/blog/archives/154/">[业余土制] 实时汇编编译器</a>
+                                </h1>
+                            </header>
+                            <date class="post-meta meta-date">
+                                2009年7月5日
+                            </date>
+                            
+                            <div class="post-meta meta-category">
+                                |
+                                
+                                    <a href="https://skywind3000.com/categories/%E5%BC%80%E6%BA%90%E9%A1%B9%E7%9B%AE">开源项目</a>
+                                
+                                    <a href="https://skywind3000.com/categories/%E7%BC%96%E7%A8%8B%E6%8A%80%E6%9C%AF">编程技术</a>
+                                
+                                    <a href="https://skywind3000.com/categories/%E7%BC%96%E8%AF%91%E6%8A%80%E6%9C%AF">编译技术</a>
+                                
+                            </div>
+                            
+                            <div class="post-content">
+                                实时动态在内存中编译汇编代码，并返回函数调用指针，可用于JIT系统的后端： 项目地址：http://code.google.com/p/asmpure/ 例子：
+const char *AlphaBlendAsm = &quot;PROC C1:DWORD, C2:DWORD, A:DWORD\n&quot; &quot; movd mm0, A\n&quot; &quot; punpcklwd mm0, mm0\n&quot; &quot; punpckldq mm0, mm0\n&quot; &quot; pcmpeqb mm7, mm7\n&quot; &quot; psubw mm7, mm0\n&quot; &quot; \n&quot; &quot; punpcklbw mm1, C1\n&quot; &quot; psrlw mm1, 8\n&quot; &quot; punpcklbw mm2, C2\n&quot; &quot; psrlw mm2, 8\n&quot; &quot; \n&quot; &quot; pmullw mm1, mm7\n&quot; &quot; pmullw mm2, mm0\n&quot; &quot; paddw mm1, mm2\n&quot; &quot; \n&quot; &quot; psrlw mm1, 8\n&quot; &quot; packuswb mm1, mm1\n&quot; &quot; movd eax, mm1\n&quot; &quot; emms\n&quot; &quot; ret\n&quot; &quot;ENDP\n&quot;; void testAlphaBlend(void) { CAssembler *casm; int c; int (*AlphaBlendPtr)(int, int, int); // create assembler casm = casm_create(); // append assembly source casm_source(casm, AlphaBlendAsm); AlphaBlendPtr = (int (*)(int, int, int))casm_callable(casm, NULL); if (AlphaBlendPtr == NULL) { printf(&quot;error: %s\n&quot;, casm-&gt;error); casm_release(casm); return; } printf(&quot;==================== Alpha Blend ====================\n&quot;); casm_dumpinst(casm, stdout); printf(&quot;\nExecute code (y/n)?\n\n&quot;); do { c = getch(); } while(c != 'y' &amp;&amp; c != 'n'); if(c == 'y') { int x = AlphaBlendPtr(0x00FF00FF, 0xFF00FF00, 128); printf(&quot;output: %.8X\n\n&quot;, x); } free(AlphaBlendPtr); casm_release(casm); }  **output: 7f7f7f7f **……
+                                <p class="readmore"><a href="https://skywind3000.com/blog/archives/154/">阅读全文</a></p>
+                            </div>
+                        </article>
+                    
+                        <article class="post">
+                            <header>
+                                <h1 class="post-title">
+                                    <a href="https://skywind3000.com/blog/archives/340/">PowerPC 汇编入门与优化</a>
+                                </h1>
+                            </header>
+                            <date class="post-meta meta-date">
+                                2008年4月15日
+                            </date>
+                            
+                            <div class="post-meta meta-category">
+                                |
+                                
+                                    <a href="https://skywind3000.com/categories/%E7%BC%96%E7%A8%8B%E6%8A%80%E6%9C%AF">编程技术</a>
+                                
+                            </div>
+                            
+                            <div class="post-content">
+                                PowerPC于1991年IBM/MOTO/APPLE研制，大量应用于服务器（AIX / AS400系列及苹果系列服务器），家用游戏机（PS3, Wii, XBOX, GameCube），以及嵌入式（仅次于Arm/x86排第三）。PowerPC核心在于开放系统软件标准，其应用范围仅次于x86，是除去x86外最值得开发者了解的体系。
+不需要写出非常高效的代码，但要了解基本效率原则；不需要大规模开发PPC程序，但需要时能写几段、调试时能看懂哪里错了。本文将从对比x86入手，引入RISC及PowerPC体系概念，向读者介绍该体系指令集，常用优化方法和交叉编译环境及模拟器的搭建等内容。
+下载阅读：powerpc_figure_0408
+PowerPC Figure – PPC入门与优化 By Skywind（2007）
+http://www.skywind.me/blog/
+背景介绍
+PowerPC于1991年IBM/MOTO/APPLE研制，大量应用于服务器（AIX / AS400系列及苹果系列服务器），家用游戏机（PS3, Wii, XBOX, GameCube），以及嵌入式（仅次于Arm/x86排第三）。PowerPC核心在于开放系统软件标准，其应用范围仅次于x86，是除去x86外最值得开发者了解的体系。
+不需要写出非常高效的代码，但要了解基本效率原则；不需要大规模开发PPC程序，但需要时能写几段、调试时能看懂哪里错了。本文将从对比x86入手，引入RISC及PowerPC体系概念，向读者介绍该体系指令集，常用优化方法和交叉编译环境及模拟器的搭建等内容。
+PowerPC基础知识 _1990年 IBM时任总裁 Kuehler说服了摩托罗拉公司和苹果公司与IBM公司共同参与制订 PowerPC体系结构。为了让 AS/400也成为其中一员，1991 / 1992年罗彻斯特实验室开始为 AS/400扩充并制订PowerPC的64位结构。
+-&mdash;《罗彻斯特城堡》_
+大部分CPU指令集都可以分为：数据读写、数值计算、流程控制与设备管理四个部分，其中设备管理不属于介绍范围。开放系统软件标准在于硬件/软件只要符合该标准都能在 PowerPC下运行，也就是说先今有大量CPU虽然实现不一，但是他们在标准上都支持了 PowerPC体系，使得开发与接口更为方便。
+PPC使用RISC（精简指令集），指令字长都是32bit，一条Intel指令往往可以由多条 PPC指令组合表示。Endian一般都是可调的，默认使用BE（Big Endian），同时PPC没有栈，也就是说应用程序需要自己实现相关操作。
+常用术语介绍
+常用寄存器 问题1：如何加载32位立即数？
+在PPC下如何加载32位的立即数呢？RISC下PPC的每条指令都是4个字节定长。除去指令与寄存器参数编码，只有剩下16bit的长度用来描述立即数，比如立即数加载指令 LI：
+LI rD, SIMM
+立即数SIMM字段仅16位，如何表示32位？
+答案：只有分两次载如，使用LIS（立即数载入并左移）和ADDI（立即数加法）分两次加载。因此32bit的立即数加载需要分两次完成：
+LIS R3, 0x1122 加载并左移16位
+ADDI R3, R3, 0x3344 再加上低16位
+两条指令后，R3完成对 0x11223344的加载
+特性：不一样的子程序调用
+• f1: 子程序入口
+• blr 返回（跳转到LR地址）
+• start:
+• bl f1 调用f1（跳转并保存地址到LR）
+• li r1, 1 设置r1 = 1
+• li r3, 1 设置r3 = 1
+• sc 系统调用：结束程序
+PPC使用了LR寄存器（Link Register）来完成：在bl指令跳转前，下条指令（li r1,1）的地址会被保存到LR而执行到f1中的blr时，系统会跳转到LR所表示的地址，完成返回。
+数据读写指令
+注意：LBZ R3, 0(R2)与LHZ R3,10(R2)并不全等同于MOV AL,[EBX]和MOV AX,[EBX+10]。前者将字节和半字加载到R3时顺便清空了高位，而后两条指令加载数据到EAX并不会清空高位。 第一个程序：Hello World !!
+把下面的程序保存成 hello.s，并交叉编译：
+powerpc-eabi-as -gstabs hello.s -o hello.o powerpc-eabi-ld hello.o -o hello • .global _start /* 请将本程序保存成 hello.s /
+• .data / 后面将讲解如何在虚拟机中调试 /
+• msg: .asciz &ldquo;Hello, PowerPC World !!\n&rdquo;
+• len = . - msg
+• .text / 代码部分开始 /
+• _start:
+• li %r0, 4 / r0 = 4 /
+• li %r3, 1 / r3 = 1 /
+• lis %r4, msg@ha / r4 = msg(high) &lt;&lt; 16 /
+• addi %r4, %r4, msg@l / r4 = r4 + msg(low) /
+• li %r5, len / r5 = len /
+• sc / system call (print) /……
+                                <p class="readmore"><a href="https://skywind3000.com/blog/archives/340/">阅读全文</a></p>
+                            </div>
+                        </article>
+                    
+                        <article class="post">
+                            <header>
+                                <h1 class="post-title">
+                                    <a href="https://skywind3000.com/blog/archives/66/">艺术化的程序设计</a>
+                                </h1>
+                            </header>
+                            <date class="post-meta meta-date">
+                                2004年9月21日
+                            </date>
+                            
+                            <div class="post-meta meta-category">
+                                |
+                                
+                                    <a href="https://skywind3000.com/categories/%E5%9B%BE%E5%BD%A2%E7%BC%96%E7%A8%8B">图形编程</a>
+                                
+                                    <a href="https://skywind3000.com/categories/%E6%B8%B8%E6%88%8F%E5%BC%80%E5%8F%91">游戏开发</a>
+                                
+                                    <a href="https://skywind3000.com/categories/%E7%BC%96%E7%A8%8B%E6%8A%80%E6%9C%AF">编程技术</a>
+                                
+                            </div>
+                            
+                            <div class="post-content">
+                                计算机的硬件也有限，而人的创造也无限，程序设计美于思维和行为，记得1997年一个叫做 &ldquo;OMNISCENT&rdquo;的DEMO使人感慨万分，作者就像一名艺术家在一粒小小的米粒上雕刻着自己的作品一般。能力虽有不及，仍不妨我校仿，以此挖掘计算机最原始的艺术表现形式： （此为自去年九月到现在三次发布中的最终版本: EXFORCE） 在DOS窗口中运行DEBUG，然后把横线下的内容复制、粘贴到DEBUG窗口中，回车就可以见到了。 -&mdash;&mdash;&mdash;&mdash;&mdash;&mdash;&mdash;&mdash;&mdash;&mdash;&mdash;&mdash;&mdash;&mdash;&mdash;&mdash;&mdash;&mdash;&mdash;&mdash;&mdash;&mdash;&mdash;&mdash;&mdash;&mdash;&mdash;- e100 e8 5f 0 e8 4c 1 e8 ed 0 b8 0 4c cd 20 f f 0 8 7 1 7 1 6 7 7 1 0 f 1 0 0 e11f 0 fe c2 cb c4 c1 8a d3 c5 df 8a cc c5 d8 8a da c6 cb d3 c3 c4 cd 86 8a e137 c8 d3 8a d9 c1 d3 dd c3 c4 ce 99 9a 9a 9a ea c2 c5 de c7 cb c3 c6 84 c9 e14f c5 c7 a7 a0 0 87 97 8a ef f2 ec e5 f8 e9 ef 8a 97 87 0 66 60 b8 0 11 a3 e168 e 1 5 80 bb a3 16 1 5 0 1 a3 10 1 5 80 0 a3 12 1 5 10 2 a3 14 1 8b 3e 10 e185 1 fc b9 80 2 33 c0 f3 aa 1e 33 c0 8e d8 8e c0 be 24 0 66 ad 1f 66 a3 18 e19e 1 8c c8 66 c1 e0 10 b8 1d 2 bf 24 0 fa 66 ab b0 34 e6 43 b8 87 0 e6 40 e1b7 8a c4 e6 40 fb 66 33 c0 1e 7 b8 13 0 cd 10 be 7e 3 bb 0 0 8b 3e 16 1 ac e1d1 3c c0 73 4 aa 43 eb 9 24 3f 50 ac 59 f3 aa 43 43 80 fb 9b 72 e9 33 c0 cd e1ea 1a 81 e2 ff 7f 89 16 1c 1 66 61 c3 33 c0 8e c0 66 a1 18 1 bf 24 0 fa 66 e203 ab b0 34 e6 43 33 c0 e6 40 e6 40 fb 66 33 c0 b8 3 0 cd 10 1e 7 e8 4d 0 e21c c3 60 1e 6 8c c8 8e d8 8e c0 33 c0 e4 60 8b c8 83 e1 7f 8b 1e 10 1 3 d9 e235 24 80 f6 d0 c1 e8 7 88 7 e4 61 c 80 e6 61 24 7f e6 61 b0 20 e6 20 7 1f e24e 61 cf c3 c3 60 b4 2 b7 0 ba d 0 cd 10 b3 3 be 54 1 e8 9 1 61 e8 b1 1 c3 e269 be 20 1 e8 fe 0 33 c0 cd 16 c3 60 8b 36 e 1 bf 40 1f b9 c0 5d fc b8 0 a0 e283 8e c0 f3 a5 e 7 61 c3 60 8b 3e e 1 b9 c0 5d e 7 33 c0 fc f3 ab 61 c3 c8 e29d 0 0 0 60 8b 4e 4 8b 56 6 8a 46 8 81 f9 40 1 73 1a 81 fa 96 0 73 14 8b 3e e2b8 e 1 8b da c1 e2 8 c1 e3 6 3 da 3 d9 3 fb 88 5 61 c9 c3 c8 2 0 0 60 8b 1e e2d4 16 1 ba 0 0 83 6e 4 8 83 6e 6 8 c7 46 fe f 0 b9 0 0 33 c0 8a 7 43 3c 0 e2f0 74 1e 50 8b 46 6 83 7e 8 0 74 4 3 c2 eb 3 3 46 fe 50 8b 46 4 3 c1 50 e8 e30b 8f ff 83 c4 6 41 83 f9 10 72 d3 ff 4e fe 42 83 fa 10 72 c7 8b 4e 4 8b 56 e324 6 61 c9 c3 c8 0 0 0 52 66 a1 1c 1 66 69 c0 35 4e 5a 1 66 40 66 a3 1c 1 e33e 66 c1 e8 10 66 25 ff 7f 0 0 99 f7 7e 4 8b c2 5a c9 c3 c8 0 0 0 8b 1e 12 e358 1 b9 20 0 b8 0 0 83 3f 0 74 7 83 c3 10 40 49 75 f4 c9 c3 fc ac 3c 0 74 a e373 b4 e 34 aa 60 cd 10 61 eb f1 c3 c3 0 1d 19 c4 0 19 1d c1 c4 c7 0 c2 19 e38c c4 0 19 0 c1 c4 c4 0 c2 70 0 19 c1 c4 c2 28 1d c2 70 28 70 0 c3 70 c2 28 e3a6 c2 70 c2 28 c2 19 70 c2 28 c6 70 28 70 19 c2 28 c3 70 c2 28 19 28 c2 70 e3be c2 0 c2 70 19 c3 28 70 c3 28 19 28 70 c4 0 70 19 28 70 28 c3 70 28 19 70 e3d7 c6 0 1d 70 0 28 0 70 0 70 1d c7 0 1d 70 0 28 36 70 0 70 1d c7 0 1d c2 0 e3f2 28 36 70 c2 0 1d c9 0 28 70 19 c2 70 cb 0 28 70 19 c2 70 cb 0 28 c4 70 e40b cc 0 28 c2 70 cd 0 28 19 cf 0 70 c8 0 c8 32 0 0 56 57 c7 46 fe 9c 2 c7 e425 46 fc cd 2 c7 46 fa 28 3 c7 46 f8 51 3 c6 46 f1 1 c6 46 f0 0 c6 46 ef 0 e43f 66 c7 46 e8 0 0 0 0 c7 46 e2 a0 0 c7 46 e0 78 0 c7 46 d2 0 0 c7 46 ce 0 e45a 0 a1 10 1 89 46 ec a1 14 1 89 46 f6 a1 12 1 89 46 f4 c7 46 de 0 0 8b 76 e474 f6 eb 38 68 40 1 ff 56 fa 59 89 4 68 c8 0 ff 56 fa 59 5 ce ff 89 44 2 83 e48e 7e de 35 7d c c7 44 4 1 0 c7 44 6 17 0 eb a c7 44 4 2 0 c7 44 6 1c 0 ff e4aa 46 de 83 c6 8 83 7e de 50 7c c2 e9 94 3 66 8b 46 e8 66 89 46 e4 eb 14 66 e4c3 60 33 c0 cd 1a 8b c1 66 c1 e0 10 8b c2 66 89 46 e4 66 61 66 8b 46 e4 66 e4db 2b 46 e8 66 83 f8 c 72 de 66 8b 46 e4 66 89 46 e8 b8 8b 2 ff d0 c7 46 de e4f4 50 0 8b 76 f6 eb 36 8a 44 6 50 ff 74 2 ff 34 ff 56 fe 83 c4 6 8b 44 4 1 e50e 44 2 81 7c 2 96 0 7e 14 68 40 1 ff 56 fa 59 89 4 6a 3c ff 56 fa 59 f7 d8 e528 89 44 2 ff 4e de 83 c6 8 83 7e de 0 75 c4 8b 5e ec 80 7f 4b 0 74 f 83 6e e542 e2 2 83 7e e2 0 7d 5 c7 46 e2 0 0 8b 5e ec 80 7f 4d 0 74 10 83 46 e2 2 e55c 81 7e e2 40 1 7e 5 c7 46 e2 40 1 8b 5e ec 80 7f 48 0 74 f 83 6e e0 3 83 e576 7e e0 0 7d 5 c7 46 e0 0 0 8b 5e ec 80 7f 50 0 74 10 83 46 e0 2 81 7e e0 e590 96 0 7e 5 c7 46 e0 96 0 8b 5e ec 80 7f 1 0 74 3 e9 b0 2 8b 5e ec 80 7f e5aa 1d 0 74 33 80 7e f0 0 75 31 c6 46 f0 1 ff 56 f8 c1 e0 4 8b 7e f4 3 f8 80 e5c4 7e ef 2 7d 1c fe 46 ef c7 5 2 0 8b 46 e2 89 45 8 8b 46 e0 5 f7 ff 89 45 e5de a eb 4 c6 46 f0 0 c7 46 de 0 0 8b 7e f4 e9 a3 1 8b 45 8 89 46 d6 8b 45 a e5f9 89 46 d4 8b 5 89 46 d0 3d 1 0 74 b 3d 2 0 75 3 e9 a7 0 e9 6b 1 83 7d 2 0 e615 74 6d 8b 46 d6 2b 46 e2 89 46 da 83 7e da 0 7d 5 f7 d8 89 46 da 8b 46 d4 e62e 2b 46 e0 89 46 d8 83 7e d8 0 7d 5 f7 d8 89 46 d8 83 7e da d 7d a 83 7e e647 d8 d 7d 4 c6 46 f1 0 6a 2 ff 56 fa 59 40 1 46 d4 81 7e d4 a0 0 7e 5 c7 e661 46 d0 0 0 6a 8 ff 56 fa 59 b c0 75 25 8b 46 d6 3b 46 e2 7e 5 b8 ff ff eb e67b 3 b8 1 0 1 46 d6 eb 10 ff 45 4 8b 45 4 3d 28 0 7e 5 c7 46 d0 0 0 8b 45 2 e697 8b 55 4 83 e2 1 b c2 75 3 e9 d8 0 6a 1 ff 76 d4 ff 76 d6 ff 56 fc 83 c4 e6b1 6 e9 c7 0 8b 46 d4 5 fb ff 89 46 dc eb 27 6a 9 ff 76 dc 8b 46 d6 5 fb ff e6cb 50 ff 56 fe 83 c4 6 6a 9 ff 76 dc 8b 46 d6 5 3 0 50 ff 56 fe 83 c4 6 ff e6e5 46 dc 8b 46 d4 5 5 0 3b 46 dc 7f ce 83 6e d4 4 83 7e d4 ec 7d 8 c7 46 d0 e6ff 0 0 fe 4e ef c7 46 dc 0 0 8b 46 f4 89 46 f2 eb 65 8b 5e f2 83 3f 1 75 56 e719 83 7f 2 1 75 50 83 7e d0 0 74 4a 8b 46 d6 2b 47 8 89 46 da 83 7e da 0 7d e733 5 f7 d8 89 46 da 8b 5e f2 8b 46 d4 2b 47 a 89 46 d8 83 7e d8 0 7d 5 f7 e74c d8 89 46 d8 83 7e da f 7d 19 83 7e d8 f 7d 13 8b 5e f2 c7 47 2 0 0 c7 46 e766 d0 0 0 fe 4e ef ff 46 ce ff 46 dc 83 46 f2 10 83 7e dc 20 7c 95 8b 46 d6 e77f 89 45 8 8b 46 d4 89 45 a 8b 46 d0 89 5 ff 46 de 83 c7 10 83 7e de 20 7d e798 3 e9 54 fe 6a 14 ff 56 fa 59 b c0 75 3b ff 56 f8 c1 e0 4 8b 56 f4 3 d0 e7b1 89 56 f2 8b 5e f2 c7 7 1 0 c7 47 2 1 0 c7 47 4 0 0 68 40 1 ff 56 fa 59 e7cc 8b 5e f2 89 47 8 6a a ff 56 fa 59 5 ec ff 8b 5e f2 89 47 a b8 96 0 2b 46 e7e6 ce 89 46 d4 83 7e d4 0 7d 5 c7 46 d4 0 0 8b 46 d4 89 46 de eb 11 6a 4 ff e800 76 de 68 3f 1 ff 56 fe 83 c4 6 ff 46 de 81 7e de 96 0 7c e8 81 7e d2 8c e819 0 7d f c6 46 f1 1 8b 46 d2 25 1 0 89 46 da eb 5 c7 46 da 1 0 83 7e da 0 e834 74 e 6a 0 ff 76 e0 ff 76 e2 ff 56 fc 83 c4 6 b8 74 2 ff d0 ff 46 d2 80 e84d 7e f1 0 74 3 e9 63 fc 80 7e f1 0 75 2e 66 8b 46 e8 66 89 46 e4 eb 14 66 e866 60 33 c0 cd 1a 8b c1 66 c1 e0 10 8b c2 66 89 46 e4 66 61 66 8b 46 e4 66 e87e 2b 46 e8 66 3d d0 2 0 0 72 dc 5f 5e c9 c3 ff 53 4b 59 57 49 4e 44 30 35 g -&mdash;&mdash;&mdash;&mdash;&mdash;&mdash;&mdash;&mdash;&mdash;&mdash;&mdash;&mdash;&mdash;&mdash;&mdash;&mdash;&mdash;&mdash;&mdash;&mdash;&mdash;&mdash;&mdash;&mdash;&mdash;&mdash;&mdash;- 本程运行于DOS环境，所以不必当心它是个病毒 ：－），用CTRL控制运行， 如果您运行在WINXP下面，粘贴操作只需要点击DEBUG窗口的图标，选“编辑”即可。 以往版本或者叫“艺术化程序设计”或者叫“Extreme Game Programming”都是 EXFORCE的前几次版本，最终版本共1943字节。关于EXFORCE的更多详情见 http://www.……
+                                <p class="readmore"><a href="https://skywind3000.com/blog/archives/66/">阅读全文</a></p>
+                            </div>
+                        </article>
+                    
+
+                    
+
+
+
+
+                </div>
+            </div>
+
+            <div id="secondary">
+    <section class="widget">
+        <form id="search" action="//www.google.com/search" method="get" accept-charset="utf-8" target="_blank" _lpchecked="1">
+      
+      <input type="text" name="q" maxlength="20" placeholder="Search">
+      <input type="hidden" name="sitesearch" value="https://skywind3000.com/">
+      <button type="submit" class="submit icon-search"></button>
+</form>
+    </section>
+    
+    <section class="widget">
+        <h3 class="widget-title">最近文章</h3>
+<ul class="widget-list">
+    
+    <li>
+        <a href="https://skywind3000.com/posts/2019/shell_init_sh/" title="提高效率从编写 init.sh 开始">提高效率从编写 init.sh 开始</a>
+    </li>
+    
+    <li>
+        <a href="https://skywind3000.com/posts/intro/" title="个人主页搬迁到新系统">个人主页搬迁到新系统</a>
+    </li>
+    
+    <li>
+        <a href="https://skywind3000.com/blog/archives/2250/" title="如何实现和优化 SVM（支持向量机）？">如何实现和优化 SVM（支持向量机）？</a>
+    </li>
+    
+    <li>
+        <a href="https://skywind3000.com/blog/archives/2229/" title="别让 cd 浪费你的时间">别让 cd 浪费你的时间</a>
+    </li>
+    
+    <li>
+        <a href="https://skywind3000.com/blog/archives/2193/" title="VimScript 五分钟入门（翻译）">VimScript 五分钟入门（翻译）</a>
+    </li>
+    
+    <li>
+        <a href="https://skywind3000.com/blog/archives/2173/" title="Windows 10 - 1803 更新又给我出幺蛾子">Windows 10 - 1803 更新又给我出幺蛾子</a>
+    </li>
+    
+    <li>
+        <a href="https://skywind3000.com/blog/archives/2084/" title="Vim 8 下 C/C&#43;&#43; 开发环境搭建">Vim 8 下 C/C&#43;&#43; 开发环境搭建</a>
+    </li>
+    
+    <li>
+        <a href="https://skywind3000.com/blog/archives/2071/" title="Bash 中文速查表/Cheatsheet （全网最全）">Bash 中文速查表/Cheatsheet （全网最全）</a>
+    </li>
+    
+    <li>
+        <a href="https://skywind3000.com/blog/archives/2060/" title="为什么说 zsh 是 shell 中的极品？">为什么说 zsh 是 shell 中的极品？</a>
+    </li>
+    
+    <li>
+        <a href="https://skywind3000.com/blog/archives/2051/" title="Vim 中文速查表/Cheatsheet（全网最完善）">Vim 中文速查表/Cheatsheet（全网最完善）</a>
+    </li>
+    
+</ul>
+    </section>
+
+    
+
+    <section class="widget">
+        <h3 class="widget-title">分类</h3>
+<ul class="widget-list">
+    
+    <li>
+        <a href="https://skywind3000.com/categories/%E4%BA%BA%E5%B7%A5%E6%99%BA%E8%83%BD/">人工智能(8)</a>
+    </li>
+    
+    <li>
+        <a href="https://skywind3000.com/categories/%E5%9B%BE%E5%BD%A2%E7%BC%96%E7%A8%8B/">图形编程(20)</a>
+    </li>
+    
+    <li>
+        <a href="https://skywind3000.com/categories/%E5%A4%A7%E6%B5%AA%E6%B7%98%E6%B2%99/">大浪淘沙(12)</a>
+    </li>
+    
+    <li>
+        <a href="https://skywind3000.com/categories/%E5%BC%80%E6%BA%90%E9%A1%B9%E7%9B%AE/">开源项目(8)</a>
+    </li>
+    
+    <li>
+        <a href="https://skywind3000.com/categories/%E6%9C%AA%E5%88%86%E7%B1%BB/">未分类(6)</a>
+    </li>
+    
+    <li>
+        <a href="https://skywind3000.com/categories/%E6%B8%B8%E6%88%8F%E5%BC%80%E5%8F%91/">游戏开发(27)</a>
+    </li>
+    
+    <li>
+        <a href="https://skywind3000.com/categories/%E7%BC%96%E7%A8%8B%E6%8A%80%E6%9C%AF/">编程技术(45)</a>
+    </li>
+    
+    <li>
+        <a href="https://skywind3000.com/categories/%E7%BC%96%E8%AF%91%E6%8A%80%E6%9C%AF/">编译技术(6)</a>
+    </li>
+    
+    <li>
+        <a href="https://skywind3000.com/categories/%E7%BD%91%E7%BB%9C%E7%BC%96%E7%A8%8B/">网络编程(14)</a>
+    </li>
+    
+    <li>
+        <a href="https://skywind3000.com/categories/%E9%9A%8F%E7%AC%94/">随笔(57)</a>
+    </li>
+    
+</ul>
+    </section>
+
+    <section class="widget">
+        <h3 class="widget-title">标签</h3>
+<div class="tagcloud">
+    
+    <a href="https://skywind3000.com/tags/ai/">ai</a>
+    
+    <a href="https://skywind3000.com/tags/android/">android</a>
+    
+    <a href="https://skywind3000.com/tags/as3/">as3</a>
+    
+    <a href="https://skywind3000.com/tags/c&#43;&#43;/">c&#43;&#43;</a>
+    
+    <a href="https://skywind3000.com/tags/cygwin/">cygwin</a>
+    
+    <a href="https://skywind3000.com/tags/dos/">dos</a>
+    
+    <a href="https://skywind3000.com/tags/kcp/">kcp</a>
+    
+    <a href="https://skywind3000.com/tags/linux/">linux</a>
+    
+    <a href="https://skywind3000.com/tags/p2p/">p2p</a>
+    
+    <a href="https://skywind3000.com/tags/python/">python</a>
+    
+    <a href="https://skywind3000.com/tags/shell/">shell</a>
+    
+    <a href="https://skywind3000.com/tags/vim/">vim</a>
+    
+    <a href="https://skywind3000.com/tags/win32/">win32</a>
+    
+    <a href="https://skywind3000.com/tags/%E4%BC%98%E5%8C%96/">优化</a>
+    
+    <a href="https://skywind3000.com/tags/%E5%90%8C%E6%AD%A5/">同步</a>
+    
+    <a href="https://skywind3000.com/tags/%E5%9B%BE%E5%BD%A2/">图形</a>
+    
+    <a href="https://skywind3000.com/tags/%E5%B0%8F%E6%B8%B8%E6%88%8F/">小游戏</a>
+    
+    <a href="https://skywind3000.com/tags/%E6%8A%97%E9%94%AF%E9%BD%BF/">抗锯齿</a>
+    
+    <a href="https://skywind3000.com/tags/%E6%B1%87%E7%BC%96/">汇编</a>
+    
+    <a href="https://skywind3000.com/tags/%E6%BC%94%E7%A4%BA/">演示</a>
+    
+    <a href="https://skywind3000.com/tags/%E7%9F%A2%E9%87%8F%E4%BD%9C%E5%9B%BE/">矢量作图</a>
+    
+    <a href="https://skywind3000.com/tags/%E7%9F%A5%E4%B9%8E/">知乎</a>
+    
+    <a href="https://skywind3000.com/tags/%E7%AD%96%E5%88%92/">策划</a>
+    
+    <a href="https://skywind3000.com/tags/%E7%AE%97%E6%B3%95/">算法</a>
+    
+    <a href="https://skywind3000.com/tags/%E7%B3%BB%E7%BB%9F%E5%BC%80%E5%8F%91/">系统开发</a>
+    
+    <a href="https://skywind3000.com/tags/%E7%BD%91%E7%BB%9C/">网络</a>
+    
+    <a href="https://skywind3000.com/tags/%E7%BF%BB%E8%AF%91/">翻译</a>
+    
+    <a href="https://skywind3000.com/tags/%E8%99%9A%E6%8B%9F%E6%9C%BA/">虚拟机</a>
+    
+    <a href="https://skywind3000.com/tags/%E8%A7%86%E9%A2%91/">视频</a>
+    
+    <a href="https://skywind3000.com/tags/%E8%AE%B2%E4%B9%89/">讲义</a>
+    
+    <a href="https://skywind3000.com/tags/%E8%AF%8D%E6%B3%95%E5%88%86%E6%9E%90/">词法分析</a>
+    
+    <a href="https://skywind3000.com/tags/%E8%AF%AD%E6%B3%95%E5%88%86%E6%9E%90/">语法分析</a>
+    
+    <a href="https://skywind3000.com/tags/%E8%B6%B3%E8%BF%B9/">足迹</a>
+    
+    <a href="https://skywind3000.com/tags/%E9%97%B2%E8%81%8A/">闲聊</a>
+    
+    <a href="https://skywind3000.com/tags/%E9%9A%8F%E7%AC%94/">随笔</a>
+    
+</div>
+    </section>
+
+    
+
+    <section class="widget">
+        <h3 class="widget-title">其它</h3>
+        <ul class="widget-list">
+            <li><a href="https://skywind3000.com/index.xml">文章 RSS</a></li>
+        </ul>
+    </section>
+</div>
+        </div>
+    </div>
+</div>
+<footer id="footer">
+    <div class="container">
+        &copy; 2019 <a href="https://skywind3000.com/">Skywind Inside By skywind</a>.
+        Powered by <a rel="nofollow noreferer noopener" href="https://gohugo.io" target="_blank">Hugo</a>.
+        <a href="https://www.flysnow.org/" target="_blank">Theme</a> based on <a href="https://github.com/rujews/maupassant-hugo" target="_blank">maupassant</a>.
+        
+    </div>
+</footer>
+
+
+<a id="rocket" href="#top"></a>
+<script type="text/javascript" src="/js/totop.js?v=0.0.0" async=""></script>
+
+
+
+<script type="text/javascript" src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js" async></script>
+
+
+
+
+
+</body>
+</html>

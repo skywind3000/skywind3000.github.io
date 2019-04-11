@@ -48,5 +48,1277 @@ int main(void)
 &lt;/blockquote&gt;</description>
     </item>
     
+    <item>
+      <title>别让 cd 浪费你的时间</title>
+      <link>https://skywind3000.com/blog/archives/2229/</link>
+      <pubDate>Fri, 08 Feb 2019 15:39:46 +0000</pubDate>
+      
+      <guid>https://skywind3000.com/blog/archives/2229/</guid>
+      <description>终端下工作最烦躁的就是路径切换，没有自动路径切换的帮助，就像在泥里走路，于是大家发明了各种 autojump / z / fasd 等工具来提升路径切换的效率，今天向大家介绍一个更好用的工具：z.lua，用熟练了以后就像终端里溜冰，路劲切换从此指哪打哪。
+z.lua 是一个会学习你使用习惯的 cd 命令，它会跟踪你在 shell 下访问过的路径，通过一套称为 Frecent 的机制（源自 Mozilla），经过一段简短的学习之后，z.lua 会帮你跳转到所有匹配正则关键字的路径里 Frecent 值最高的那条路径去。
+正则将按顺序进行匹配，&amp;rdquo;z foo bar&amp;rdquo; 可以匹配到 /foo/bar ，但是不能匹配 /bar/foo。
+特性说明：  性能比 z.sh 快三倍，比 fasd / autojump 快十倍以上。 支持 Posix Shell：bash, zsh, dash, sh, ash, busybox 等等。 支持 Fish Shell，Power Shell 和 Windows cmd。 使用增强匹配算法，更准确的带你去到你想去的地方。 低占用，能够仅在当前路径改变时才更新数据库（将 $_ZL_ADD_ONCE 设成 1）。 交互选择模式，如果有多个匹配结果的话，跳转前允许你进行选择。 交互选择模式，支持使用 fzf 进行可视化结果筛选（可选）。 快速跳转到父目录，或者项目根目录，代替反复 “cd ../../..&amp;rdquo; 。 为不同的操作系统，不同的 Shell 程序提供统一的使用体验。 兼容 lua 5.1, 5.2 和 5.3 以上版本。 自包含且无额外依赖，单个 z.lua 文件完成所有工作。  软件安装： 将下面对应语句添加到你的 .bashrc / .zshrc / .profile 或者对应 shell 的初始化脚本末尾：
+eval &amp;quot;$(lua /path/to/z.lua --init bash enhanced once echo)&amp;quot; # BASH 初始化 eval &amp;quot;$(lua /path/to/z.lua --init zsh enhanced once echo)&amp;quot; # ZSH 初始化 eval &amp;quot;$(lua /path/to/z.lua --init posix enhanced once echo)&amp;quot; # 其他 Posix Shell 初始化 source (lua /path/to/z.lua --init fish enhanced once echo | psub) # Fish Shell 初始化 iex ($(lua /path/to/z.lua --init powershell enhanced once echo) -join &amp;quot;`n&amp;quot;) # Power Shell 初始化  然后重新登陆，即可使用。
+用户评价： “我喜欢它的原理，我在命令行下面的行为十分有规律，并且我十分懒惰，懒得管理和维护一套书签或者路径别名。“
+“总之，z.lua 做到了它所宣称的目标。如果你需要快速的在目录间切换，它可能是最好的选择。“
+”我终于可以在自己的树莓派1上使用 autojump 类似的功能了，而不用像以前传统 autojump 那样每次打开终端都要等待 30 秒。”
+基本使用： cd 到一个包含 foo 的目录：
+z foo  cd 到一个以 foo 结尾的目录：
+z foo$  对长路径使用多个关键字进行匹配： 假设路径历史数据库（~/.zlua）中有两条记录：
+10 /home/user/work/inbox 30 /home/user/mail/inbox
+&amp;ldquo;z in&amp;rdquo;将会跳转到 /home/user/mail/inbox 因为它有更高的权重，同时你可以传递更多参数给 z.lua 来更加精确的指明，如 &amp;ldquo;z w in&amp;rdquo; 则会让你跳到 /home/user/work/inbox。
+交互选择： 使用 -i 参数进行跳转时, 如果有多个匹配结果，那么 z.</description>
+    </item>
+    
+    <item>
+      <title>VimScript 五分钟入门（翻译）</title>
+      <link>https://skywind3000.com/blog/archives/2193/</link>
+      <pubDate>Sat, 26 May 2018 09:24:13 +0000</pubDate>
+      
+      <guid>https://skywind3000.com/blog/archives/2193/</guid>
+      <description>译注：折腾 Vim 当然要能看懂和改写相关脚本，而中文资料匮乏，缺一个提纲挈领的教程。本文翻译自 Andrew Scala 的 《Five Minute Vimscript》，立足于让你用最短的时间掌握 VimScript 的基础和要点，你可以把它看成一份语言速查表。
+Vim有着丰富的内建文档系统，使用 :h &amp;lt;关键词&amp;gt; 就可以阅读，如果你想在方便的尝试各种 vimscript ，你可以通过 NORMAL 模式下使用 gQ 命令进入 VimScript 的交互式环境调试命令。
+注意：下面的例子中会包含一些形如 &amp;lt;符号&amp;gt; 的符号，意味着正式使用时应该被完全替换成真实的东西，包括左右两边的尖括号。而单独的 &amp;lt; 和 &amp;gt; 在 VimScript 中被用作比较符号。
+变量
+ let 命令用来对变量进行初始化或者赋值。 unlet 命令用来删除一个变量。 unlet! 命令同样可以用来删除变量，但是会忽略诸如变量不存在的错误提示。  默认情况下，如果一个变量在函数体以外初始化的，那么它的作用域是全局变量；而如果它是在函数体以内初始化的，那它的作用于是局部变量。同时你可以通过变量名称前加冒号前缀明确的指明变量的作用域：
+ g:var - 全局 a:var - 函数参数 l:var - 函数局部变量 b:var - buffer 局部变量 w:var - window 局部变量 t:var - tab 局部变量 s:var - 当前脚本内可见的局部变量 v:var - Vim 预定义的内部变量  你可以通过 $name 的模式读取或者改写环境变量，同时可以用 &amp;amp;option 的方式来读写 vim 内部的设置值。
+数据类型
+Number：32 位有符号整数 -123 0x10 0177
+Float: 浮点数，需要编译 Vim 的时候，有 +float 特性支持 123.456 1.15e-6 -1.1e3
+String: NULL 结尾的 8位无符号字符串 &amp;ldquo;ab\txx\&amp;ldquo;&amp;ndash;&amp;rdquo; &amp;lsquo;x-z&amp;rdquo;a,c&amp;rsquo;
+Funcref: 函数引用，函数引用类型的变量名必须以大写字母开头 :let Myfunc = function(&amp;ldquo;strlen&amp;rdquo;) :echo Myfunc(&amp;lsquo;foobar&amp;rsquo;) &amp;ldquo; Call strlen on &amp;lsquo;foobar&amp;rsquo;. 6
+List: 有序列表 :let mylist = [1, 2, [&amp;lsquo;a&amp;rsquo;, &amp;lsquo;b&amp;rsquo;]] :echo mylist[0] 1 :echo mylist[2][0] a :echo mylist[-2] 2 :echo mylist[999] E684: list index out of range: 999 :echo get(mylist, 999, &amp;ldquo;THERE IS NO 1000th ELEMENT&amp;rdquo;) THERE IS NO 1000th ELEMENT
+Dictionary: 无序的 Key/Value 容器 :let mydict = {&amp;lsquo;blue&amp;rsquo;: &amp;ldquo;#0000ff&amp;rdquo;, &amp;lsquo;foo&amp;rsquo;: {999: &amp;ldquo;baz&amp;rdquo;}} :echo mydict[&amp;ldquo;blue&amp;rdquo;] #0000ff :echo mydict.foo {999: &amp;ldquo;baz&amp;rdquo;} :echo mydict.foo.999 baz :let mydict.blue = &amp;ldquo;BLUE&amp;rdquo; :echo mydict.blue BLUE
+没有布尔类型，整数 0 被当作假，其他被当作真。字符串在比较真假前会被转换成整数，大部分字符串都会被转化为 0，除非以非零开头的字符串才会转化成非零。
+VimScript 的变量属于动态弱类型。
+:echo 1 . &amp;quot;foo&amp;quot; 1foo :echo 1 + &amp;quot;1&amp;quot; 2 :function! TrueFalse(arg) : return a:arg?</description>
+    </item>
+    
+    <item>
+      <title>Windows 10 - 1803 更新又给我出幺蛾子</title>
+      <link>https://skywind3000.com/blog/archives/2173/</link>
+      <pubDate>Wed, 02 May 2018 04:16:53 +0000</pubDate>
+      
+      <guid>https://skywind3000.com/blog/archives/2173/</guid>
+      <description>Windows 10 的 1803 版本更新后，Cygwin 的 Open SSH 服务无法始用，调查半天，Windows 10 新建了个 sshd 的服务，原来的 Cygwin Open SSH 服务被删除了，也安装不上去，解决方法是 ssh-host-config 后面加个参数 \--name sshd2 换个新名字重新安装服务。</description>
+    </item>
+    
+    <item>
+      <title>Vim 8 下 C/C&#43;&#43; 开发环境搭建</title>
+      <link>https://skywind3000.com/blog/archives/2084/</link>
+      <pubDate>Sat, 21 Apr 2018 22:38:07 +0000</pubDate>
+      
+      <guid>https://skywind3000.com/blog/archives/2084/</guid>
+      <description>&lt;p&gt;挺多人问怎么在 Vim 中搭建 C/C++ 开发环境，我本来想找篇文章发给人家，结果网上看了一圈，要不就是内容太过陈旧，要不就是太过零碎，不成体系。2018 年了，Vim 8 发布已经一年半，各大 Linux 发行版和 Mac OS X自带的 Vim 都已经跟进到 8了，不少文章还在介绍一些十年前的老方法。于是有了这篇文章。&lt;/p&gt;
+
+&lt;p&gt;那如何高效的再 Vim 8 中开发 C/C++ 项目呢？假设你已经有一定 Vim 使用经验，并且折腾过 Vim 配置，能够相对舒适的在 Vim 中编写其他代码的时候，准备在 Vim 开始 C/C++ 项目开发，或者你已经用 Vim 编写了几年 C/C++ 代码，想要更进一步，让自己的工作更加顺畅的话，本文就是为你准备的：&lt;/p&gt;
+
+&lt;h3 id=&#34;插件管理&#34;&gt;插件管理&lt;/h3&gt;
+
+&lt;p&gt;为什么把插件管理放在第一个来讲呢？这是比较基本的一个东西，如今 Vim 下熟练开发的人，基本上手都有 20-50 个插件，遥想十年前，Vim里常用的插件一只手都数得过来。过去我一直使用老牌的 &lt;a href=&#34;https://github.com/VundleVim/Vundle.vim&#34;&gt;Vundle&lt;/a&gt; 来管理插件，但是随着插件越来越多，更新越来越频繁，Vundle
+这种每次更新就要好几分钟的东西实在是不堪重负了，在我逐步对 Vundle 失去耐心之后，我试用了 &lt;a href=&#34;https://github.com/junegunn/vim-plug&#34;&gt;vim-plug&lt;/a&gt; ，用了两天以后就再也回不去 Vundle了，它支持全异步的插件安装，安装50个插件只需要一分钟不到的时间，这在 Vundle
+下面根本不可想像的事情，插件更新也很快，不像原来每次更新都可以去喝杯茶去，最重要的是它支持插件延迟加载：&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-viml&#34;&gt;&amp;quot; 定义插件，默认用法，和 Vundle 的语法差不多
+Plug &#39;junegunn/vim-easy-align&#39;
+Plug &#39;skywind3000/quickmenu.vim&#39;
+&amp;quot; 延迟按需加载，使用到命令的时候再加载或者打开对应文件类型才加载
+Plug &#39;scrooloose/nerdtree&#39;, { &#39;on&#39;:  &#39;NERDTreeToggle&#39; }
+Plug &#39;tpope/vim-fireplace&#39;, { &#39;for&#39;: &#39;clojure&#39; }
+&amp;quot; 确定插件仓库中的分支或者 tag
+Plug &#39;rdnetto/YCM-Generator&#39;, { &#39;branch&#39;: &#39;stable&#39; }
+Plug &#39;nsf/gocode&#39;, { &#39;tag&#39;: &#39;v.20150303&#39;, &#39;rtp&#39;: &#39;vim&#39; }
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;定义好插件以后一个：&lt;code&gt;:PlugInstall&lt;/code&gt; 命令就并行安装所有插件了，比 Vundle 快捷不少，关键是 vim-plug 只有单个文件，正好可以放在我 github 上的 vim 配置仓库中，每次需要更新 vim-plug 时只需要 &lt;code&gt;:PlugUpgrade&lt;/code&gt;，即可自我更新。&lt;/p&gt;</description>
+    </item>
+    
+    <item>
+      <title>Bash 中文速查表/Cheatsheet （全网最全）</title>
+      <link>https://skywind3000.com/blog/archives/2071/</link>
+      <pubDate>Wed, 07 Mar 2018 03:59:26 +0000</pubDate>
+      
+      <guid>https://skywind3000.com/blog/archives/2071/</guid>
+      <description>Bash 的知识点向来比较凌乱，有时候写点小脚本，你忘记了条件判断怎么写了，就打开网页搜索一半天；忘记怎么分割字符串，又搜索一半天；忘了怎么解压缩某后缀名，又打开网页搜一半天。
+关键大部分搜出来的东西都十分琐碎，东一处，西一处，质量又参差不齐，而且看到一处有些细节有疑问，你还得接着搜索。
+连记点笔记也是这一篇那一篇的，用起来找来找去的十分不爽，所以我一怒之下春节期间整理了一份 bash 的 cheatsheet，以图以后有关于 bash 的事情就查看这个文件就够了：
+https://github.com/skywind3000/awesome-cheatsheets/blob/master/languages/bash.sh
+对于一些工具性的东西，有时候一份速查表比你翻书查网页都高效数倍。
+-- 相关阅读：
+韦易笑：有哪些命令行的软件堪称神器？
+终端调试哪家强？
+为什么说 zsh 是 shell 中的极品？</description>
+    </item>
+    
+    <item>
+      <title>为什么说 zsh 是 shell 中的极品？</title>
+      <link>https://skywind3000.com/blog/archives/2060/</link>
+      <pubDate>Wed, 07 Mar 2018 03:42:29 +0000</pubDate>
+      
+      <guid>https://skywind3000.com/blog/archives/2060/</guid>
+      <description>（这是之前我在知乎上回答的一个可能对大家有点用处的答案，关于 zsh 的一些演示）
+色彩高亮 并不是传统基于正则表达式的色彩高亮，而是真的会判断你输入的是啥的色彩高亮：
+白色代表普通命令或者程序，红色代表错误命令，这个很管用，你再一个个字母的敲命令，前面都是红色的，如果敲对了最后一个字母的话，你会看到整条命令连着前面的都变成了白色，代表你敲对了。以前无高亮的时候敲错了都不知道，还要往上翻着左右检查。下面青色的代表内建命令或者 alias （echo 和 ls ），这些都不是正则判断出来的，是真的去检查的。
+细心的人会发现非零的错误码，也会高亮显示在最右边（上一条 data命令错误，返回127）。
+命令提示 注意，命令提示和补全是两个完全不同的系统，很多时候提示比补全更有用：
+你才输入完 “tar”命令，后面就用灰色给你提示 tar 命令的参数，而且是随着你动态输入完每一个字母不断修正变化：
+比如你输入到 - 后，没有跟着它上面的提示，而是输入了一个c字母，它马上明白你是要压缩，不是解压，然后随即给出你压缩对应的命令提示。
+这个命令提示是基于你的历史命令数据库进行分析的，随着你输入的命令越来越多，提示将会越来越准确和顺手，某些不常输入的命令特别管用，比如偶尔查看下网卡配置：
+刚输入完：cat /etc/n 它后面已经猜出你可能要查看网卡配置了，然后马上给出你提示，用不着你 tab 补全半天，你才敲 gc ，它就猜测出你可能想运行 gcc，然后马上给出完整建议：
+如果你觉得它提示的正确，你可以 CTRL+F 表示采纳，后面就会自动帮你一次性全部输入完了，不用一个字一个字的照着敲。前面的高亮就不说了，用惯这套提示系统，你就再也难以回到光秃秃的 bash 时代了。
+智能补全 传统 shell 的补全在 zsh 面前基本都可以下班了：
+即便可以在终端下舒适工作的人，面对有些任务也会觉得烦躁，比如频繁的切换路径，这种缩写路径补全是我用 zsh 的一大痛点之一，特别是路径比较长的时候，比如 OS X 下工具链层层套的那种路径，比如某 java 代码树，有了这种缩写补全，能让你切换路径流畅不少。
+当补全内容较多时，不用像 bash 一样持续提示你需要继续输入，也不会像 cmd 永无止境的循环下去，连续敲击两次 TAB 键 zsh 给你一个补全目录，让你上下左右选择：
+这叫选择模式，由两次连续 TAB 进入，进入后，除了 tab/shift+tab 可以前后切换外，你还可以使用光标键上下左右移动，或者使用 emacs 键位：ctrl + f/b/p/n (左右上下：forward, backward, previous, next) 。如果你觉得光标键太远难按，CTRL+f/b/p/n 太伤小拇指，可以跟我一样新定义出一套：ALT+hjkl （左下上右）来选择，十分顺手。回车表示确认选择，用 CTRL+G 表示退出。
+命令参数补全更不在话下，输入 svn 后面按 TAB：
+就出现了 svn 的参数，这种一级参数补全基本只会对很少用的命令才有效果，svn/git 这种一级参数基本都不需要补全的，我们一般会需要到二级参数补全，比如已经输入了 svn commit，但是有一个 commit 的参数我忘记了，我只记得两个减号开头的，于是：
+这时候两次 TAB 进入选择模式就比较管用了，svn 的二级参数往往很长，选择模式比如信任 server 那个，选择完回车确认，或者 CTRL+G 退出选择模式。
+zsh的补全真的太强了，我这里只说了十分之一不到，没法一一展开了，但就上面几个已经让我有充分的理由切换到 zsh 了。
+快速跳转 前面也说过命令行工作中，不同的路径间切来切去是个头疼的问题，除了上面提到的缩写补全外，有无更快的办法让我马上切换到我最近跳转过的某个路径？当然有“cd -”命令：
+输入 cd 后面加一个减号后，按一次 tab 马上就列出本次登陆后去过的最近几次路径，接着根据下面的提示输入数字按回车就过去了，比如输入：
+$ cd -5 &amp;lt;回车&amp;gt;  就跳转到 ~/software/libclang-python3 路径下了。当然你还可以不输入数字，而是再按一次 tab 进入选择模式，上下键或者 ctrl+n/p 来选择，回车确认，ctrl+g 返回。
+自动跳转 有了前面的路径缩写展开，和这里的最近访问路径切换，你已经没法再回到过去那种按部就班输入路径外加点弱智补全的方式了，但是可能你还会问，能否更进一步，不限于本次登陆或者最近去过的几级路径，有没有办法让我快速进入自我开始用 zsh 之后进入过的某个路径呢？当然可以，我们用 z 命令，查看历史上进入过的目录：
+敲入 z 命令，列出了自从我开始用zsh进入过的目录和他们的权重，进入次数越多，权重越大，便于演示，我删除了我的历史，随便 cd 了一下，保持列表的简洁。z 后面加一个关键词就能跳转到所有匹配的历史路径中权重最高的那个了：
+比如所有历史路径都包含 o ，那么 z o 就会跳转到权重最高的 ~/software 目录中。使用：“z -l foo&amp;rdquo; 可以列出包含 foo 的所有历史路径：
+比如我们查询包含关键字为 c 的所有历史路径和他们的权重，有时你搞不清楚权重，可能会跳转错了，比如有两个路径：
+project1/src project2/src  那么你 z src 的时候可能并不能如你愿跳转到你想要去的路径，那怎么办呢？第一个办法是实际 cd project1/src 过去，增加它的权重，权重超过 project2/src 那么下次 z src 的时候就会跳转过去，你可以实时用 z -l src 查看包含 src 的所有路径权重。
+更加可靠的方法是，增加一个关键字，比如 z 1 src ，空格分隔多个关键字，z会先匹配出第一个来，比如1 ，然后再匹配第二个 src ，马上锁定 project1/src 了。大家实际使用起来，一般是 z + 最后一级目录名，比如：
+$ z vim # -&amp;gt; /home/skywind/software/vim $ z tmp # -&amp;gt; /home/skywind/tmp $ z local # -&amp;gt; /home/skywind/.</description>
+    </item>
+    
+    <item>
+      <title>Vim 中文速查表/Cheatsheet（全网最完善）</title>
+      <link>https://skywind3000.com/blog/archives/2051/</link>
+      <pubDate>Wed, 07 Mar 2018 03:26:13 +0000</pubDate>
+      
+      <guid>https://skywind3000.com/blog/archives/2051/</guid>
+      <description>春节期间整理了一份 Vim 中文速查表，免得经常东搜索西搜索的：
+https://github.com/skywind3000/awesome-cheatsheets/blob/master/editors/vim.txt
+看了一下，应该是现在 Vim 所有中英文速查表里最完善的一份，有时候速查表比看书搜网页高效多了。</description>
+    </item>
+    
+    <item>
+      <title>GDB 从裸奔到穿戴整齐</title>
+      <link>https://skywind3000.com/blog/archives/2036/</link>
+      <pubDate>Wed, 28 Feb 2018 08:56:56 +0000</pubDate>
+      
+      <guid>https://skywind3000.com/blog/archives/2036/</guid>
+      <description>无数次被问道：你在终端下怎么调试更高效？或者怎么在 Vim 里调试？好吧，今天统一回答下，我从来不在 vim 里调试，因为它还不成熟。那除了命令行 GDB 裸奔以外，终端下还有没有更高效的方法？能够让我事半功倍？
+当然有，选择恰当的工具和方法，让 GDB 调试效率成倍的提升并没有任何问题。当然，前提条件是你至少会在使用最原始的 GDB。
+裸奔状态：原始的 GDB 命令行 穿上各种衣服前，至少得先学会裸奔，找份简单的 GDB cheat sheet 对照一下：
+生产环境中出现崩溃时，因线上服务器一般没有开发环境，也无配套源代码，所以程序崩溃后，如果你懒得把 core 文件拖回到开发机检查，可以先在线上服务器先简单gdb看一下。
+GDB命令密密麻麻，常用的也就表格上那几条，比如进去以后第一步先用 bt 查看一下调用栈，info local查看一下本地变量，再配合 up/down 在整个调用栈的不同层次之间上下移动一下，检查各处局部变量的值，print 一下某个表达式，即便没代码，看下符号和反汇编，一般也能调试个七七八八。
+碰到复杂点的 BUG，必须配合源代码了，那你得把 core 文件拉到开发环境中，再用 gdb 对照源代码调试，配合 list [行号] 指令查看当前运行的源代码，再配合其他方法进行调试。
+那么这时候，如果调试复杂度继续上升，你需要不断的断点，每次 next / step 单步完后你都需要 list 一下前后源代码，或者用 disassemble [函数名/地址] 查看一下指令的话，不少人会感觉到抓狂，这时我们需要给裸奔的 GDB 穿条内裤了。
+穿上内裤的 GDB - TUI 这是 gdb 自带的文本界面，使用 gdb -tui 命令启动，比如：
+gdb -tui hello  即可打开我们的文本界面：
+上方是源代码窗口，下面是 gdb 终端，窗口管理快捷键模仿 emacs，使用 c-x o 进行窗口切换，如果你还想查看指令窗口，可以输入：layout split
+然后你单步的时候上面的源代码窗口会跟着滚动，比之前不停的 list 方便不少吧，要看前后源代码可以继续 c-x o 切换窗口后上下滚动。
+有时候你 up/down 切换了栈帧后，上面的代码也许来不及更新，那么你用 update 指令，让上面的代码窗口定位到你最新的执行位置，有时也需要 CTRL-L 重绘下整个界面。
+在 gdb 自带的 tui 模式中，你不但可以随时查看代码/指令，还可以查看寄存器。好吧，其实 gdb再简陋，本身还是配套了一条内裤的，只是很多人忘记拿出来穿了。
+穿上内衣：gdbinit 如果上述文本 TUI的信息不够丰富的话，也许你会对 .gdbinit 感兴趣，~/.gdbinit 是一个 gdb配置脚本，可以设定一些由 python 编写的插件，比如 peda：
+在 ~/.gdbinit 上面配置了 peda 后，可以看到命令提示符就从 (gdb) 变成了 gdb-peda$ 。每敲一个单步命令，peda 都会显示出无比丰富的信息，你还可以配置添加更多，配合高亮，你可以得到一个加强版的命令行。
+不过这个我用的并不多，因为它会影响 TUI 模式的界面，我不喜欢在我的 gdb 里搞太多乱七八糟的东西。同时，当我们的调试需求继续变得更加复杂，你要不停的断点，频繁的单步，这些传统命令行里不停的输入各种指令显然已经让我们疲惫不堪了，能否直接在界面上查看源代码并且直接在代码上快捷键断点，快捷键单步呢？
+可以啊，试试 cgdb。
+穿上外套的 GDB：cgdb CGDB 类似 gdb tui 分为终端窗口和代码窗口：
+上面的代码窗口称为 cgdb mode, 下面的 gdb 窗口称为 gdb mode，调试就是不停的在两种模式间切换，按键模仿 vim，按 ESC 切换回 cgdb 模式，按 i 切换到 gdb 模式。
+这看起来和 TUI gdb 差不多啊？除了语法高亮外它比 gdb tui 高效在哪里呢？答案是：大部分操作皆可在 cgdb mode 下（即源代码窗口）用快捷键操作。
+方向键 或者 hjkl 移动光标，page-down/up 或 c-f / c-b 前后翻页，按 o键会列出当前可执行文件的源代码列表，可以切换查看其他相关代码文件，按 / 或者 ？ 可以进行文档搜索。
+上面这些快捷键基本和 vim 对应，能让你方便的浏览源代码，同时在代码窗口可以用空格键来切换断点，还有其他一些快捷键：
+ F5 - Send a run command to GDB. F6 - Send a continue command to GDB. F7 - Send a finish command to GDB. F8 - Send a next command to GDB.</description>
+    </item>
+    
+    <item>
+      <title>终端软件里正确设置 ALT 键和 BACKSPACE 键</title>
+      <link>https://skywind3000.com/blog/archives/2021/</link>
+      <pubDate>Fri, 23 Feb 2018 07:42:59 +0000</pubDate>
+      
+      <guid>https://skywind3000.com/blog/archives/2021/</guid>
+      <description>不管你在终端下使用 vim/neovim, emacs, nano 或者 zsh，你都会碰到使用 ALT 键的情况（终端下叫做 meta键），而由于历史原因，大部分终端软件的默认设置都无法正确使用 ALT 键。
+要在终端下正确使用 ALT键最简单的做法是：首先将终端软件的 “使用 Alt键作为 Meta键” 的功能打开，意思是如果你在终端下按下 ALT+X，那么终端软件将会发送 &amp;lt;ESC&amp;gt;x 两个字节过去，字节码为：0x27, 0x78。
+SecureCRT：终端设置
+XShell4 终端设置：
+其他终端软件里：
+ Putty/MinTTY 默认ALT+X 就是发送 &amp;lt;ESC&amp;gt;x过去 Mac下面的 iTerm2/Terminal.app 需要跟 XShell / SecureCRT一样设置一下 Ubuntu 下面的 GnomeTerminal 默认也是发送 &amp;lt;ESC&amp;gt;x过去的 任意平台下面的 xterm 可以配置 ~/.Xdefaults 来设置这个行为。  这样的话，终端里的软件就能识别你的 ALT 组合键了，设置好以后，你可以在终端下使用命令：
+showkey -a  来查看自己的设置正确不，是不是按下 ALT_a 后正确发送了 0x1b, 0x61 两个字节过去了？
+功能键超时
+那么终端里按下 ALT_X 和先按 ESC 键再按 X键有什么区别呢？答案是没有区别，你在 emacs 中快速先后按下 ESC 和 v 的话，emacs 就会以为你按了 ALT_v，然后给你来个上翻页了。
+远程主机一般靠超时来区别到底是 ALT_X 还是先按 ESC 再按 X 键，如果你 100 毫秒内先后发送了 ESC 和 X 过来，远程主机会识别成 ALT_X 键，否则识别成 ESC 和 X 两个键，这个超时时间可以设置，一般设置成 100ms 或者 50ms ，但不要低于 25ms，否则网络一卡可能有概率会判断错误。
+在 Vim/NeoVim 中你可以通过 ttimeoutlen 来设置功能键超时检测为 50 毫秒，比如：
+:set ttimeout ttimeoutlen=50  而 tmux 中，也有类似配置，比如：
+set-option -g escape-time 50  就连 ncurses 库中也有类似功能键超时检测的设置，来区别到底是功能键/组合键，还是数个单独的按键。这里你可能觉得这样靠超时检测很不可靠，那你要问 VT100, VT220 的标准制定者了。不过我个人常年设置成 50 毫秒后，连接到各种国内外速度不一的主机上并没有被网速慢把功能键卡成两个键的情况，应该是终端软件中本身也在尽量保证同一组按键序列能够尽量同时发送，所以我链接到国外 rtt=400 左右的主机上工作时，尽管网速经常不稳定，也没有发生错误识别的问题，那其他网速正常的主机就更不用担心了。
+更友好的终端设置
+上面在 SecureCRT / XShell 中设置了将 alt 键作为发送 +ESC x 的 meta 键后，你会发现，终端软件中固有的一些 ALT 组合键全部失效了，比如原来在终端中 ALT_1 到 ALT_9 可以切换终端的 TAB，ALT_B 可以打开链接管理器，这下都全部用不了了，这是件比较坑爹的事情，能不能保留有限的几个 ALT 组合键给终端软件使用，剩下的全部当作 meta 键呢？答案是可以的，先取消终端里 ALT 当作 meta 键的设置，恢复成默认状态，然后打开终端软件 keymap 设置窗口，将你不需要保留的 ALT 组合键全部设置成发送 +ESC x 字符串。
+那么一个个设置可能有些麻烦，对于 SecureCRT 的话，我生成了一个配置文件：
+A VK_A &amp;quot;\033a&amp;quot; A VK_D &amp;quot;\033d&amp;quot; A VK_E &amp;quot;\033e&amp;quot; A VK_G &amp;quot;\033g&amp;quot; A VK_H &amp;quot;\033h&amp;quot; .... AS VK_A &amp;quot;\033A&amp;quot; AS VK_B &amp;quot;\033B&amp;quot; AS VK_C &amp;quot;\033C&amp;quot; AS VK_D &amp;quot;\033D&amp;quot;  可以到 这里 下载现成的，在 keymap editor 窗口中加载进去即可。</description>
+    </item>
+    
+    <item>
+      <title>如何优雅的使用 Vim</title>
+      <link>https://skywind3000.com/blog/archives/1958/</link>
+      <pubDate>Tue, 20 Jun 2017 11:14:54 +0000</pubDate>
+      
+      <guid>https://skywind3000.com/blog/archives/1958/</guid>
+      <description>根据 Bram 前后几个关于高效使用 Vim的视频，大家每天需要花很多时间来编辑：代码、文档、邮件、日志 等等，除去这些外，还要分时间参加会议和人沟通，每个人的时间却都是不够的，优雅使用 Vim 无外乎：
+ 检测不高效的地方：你的整个工作流里，什么地方比较浪费时间？ 寻找一个更快的方式：官方文档，学习他人经验，自己编写 VimScript 使它习惯化：开始使用，并且不断完善  以上三点反复循环，能让你的 Vim 越来越顺手。所以重点是根据自己的工作流不断迭代。而不是象大部分教程那样教你安装一大堆插件。插件都是别人写的为了解决通用需求而提炼的东西，和每个人的具体需求都有差别。上面这三点我屡试不爽，随着时间增长，有种越来越顺手的感觉，举几个我具体碰到的例子：
+问题1：边开发边参考网上解决方案的问题 比如碰到问题搜到一段代码，需要试一下，一会又看会 Chrome ，一会又切回 GVim 里去写代码，反复 ALT_TAB，有时候中间使用了一下资源管理器或者其他程序，ALT_TAB 的顺序就会被打乱，你一切换就切跑了，十分低效。
+于是我用 VimScript + 内嵌 Python 写了一个功能，按快捷键可以让 GVim 在透明/不透明两种状态间自由切换：
+就是 VimScript 简单封装一个函数，里面用内嵌 Python 找到 GVim 的顶层 HWND，并设置透明度。平时默认不透明，需要参考其他资料时切换成透明，参考完了又快捷键切换回来，感觉比缘来切来切去顺畅很多。
+问题2：浏览文档时的窗口滚动问题 比如你在抄写或者改写一段代码，窗口分为左右两个，左边是你引用参考的源代码，右边是你正在编辑的源代码。你抄着抄着，抄到左边最后一行了，或者你想前后看看正在引用的文本，你就需要将焦点从右边切换到左边，滚动，再切换交点回来，十分麻烦，于是撸一小段 VimScript 来解决这个问题：
+&amp;quot; 0:up, 1:down, 2:pgup, 3:pgdown, 4:top, 5:bottom function! Tools_PreviousCursor(mode) if winnr(&#39;$&#39;) &amp;lt;= 1 return endif noautocmd silent! wincmd p if a:mode == 0 exec &amp;quot;normal! \&amp;lt;c-y&amp;gt;&amp;quot; elseif a:mode == 1 exec &amp;quot;normal! \&amp;lt;c-e&amp;gt;&amp;quot; elseif a:mode == 2 exec &amp;quot;normal! &amp;quot;.winheight(&#39;.&#39;).&amp;quot;\&amp;lt;c-y&amp;gt;&amp;quot; elseif a:mode == 3 exec &amp;quot;normal! &amp;quot;.winheight(&#39;.&#39;).&amp;quot;\&amp;lt;c-e&amp;gt;&amp;quot; elseif a:mode == 4 normal! gg elseif a:mode == 5 normal! G elseif a:mode == 6 exec &amp;quot;normal! \&amp;lt;c-u&amp;gt;&amp;quot; elseif a:mode == 7 exec &amp;quot;normal! \&amp;lt;c-d&amp;gt;&amp;quot; elseif a:mode == 8 exec &amp;quot;normal! k&amp;quot; elseif a:mode == 9 exec &amp;quot;normal! j&amp;quot; endif noautocmd silent! wincmd p endfunc  把这个函数绑定到 ALT_U, ALT_D 两个按键上，你正在编辑着当前文档时，不用退出 INSERT 模式，更不用切换窗口交点，直接 ALT_U, ALT_D，就可以上下滚动正在参考的文档内容了，有了这个改进后，我的工作又高效了那么一点点。
+同理，Quickfix 窗口经常用来查看编译错误，或者 Grep 结果，我也写了一个专门针对 Quickfix 窗口的滚屏函数，不用切焦点随时浏览 Quickfix 内容。
+问题3：Tag Preview 十分低效 默认 CTRL-] 可以跳转到 Tag 定义处，但有时候我就像看一眼，并不像把当前文档给切走，也不想预览下其他文件就开一大堆文件，污染 buffer list。后来发现一个快捷键 &amp;lt;C-W&amp;gt;&amp;lt;C-]&amp;gt; 可以打开预览窗口预览符号定义。
+用了一段时间又发现两个问题：每次 &amp;lt;c-w&amp;gt;&amp;lt;c-]&amp;gt; 如果有多处定义，vim会打印显示一大串定义位置，让你选择要看哪个，比较讨厌，而且开始预览时是默认上下分屏，现在都是宽屏显示器时代了，上下分屏十分影响观感。于是自己用 VimScript 重新撸了 Tag Preview：
+需要预览时按下 “ALT+;”，右边弹出预览窗口，并且高亮符号名称，下面显示该 tag一共有 3处定义，现在正在查看第1个定义，连续按下 &amp;ldquo;ALT+;&amp;rdquo; 可以将右边预览窗口切换到下一处定义，切换到最后一个了又会折头到第一个。
+配合前面的当前窗口控制其他窗口滚动的代码，编辑模式下直接 &amp;ldquo;ALT+;&amp;rdquo; 打开 tag预览并切换到你想要的定义处，然后 ALT+U, ALT+D 上下滚动预览窗口来查看前后内容，看完了 &amp;ldquo;ALT+SHIFT+;&amp;rdquo; 就可以关闭预览窗口。
+从开始到结束不需要切换窗口交点，更不需要切换编辑模式，还没有 &amp;lt;c-w&amp;gt;&amp;lt;c-]&amp;gt; 乱七八糟的列表选择过程，使用一个星期以后，彻底淘汰原生的 tag功能了，感觉自己的流畅度又提升了一些。
+具体代码见： https://github.com/skywind3000/vim/blob/master/autoload/asclib.vim#L365
+后面继续迭代，有时在函数调用时候，想不起该函数的参数了，需要查看一下原型（声明和参数），不需要打开整个预览窗口查看实现，我就又开发了一个查看函数原型的 VimScript 函数，绑定到 ALT_Q 上，同样不需要退出插入模式：</description>
+    </item>
+    
+    <item>
+      <title>Emacs/Vim 深度比较</title>
+      <link>https://skywind3000.com/blog/archives/1951/</link>
+      <pubDate>Sat, 24 Dec 2016 17:48:49 +0000</pubDate>
+      
+      <guid>https://skywind3000.com/blog/archives/1951/</guid>
+      <description>生命在于折腾，折腾完了 Atom Editor，开始跟着陈斌大婶和 purcell的配置折腾 Emacs，比较下。很多人都在比较键位，比较插件，这是十分肤浅的，我们比较点深入的东西：
+代码结构
+ Emacs 源代码：eLisp 79%, C 21% Vim 源代码：C 52%, VimScript 48%  从代码结构上来讲，Emacs的代码最多的是 elisp，C代码只是一个微内核，Vim 里C代码还是大头。当然不排除 24.X, 25.X以后 Emacs源代码里带了好几个重量级的包，而 Vim向来比较精简一些，官方没带啥大点的插件有关。去除自带插件后，Emacs的 elisp代码比例应该会下降很多，不过总体来说，Emacs有更多组件使用 elisp开发而成，也就是说可以被用户修改或者替换的地方比 Vim要多，当然速度也会相应慢一点（比如 Emacs新打开上万行的文件连续按住PageDown时cpu 100%占满），不过比较大 JB，Atom Editor来说，还是快不少。
+系统接口
+大框架基本类似：
+ Vim 可以操作： buffer, window, tabpage, 光标，marker, region 跳转表等等。 Emacs 可以操作：buffer, window, frame, 光标，marker，region 异步进程 等等。  Vim 有 local，Emacs有 mode，Vim有事件触发，Emacs有各种钩子，基本大框架类似的。
+键位设置也都很灵活，会配置的话，可以把 Emacs键位全部弄成 Vim的，比如 Evil，或者Vim里面也可以配制成进去就自动进入插入模式，全部用 Emacs键位。
+具体到比如 buffer 或者窗口里面，Emacs的窗口或者 buffer /window 属性更多一些，Vim也有一些 Emacs没有的基础设施，比如 jumplist, quickfix之类的，不过 Emacs也可以用插件实现，实现 jumplist没问题，比较独立，但每个插件实现一个类似的 quickfix的东西，实在是比较蛋疼。
+脚本语言
+VimScript 类似 Lua，但更啰嗦些，没啥好说的，要上手可能就是2-3天的样子，主要是实际编写中熟悉各种 Vim内部结构体系，以及api。
+EmacsLisp 类似 clisp，稍微有些区别而已。clisp中的向量： (vector 1 2 3 4) 在 elisp中可以用中括号来表示：[1 2 3 4] 这样对减少小括号数量有一些帮助，代码读起来没那么拗口，可惜实际写 elisp的过程中，向量用的并不多，各种插件用的最多的还是 list，alist，plist 几种容器，小括号还是满天飞，如果不借助编辑器的匹配，缩进，还有彩虹括号（不同层次的括号用不同颜色的小插件）代码很难阅读，自己写好写点，看别人代码要对括号对半天（特别是他们把很多写一行的话）。
+Lisp变量可视范围比较好用，局部变量可以 “遮盖住” 全局变量，比如你在 VimScript里面要临时跳转到一个新目录需要这么写：
+let cd = haslocaldir()? &amp;quot;cd&amp;quot; : &amp;quot;lcd&amp;quot; let saved = getcwd() silent! exec cd &amp;quot;my new directory&amp;quot; ...... silent! exec cd saved  而 elisp里面，利用局部变量遮盖特性，简单的：
+(let ((default-directory &amp;quot;my new directory&amp;quot;)) ..... )  在这个 let的作用范围内，buffer的全局变量 default-directory 被新定义的同名局部变量给遮盖住了，里面的代码（包括调用外面定义的函数）取这个名字的变量，都会取到你新定义的变量，作用范围结束就恢复了，这样比 vimscript方便不少，类似的用法还有 (with-selected-window new-window...) 把当前窗口设置成 new- window并做一些事情，当离开代码作用域以后，自动恢复成先前的窗口，如果VimScript来做这事情，又需要保存前窗口，然后跳转，最后又恢复。
+VimScript在 vim6.0及以前的时代里比 EmacsLisp弱很多，连个 List，HashTable之类的容器都没有，怎么写复杂的程序嘛，Vim7.0以后补充了字典和列表还有三元式，简单面向对象等，终于可以写点复杂的东西了，而 Vim下很多传奇性的插件，其实也正是 7.0以后才出现的。Vim8.0以后又进一步补充了匿名函数和 partial function (类似简陋版的 curry 函数）等等特性，除了啰嗦外，写点复杂东西问题不大，比如前久有人用 VimScript写了一个 C编译器，可以在Vim里跑 C脚本。
+Lisp里面的宏类似C++模版加强版，C++模版只有一层，定义好模版，然后生成代码。Lisp的宏可以先用程序生成模版，再由模版生成代码，类似模版的模版。不过实际使用中，为了不让自己的代码飞的太远，难以维护，大部分插件开发者在 elisp里面最多就是 require一下 common lisp的兼容包，用一些 common lisp里面诸如 loop, for, incf, case 之类的通用宏，自己定义也限于定义一些小工具，没有人丧心病狂的搞一些影响程序结构的东西，定义成另外一门语言。
+大部分插件开发者实际上还是把它当作充满括号的 lua 来用，除去一些便利性外，麻烦也还是挺多的。
+异步进程
+早期的 Vim没有异步进程操作，导致很多插件没有 Emacs那么顺畅，比如生成 tag或者编译，Vim只有傻等着，Emacs可以同时做其他事情，Vim8.0以后异步接口和后台时钟等也比较完善了，假以时日各大常见插件能逐步发挥 8.0特性的时候，相信也能带来一致的体验，包括纯vimscript实现的 shell，以及 gdb集成，发邮件等，问题不大。
+实际使用中最紧缺的异步任务，虽然系统都支持，但是显然就插件来讲，Vim的插件跟进的速度还有待提高，毕竟本身已经晚出了那么多年了。不过好在自己可以撸，熟悉 VimScript的话，可以把最紧缺的 tag 生成，编译， grep等几项日常使用频率最高的工作自己写插件异步化了，比如我自己撸的： skywind3000/asyncrun.vim
+Vim里面的 CtrlP（模糊文件查找），还有 tagbar（文件符号列表），先前用起来就是一个字 “卡”，经常卡住做不了别的事情。同比之下，Emacs的 Helm系列全家桶做文件模糊查找就顺畅的多。同样的 python实时补全插件 jedi，在 Vim下会卡，Emacs下很流畅也是这个原因。好在最新版的 CtrlP已经增加了异步任务支持，可以后台检索文件，是没卡界面了，但是确实还需要时间进一步完善改bug。
+Emacs的 flycheck 被人津津乐道，方便的后台异步检查当前编辑文件的语法，并且标注出错的地方。Vim的同类产品 syntastic 以往会把界面卡住，你需要停下编辑，等着跑 lint跑完了以后它才给你标注出来。所以很多人比较了 flycheck以后，觉得 flycheck很爽，一边写着，前面出错的地方就会被自动标注，根本不用停下来，于是坚定不移的转战了 Emacs了。当然，Vim8.</description>
+    </item>
+    
+    <item>
+      <title>Aix 折腾手记</title>
+      <link>https://skywind3000.com/blog/archives/1924/</link>
+      <pubDate>Wed, 07 Dec 2016 17:51:09 +0000</pubDate>
+      
+      <guid>https://skywind3000.com/blog/archives/1924/</guid>
+      <description>早年开发工作主要在 FreeBSD进行，2006年后来切换到 Linux下，期间穿插使用了一下 Solaris，所以我的网络库一直都是只支持这三个系统。为了让网络库支持更多平台，网上购置了一台 IBM AIX 小型机，因为其他大部分非 Linux系统，今天基本都可以在虚拟机里面安装了，而 AIX系统，你真的没法虚拟。
+弄了几天以后，发现真他妈的麻烦，强大是强大，但是真的太琐碎了，相比之下，Linux/FreeBSD之流基本是傻瓜了。不看说明直接操作 AIX的话，可能连开机都麻烦，或者关机没关对，下次直接启动不了。
+文字终端就没什么好拍的了，先上一张图形桌面的靓照吧：
+是的你没看错，这就是 AIX 7，2012年的操作系统，就是那么的霸道，四处透着古典 Unix的味道。这样的机器今天还跑在各大银行的机房里，AIX系统管理员也拿着比 Linux系统管理员多几倍的工资，虽然工作岗位比较稀少。
+下面来感受一下你想正常开关机，安装软件的话要怎么弄：
+查看微码：lsmcode 光盘检测：开机键盘检测后按5光盘启动再按1 图形下设置网络： smitty tcpip
+开机： 第一步：插电，风扇开始转，等两分钟 第二步：待前面板绿灯开始闪时，安白色开机键，绿灯长亮，等三分钟 第三步：显示器上出现画面，按提示进行操作
+关机： 第一步：shutdown -F 第二步：等待系统结束后，显示器无信号，再等待一分钟 第三步：风扇降速，前面板绿灯从长亮回到闪烁状态 第四步：拔掉电源
+解决亮黄灯： 第一步：root执行 diag 第二步：选择第2项，advanced diagnostics routines; 第三步：选择 system verification 第四步：选择 all resources 第五步：F7（或者 ESC+7）执行检测 第六步：看返回结果，是否存在故障，记录故障及errpt -a，再做处理
+如果还不行补充1： 第一步：diag-&amp;gt;task selection(diagnostics, advanced diagnostics, service aid） 第二步：identify and attention indicators 第三步：set system attention indicator to normal/set all identify …. To normal 第四步：F7执行 实在不行：# /usr/lpp/diagnostics/bin/usysfault -s normal
+安装系统： 第一步：加电开机，插入安装 DVD 第二步：到系统键盘自检时按1，或者F1 第三步：输入密码（默认：admin）开始安装
+更新微码： 危险：http://www-912.ibm.com/eserver/support/fixes 查看处理器：prtconf
+加载光驱： mount -v cdrfs -o ro /dev/cd0/ /mnt
+添加用户： mkgroup dba useradd -G dba -d /home/oracle -m oracle
+全局变量：
+# cat /etc/environment 只能写 key=value # cat /etc/profile 可以写shell脚本  分区操作：
+# lsvg rootvg 查看分区 # df -tk 查看文件系统按1K来查看 # chfs -a size=+2000000 /home 给home增加1G空间  安装软件：
+# smitty 安装系统包 # ftp ftp.software.ibm.com/aix/freeSoftware/aixtoolbox/RPMS/ppc 下载工具 # rpm -hUv xxx.rpm 安装工具 # rpm -e python 卸载工具 # rpm -qa 查看所有已经安装的包 # rpm -qpR xxx.rpm 查看依赖关系 # installp -qaXgd rpm.rte rpm.rte 安装 rte，或者试用smitty # zcat xxx.tar.Z | tar -vxf -  第三方包：
+http://www.perzl.org/aix/index.php?n=Main.Apr-util ftp://www.oss4aix.org/latest/aix71/  调试代码：
+使用 truss 相当于 strace
+。。。。。
+玩了几天，看了N多 AIX资料，给程序增加了 AIX支持并调试正常后，觉得 IBM AIX System Administrator 认证（非 User）估计还真不是那么好考的。</description>
+    </item>
+    
+    <item>
+      <title>Linux 网桥设置</title>
+      <link>https://skywind3000.com/blog/archives/1909/</link>
+      <pubDate>Wed, 07 Dec 2016 17:27:24 +0000</pubDate>
+      
+      <guid>https://skywind3000.com/blog/archives/1909/</guid>
+      <description>在公司机房的物理机上架设 KVM虚拟化的时候，经常需要配置网桥，先要安装网桥工具：
+apt-get install bridge-utils apt-get install uml-utilities  编辑 /etc/network/interfaces，参考下面配置加入网桥配置信息：
+auto lo iface lo inet loopback auto eth0 iface eth0 inet manual auto br0 iface br0 inet static address 192.168.10.6 netmask 255.255.255.0 network 192.168.10.0 broadcast 192.168.10.255 dns-search dell1 bridge_ports eth0 bridge_stp off bridge_fd 0 bridge_maxwait 0 auto eth1 iface eth1 inet manual auto br1 iface br1 inet static address 14.152.50.6 netmask 255.255.255.192 network 14.152.50.0 broadcast 14.152.50.63 gateway 14.152.50.1 bridge_ports eth1 bridge_stp off bridge_fd 0 bridge_maxwait 0 # dns-* options are implemented by the resolvconf package, if installed dns-nameservers 114.114.114.114 dns-search dell1 auto eth2 iface eth2 inet manual auto br2 iface br2 inet static address 112.93.114.2 netmask 255.255.255.224 network 112.93.114.0 broadcast 112.93.114.255 gateway 112.93.114.1 bridge_ports eth2 bridge_stp off bridge_maxwait 0 dns-nameservers 114.114.114.114 dns-search dell1  上面配置针对双线接入多 IP的情况，这样 br0-br2就可以给虚拟机 guest使用了，br0是内网，br1-br2是电信或者联通出口。</description>
+    </item>
+    
+    <item>
+      <title>Linux 硬件时区折腾备忘</title>
+      <link>https://skywind3000.com/blog/archives/1904/</link>
+      <pubDate>Wed, 07 Dec 2016 17:21:21 +0000</pubDate>
+      
+      <guid>https://skywind3000.com/blog/archives/1904/</guid>
+      <description>前段时间折腾家中 Nas的虚拟化服务，有时候虚拟机系统时间总是快8个小时。Guest这边设好了，到了 物理机就会慢8个小时。网上说只要修改/etc/default/rcS中的 UTC=no就行了，但还是没反映，没办法，一步步找问题。发现在/etc/rcS.d/S05hwclock.sh有这样一段话：
+# 2012-02-16 Roger Leigh rleigh@debian.org # - Use the UTC/LOCAL setting in /etc/adjtime rather than # the UTC setting in /etc/default/rcS. Additionally # source /etc/default/hwclock to permit configuration.  也就是说时间是按照/etc/adjtime设置的，而不是/etc/default/rcS，晕倒。查了下adjtime文件，原来这个才是现在调整时间的设置文件，那个rcS已经被忽略了，也就是网上的那些方法只适合以前的系统，看来走了不少弯路啊。
+将 /etc/adjtime 第三行由 UTC 改为 LOCAL 即可。</description>
+    </item>
+    
+    <item>
+      <title>Linux 线上系统调优备忘</title>
+      <link>https://skywind3000.com/blog/archives/1893/</link>
+      <pubDate>Wed, 07 Dec 2016 17:09:39 +0000</pubDate>
+      
+      <guid>https://skywind3000.com/blog/archives/1893/</guid>
+      <description>大公司呆久了，都会对 SA的依赖十分强烈，很多事情 SA都帮我们搞定了。如今控制成本，没有招聘 SA，又没有购买 VPS，从买物理机开始到 IDC部署，服务器调优，虚拟机管理，全部都是自己来，才发现，安装一台 Linux机器自己玩很简单，但是要达到线上服务器的标准，还有若干调优工作需要做，有 SA的日志是多幸福的事情啊。
+物理机设备驱动
+Dell服务器默认安装系统后会报找不到驱动:
+W: Possible missing firmware /lib/firmware/tigon/tg3_tso5.bin  因为 Debian/Ubuntu 的包都是开源的，默认开源驱动性能不行，于是需要添加 non-free源：
+deb http://ftp.de.debian.org/debian main contrib non-free deb-src http://ftp.de.debian.org/debian main contrib non-free  然后：
+apt-get update apt-get install firmware-linux-free firmware-linux-nonfree  解决 Dell驱动报错问题。
+配置限制
+查看 /etc/security/limits.conf 没有就新建，加入 core 和 nofile 的相关配置，比如：
+* soft nofile 65536 * hard nofile 65536 * soft core unlimited * hard core unlimited # End of file  之类的，不用到 ~/.bashrc 里面调用 ulimit。
+网卡多队列
+打开内核网卡多队列支持，避免网卡中断都集中在 cpu0 上处理，多队列打开后，可以让网卡中断均摊到各个 cpu上，对提高并发十分有用：
+wget http://skywind3000.github.io/install/set_irq_affinity.sh  放到 /etc/config 目录下面（没有就新建），然后在 /etc/rc.local 里面加一行，每次重启就跑 set_irq_affinity.sh 且必须用 bash跑，参数传入需要开启多队列的网卡，以下是 /etc/rc.local 的内容：
+/bin/bash /etc/set_irq_affinity.sh eth0 eth1 eth2 exit 0  下面是 set_irq_affinity.sh 的代码：
+# setting up irq affinity according to /proc/interrupts # 2008-11-25 Robert Olsson # 2009-02-19 updated by Jesse Brandeburg # # &amp;gt; Dave Miller: # (To get consistent naming in /proc/interrups) # I would suggest that people use something like: # char buf[IFNAMSIZ+6]; # # sprintf(buf, &amp;quot;%s-%s-%d&amp;quot;, # netdev-&amp;gt;name, # (RX_INTERRUPT ? &amp;quot;rx&amp;quot; : &amp;quot;tx&amp;quot;), # queue-&amp;gt;index); # # Assuming a device with two RX and TX queues. # This script will assign: # # eth0-rx-0 CPU0 # eth0-rx-1 CPU1 # eth0-tx-0 CPU0 # eth0-tx-1 CPU1 # set_affinity() { MASK=$((1&amp;lt;&amp;lt;$VEC)) printf &amp;quot;%s mask=%X for /proc/irq/%d/smp_affinity\n&amp;quot; $DEV $MASK $IRQ printf &amp;quot;%X&amp;quot; $MASK &amp;gt; /proc/irq/$IRQ/smp_affinity #echo $DEV mask=$MASK for /proc/irq/$IRQ/smp_affinity #echo $MASK &amp;gt; /proc/irq/$IRQ/smp_affinity } if [ &amp;quot;$1&amp;quot; = &amp;quot;&amp;quot; ] ; then echo &amp;quot;Description:&amp;quot; echo &amp;quot; This script attempts to bind each queue of a multi-queue NIC&amp;quot; echo &amp;quot; to the same numbered core, ie tx0|rx0 --&amp;gt; cpu0, tx1|rx1 --&amp;gt; cpu1&amp;quot; echo &amp;quot;usage:&amp;quot; echo &amp;quot; $0 eth0 [eth1 eth2 eth3]&amp;quot; fi # check for irqbalance running IRQBALANCE_ON=`ps ax | grep -v grep | grep -q irqbalance; echo $?</description>
+    </item>
+    
+    <item>
+      <title>Linux 下配置 Iptables 端口转发</title>
+      <link>https://skywind3000.com/blog/archives/1880/</link>
+      <pubDate>Wed, 07 Dec 2016 16:02:17 +0000</pubDate>
+      
+      <guid>https://skywind3000.com/blog/archives/1880/</guid>
+      <description>经常需要对服务端的端口进行转发映射，让链接A服务器（202.181.55.93：8080）端口的所有tcp数据，forward到B服务器（106.185.43.22:80）端口，比如国内联通出国访问比较快，而电信比较坑爹，如果你家是电信网络，你却想畅快的访问境外的 vps，那么可以在你联通网络的境内服务器上进行这样一个端口映射，你链接境内服务器（201.181.55.93:8080）端口相当于链接境外服务器的（106.185.43.22:80）端口。
+Linux内核的 Iptables很强大，它维护一组内核变量，使用 /sbin/iptables命令进行直接规则设置，且通过配置新规则，可以直接支持端口转发，简单在 A服务器上使用下面这个 shell脚本即可：
+#! /bin/sh # create forward rule by source interface # http://serverfault.com/questions/532569/how-to-do-port-forwarding-redirecting-on-debian PortForward1() { local IN_IF=$1 local IN_PORT=$2 local OUT_IP=$3 local OUT_PORT=$4 local IPTBL=&amp;quot;/sbin/iptables&amp;quot; echo &amp;quot;1&amp;quot; &amp;gt; /proc/sys/net/ipv4/ip_forward $IPTBL -A PREROUTING -t nat -i $IN_IF -p tcp --dport $IN_PORT -j DNAT --to-destination ${OUT_IP}:${OUT_PORT} $IPTBL -A FORWARD -p tcp -d $OUT_IP --dport $OUT_PORT -j ACCEPT $IPTBL -A POSTROUTING -t nat -j MASQUERADE } # create forward rule by source ip # http://blog.csdn.net/zzhongcy/article/details/42738285 ForwardPort2() { local IN_IP=$1 local IN_PORT=$2 local OUT_IP=$3 local OUT_PORT=$4 local IPTBL=&amp;quot;/sbin/iptables&amp;quot; echo &amp;quot;1&amp;quot; &amp;gt; /proc/sys/net/ipv4/ip_forward $IPTBL -t nat -A PREROUTING --dst $IN_IP -p tcp --dport $IN_PORT -j DNAT --to-destination ${OUT_IP}:${OUT_PORT} $IPTBL -t nat -A POSTROUTING --dst $OUT_IP -p tcp --dport $OUT_PORT -j SNAT --to-source $IN_IP } PortForward1 eth3 8080 106.185.43.22 80 # put this file on /etc/network/if-up.d  上面两个函数，一个是针对网卡，一个是针对本地IP设置转发，记得把这个脚本放到 /etc/network/if-up.d 下面并设置可执行权限（Debian/Ubuntu），每次开机重启时保证可以运行，即可。</description>
+    </item>
+    
+    <item>
+      <title>Vim 里如何映射 CTRL-h 为 left ?</title>
+      <link>https://skywind3000.com/blog/archives/1857/</link>
+      <pubDate>Sun, 27 Nov 2016 19:14:45 +0000</pubDate>
+      
+      <guid>https://skywind3000.com/blog/archives/1857/</guid>
+      <description>很多人习惯在配置文件中映射 CTRL+HJKL 为光标移动，却碰到了一些问题：
+inoremap &amp;lt;c-h&amp;gt; &amp;lt;left&amp;gt; inoremap &amp;lt;c-j&amp;gt; &amp;lt;down&amp;gt; inoremap &amp;lt;c-k&amp;gt; &amp;lt;up&amp;gt; inoremap &amp;lt;c-l&amp;gt; &amp;lt;right&amp;gt;  映射后无效或者映射以后按 &amp;lt;BS&amp;gt;键不能删除，这是什么原因呢？
+很简单，因为你的终端软件（Xshell, SecureCRT）有些老，默认配置是按下&amp;lt;BS&amp;gt;键以后 发送的是：^H (ASCII 码 0x08），而 ^H在你的 Vim 里被你 inoremap 成 了，所以你按了&amp;lt;BS&amp;gt;会被认为按下了左键。
+早在 VT100终端时代，^H（ASCII码 0x08）表示&amp;lt;BS&amp;gt; 而 ^? （ASCII码 0x7f）表示&amp;lt;DEL&amp;gt;。过去 0x7f是留给 DELETE键使用的。而到了 VT220时代，DELETE已经变为 ^[[3~ （ASCII 码 0x1b, 0x5b, 0x33, 0x7e 共4个字节），而 ^? 的 0x7f 换给了我们的&amp;lt;BS&amp;gt;，有些老点版本的终端软件，默认 &amp;lt;BS&amp;gt;还是使用 VT100的 ^H，比如 Xshell 4 Build 0142以前的版本，默认&amp;lt;BS&amp;gt;是发送^H。SecureCRT直到6.x版本还在默认发送 VT100的 ^H。
+你需要做的就是改一下终端默认配置而已，大部分不那么陈旧的终端软件，如今都是默认VT220的标准，比如 Xshell4 Build 0142及以后的 Xshell5，Putty，Mac下面的 Terminal.app, iTerm2，Ubuntu下面的 gnome-terminal，他们都是把 &amp;lt;BS&amp;gt; 发送成 ^?
+你可以在你服务端下面查看下默认的键位设置：
+$ stty -a  现在所有 Linux服务器的 erase （bs）基本都是 ^? 了（如果链接到非 Linux老操作系统 erase不是这个的话，需要改一下，可以在系统层改，也可以vim里面 set t_kb=&amp;hellip;），Vim里面也是认可 ^?的，可老旧的终端软件却默认发送 ^H，不过好在他们都支持修改：
+Xshell 老版本的修改方法
+Properties -&amp;gt; Terminal -&amp;gt; Keyboard 里，把&amp;lt;BS&amp;gt;设置成 127，而 &amp;lt;DEL&amp;gt;设置成 VT220 Del
+SecureCRT 6 的设置方法
+Session Options -&amp;gt; Terminal -&amp;gt; Emulation -&amp;gt; Mapped Keys, 勾选 Backspace sends delete
+Putty 设置方法
+好像默认是 ^? 的不过需要到：Configuration -&amp;gt; Terminal -&amp;gt; Keyboard 下面下确认下 The Backspace key 是 Control-? (127)
+Terminal.app
+Mac 下面的 Terminal.app 默认是发送 ^? 的，你也可以到 Profiles Advanced 下面确认下 “Delete sends Control-H” 没有勾选。
+iTerm2
+iTerm2 下面默认也是发送 ^? 的，可以到 Profiles -&amp;gt; Keys下面确认一下 “Delete key sends ^H” 没有被勾选。
+Gnome-Terminal
+至于 Gnome-Terminal 和 MinTTY之流的默认是 ^? 要修改可以看具体文本配置文件。
+好了，默认 Vim 同时识别 ^H（ASCII 码 0x08）和 ^?（ASCII码 0x7f） 都把这两个当成&amp;lt;BS&amp;gt;，现在我们统一把终端软件的 &amp;lt;BS&amp;gt;改为 0x7f以后，^H 的 0x08就空出来给我们 noremap了：
+noremap &amp;lt;C-h&amp;gt; &amp;lt;left&amp;gt; noremap &amp;lt;C-j&amp;gt; &amp;lt;down&amp;gt; noremap &amp;lt;C-k&amp;gt; &amp;lt;up&amp;gt; noremap &amp;lt;C-l&amp;gt; &amp;lt;right&amp;gt; inoremap &amp;lt;C-h&amp;gt; &amp;lt;left&amp;gt; inoremap &amp;lt;C-j&amp;gt; &amp;lt;down&amp;gt; inoremap &amp;lt;C-k&amp;gt; &amp;lt;up&amp;gt; inoremap &amp;lt;C-l&amp;gt; &amp;lt;right&amp;gt; cnoremap &amp;lt;c-h&amp;gt; &amp;lt;left&amp;gt; cnoremap &amp;lt;c-j&amp;gt; &amp;lt;down&amp;gt; cnoremap &amp;lt;c-k&amp;gt; &amp;lt;up&amp;gt; cnoremap &amp;lt;c-l&amp;gt; &amp;lt;right&amp;gt;  其实这样映射是有好处的，有时候就想在插入模式下移动一小下，真没必要 跳出。 命令模式下，这样移动也是有好处的，因为进场敲 Ex命令时都是按上，把上一条弄出来，移动下光标修改下，然后回车，这下 Ex命令模式下 直接 把上一条显示出来，然后 和左右移动修改。当然你也可以map成 emacs格式，为了保持一致性，Command/Normal/Insert/Visual我都做了这个设置。</description>
+    </item>
+    
+    <item>
+      <title>Vim 中正确使用 Alt映射</title>
+      <link>https://skywind3000.com/blog/archives/1846/</link>
+      <pubDate>Sat, 19 Nov 2016 13:23:55 +0000</pubDate>
+      
+      <guid>https://skywind3000.com/blog/archives/1846/</guid>
+      <description>最简单的做法是：首先将终端软件的 “使用 Alt键作为 Meta键” 的功能打开，其次将 Alt的模式改为 ESC+字母，意思是如果你在终端下按下 ALT+X，那么终端软件将会发送 &amp;lt;ESC&amp;gt;x 两个字节过去，字节码为：0x27, 0x78。如果你使用过 NeoVim 或者 Emacs的话，这一步应该早就做过了。
+XShell4 终端设置：
+SecureCRT：终端设置
+其他终端软件里：
+ Putty/MinTTY 默认ALT+X 就是发送 &amp;lt;ESC&amp;gt;x过去 Mac下面的 iTerm2/Terminal.app 需要跟 XShell / SecureCRT一样设置一下 Ubuntu 下面的 GnomeTerminal 默认也是发送 &amp;lt;ESC&amp;gt;x过去的 任意平台下面的 xterm 可以配置 ~/.Xdefaults 来设置这个行为。  这样的话，不管是 NeoVim 还是 Emacs都识别了，Vim 的话，你可以简单这样：
+noremap &amp;lt;ESC&amp;gt;x :echo &amp;quot;ALT-X pressed&amp;quot;&amp;lt;cr&amp;gt;  注意 ESC后面是小写 x，如果你是大写 X就变成 ALT+SHIFT+X了。于是你在 Vim 中，ALT+X就能看到后面输出的那句话了。看到这里你也许要问：这和我快速按下 ESC再马上按下 x键有什么区别？答案是没有区别，在终端里面这两个操作是一模一样的键盘码传送过去。
+就像你不设置 ttimeout 和 ttimeoutlen，然后快速在 VIM 里面按下 &amp;lt;ESC&amp;gt;OP，Vim 会以为你按下了 &amp;lt;F1&amp;gt;一样。因为 F1 的终端下字符串序列就是 &amp;lt;ESC&amp;gt;OP ，而你在 Insert 模式下面马上 &amp;lt;ESC&amp;gt; 退出并按下大写 O ，向上插入一行，Vim 将会等待一秒钟（默认 timeout ），确认后面没有一个 P，才会进一步确认不是F1，而是向上插行。
+所以更好的做法是直接按照 &amp;lt;M-x&amp;gt; 进行映射，并且告诉 vim，&amp;lt;M-x&amp;gt;的键盘序列码是多少，然后再加上 ttimeoutlen超时：
+noremap &amp;lt;M-x&amp;gt; :echo &amp;quot;ALT-X pressed&amp;quot;&amp;lt;cr&amp;gt; exec &amp;quot;set &amp;lt;M-x&amp;gt;=\ex&amp;quot; set ttimeout ttimeoutlen=100  这样做的好处是告诉 Vim, ESC+x是一个完整的按键码，并且需要在 100ms以内进行判断，即，如果收到 ESC，并且100ms以后没有后续的x，则是认为是一个单独的ESC键，退出 INSERT模式，否则认为是按下了 ALT+X，这和 Vim处理方向键，处理 F1, F2等功能键的原则是相同的，具体见 :h set-termcap:
+ *:set-termcap* *E522* For {option} the form &amp;quot;t_xx&amp;quot; may be used to set a terminal option. This will override the value from the termcap. You can then use it in a mapping. If the &amp;quot;xx&amp;quot; part contains special characters, use the &amp;lt;t_xx&amp;gt; form: &amp;gt; :set &amp;lt;t_#4&amp;gt;=^[Ot This can also be used to translate a special code for a normal key. For example, if Alt-b produces &amp;lt;Esc&amp;gt;b, use this: &amp;gt; :set &amp;lt;M-b&amp;gt;=^[b (the ^[ is a real &amp;lt;Esc&amp;gt; here, use CTRL-V &amp;lt;Esc&amp;gt; to enter it) The advantage over a mapping is that it works in all situations.</description>
+    </item>
+    
+    <item>
+      <title>Vim 异步运行 Shell 指令的插件 - AsyncRun</title>
+      <link>https://skywind3000.com/blog/archives/1835/</link>
+      <pubDate>Wed, 24 Aug 2016 09:09:15 +0000</pubDate>
+      
+      <guid>https://skywind3000.com/blog/archives/1835/</guid>
+      <description>自制另一个新的 Vim 8.0 专用异步插件：asyncrun.vim，它可以让你在 Vim 里面异步运行各种 Shell 指令并且把结果实时输出到 Quickfix，需要 Vim 7.4.1829 以上版本。
+安装方法
+到插件首页 https://github.com/skywind3000/asyncrun.vim 下载项目，并拷贝 asyncrun.vim 到你的 ~/.vim/plugin。或者使用 Vundle 指向 skywind3000/asyncrun.vim 来自动更新。
+基本教程
+使用 gcc 异步编译当前文件：
+:AsyncRun gcc % -o %&amp;lt; :AsyncRun g++ -O3 % -o %&amp;lt; -lpthread  该命令会在后台运行 gcc 并且把输出实时显示在 Quickfix 窗口，宏 % 代表当前文件名，%&amp;lt; 代表没有扩展名的文件名。
+异步运行 make：
+:AsyncRun make :AsyncRun make -f makefile  异步调用 grep:
+:AsyncRun! grep -R word . :AsyncRun! grep -R &amp;lt;cword&amp;gt; .  默认 :AsyncRun 运行命令后，输出添加到 Quickfix时 Quickfix 会自动滚动到最下面那一行，使用感叹号修饰符以后，可以避免 Quickfix 自动滚动。同时 &amp;lt;cword&amp;gt; 代表当前光标下面的单词。
+编译 go项目：
+:AsyncRun go build %:p:h  宏 %:p:h 代表当前文件的目录
+查询 man page，异步 git push ，以及把设置 F7异步编译当前文件：
+:AsyncRun! man -S 3:2:1 &amp;lt;cword&amp;gt; :AsyncRun git push origin master :noremap &amp;lt;F7&amp;gt; :AsyncRun gcc % -o %&amp;lt; &amp;lt;cr&amp;gt;  使用手册
+AsyncRun - Run shell command：
+:AsyncRun{!} [cmd] ...  后台运行命令并且实时输出到 quickfix 窗口，如果有感叹号修饰符，quickfix 窗口的自动滚动将会禁止。
+命令参数以空格分割，接受下面这些以 &amp;lsquo;%&amp;rsquo;, &amp;lsquo;#&amp;rsquo; or &amp;lsquo;&amp;lt;&amp;rsquo; 开头的替换宏:
+%:p - File name of current buffer with full path %:t - File name of current buffer without path %:p:h - File path of current buffer without file name %:e - File extension of current buffer %:t:r - File name of current buffer without path and extension % - File name relativize to current directory %:h:. - File path relativize to current directory &amp;lt;cwd&amp;gt; - Current working directory &amp;lt;cword&amp;gt; - Current word under cursor &amp;lt;cfile&amp;gt; - Current file name under cursor  运行一个命令前，环境变量也会做如下设置:</description>
+    </item>
+    
+    <item>
+      <title>Vim 异步编译插件 vimmake</title>
+      <link>https://skywind3000.com/blog/archives/1813/</link>
+      <pubDate>Sat, 16 Jul 2016 12:48:08 +0000</pubDate>
+      
+      <guid>https://skywind3000.com/blog/archives/1813/</guid>
+      <description>推荐下自己写的用了好几年的编程插件：vimmake ？完美支持 vim的异步模式： GitHub - skywind3000/vimmake: Customize shell commands in vim
+让用户自定义各种不同的编译或运行任务，并且在 Vim 中执行他们。类似 NotePad++的自定义 Commands 和 EditPlus/UltraEdit 的 &amp;lsquo;User Tool&amp;rsquo; 或者 GEdit中的 External Tool 以及 TextMate 中的 Shell Command。完美支持 vim 7.4.1829 后已经稳定成熟的异步任务机制，不需要写任何 Vim Script 也可以很容易的体验到 vim 的异步任务机制，并且使用它来执行各种艰巨的编译任务，让你一边编辑代码，一边跑编译任务。
+安装：拷贝 vimmake.vim 到你的 ~/.vim/plugin 或用 vundle 指向 skywind3000/vimmake .
+简单使用：异步编译 &amp;amp; 运行 C/C++ 代码
+首先每个 “用户自定义工具” 使用一个独立的 shell脚本来描述（Windows下是.cmd的批处理文件），我们将首先编写 vimmake可以使用的 gcc编译工具脚本， &amp;ldquo;~/.vim/vimmake.gcc&amp;rdquo;:
+#! /bin/sh gcc &amp;quot;$VIM_FILEPATH&amp;quot; -o &amp;quot;$VIM_FILEDIR/$VIM_FILENOEXT&amp;quot;  就这么短短的两行，当你把它设置成 0755的权限时，就可以在 Vim中通过下面语句运行了：
+:VimTool gcc  命令 :VimTool {name} 命令会在 Vim里面直接调用 ~/.vim/ 目录下，名为 &amp;ldquo;vimmake.{name}&amp;rdquo; 的脚本来完成各种类似编译或者执行的任务，所以用:VimTool gcc 就可以运行前面定义的名为 vimmake.gcc 的工具脚本来编译当前的源代码了。
+现在编辑 &amp;ldquo;~/.vim/&amp;rdquo; 下面名为 &amp;ldquo;vimmake.run&amp;rdquo; 的脚本，以便用 :VimTool run 来运行当前代码：
+#! /bin/sh &amp;quot;$VIM_FILEDIR/$VIM_FILENOEXT&amp;quot;  记得将 vimmake.run 的模式设置成 0755，如今有了两个可以直接在 Vim里通过 VimTool命令启动的工具（gcc 和 run），接下来我们需要设置 run 这个工具的模式为默认运行模式，而 gcc 为 quickfix模式（输出会被捕获并重定向到 quickfix窗口），现在打开 .vimrc 添加一行：
+let g:vimmake_mode = { &#39;gcc&#39;:&#39;quickfix&#39;, &#39;run&#39;:&#39;normal&#39; }  而如果我们能够使用到较新版本的 vim（7.4.1829或者更高），我们就可以使用异步方式在后台启动 gcc，并且将后台进程的输出实时重定向到界面下端的 quickfix 窗口：
+let g:vimmake_mode = { &#39;gcc&#39;:&#39;async&#39;, &#39;run&#39;:&#39;normal&#39; }  在这之后，将 &amp;lsquo;gcc&amp;rsquo;的运行模式设置成 &amp;lsquo;async&amp;rsquo; 后，:VimTool gcc 就可以以异步的方式运行名为 vimmake.gcc 的脚本然后在后台执行编译任务了，就像传统 IDE编译任务一样。
+以往使用 Vim 的 :make 之类的命令编译项目时，往往无法异步，编译任务一运行，你就无法编辑了，只有等到编译结束，才能返回编辑状态，大项目时，不得不另外开一个终端来进行编译，这是很痛苦的事情，有了异步任务以后，你能在同一个屏幕下编辑并且实时在 quickfix窗口查看编译的进度。
+vimmake 可以让你在不需要掌握晦涩的 VimScript 和繁琐的异步编程接口的情况下，直接方便的使用vim 异步功能来完成各种长时间编译任务。同时为了加快你的：编译-编辑-编译 工作流的流畅度，我们需要配置一两个热键来调用 :VimTool 命令：
+noremap &amp;lt;F7&amp;gt; :VimTool gcc&amp;lt;cr&amp;gt; noremap &amp;lt;F5&amp;gt; :VimTool run&amp;lt;cr&amp;gt; inoremap &amp;lt;F7&amp;gt; &amp;lt;ESC&amp;gt;:VimTool gcc&amp;lt;cr&amp;gt; inoremap &amp;lt;F5&amp;gt; &amp;lt;ESC&amp;gt;:VimTool run&amp;lt;cr&amp;gt;  在 .vimrc里面加入上面的几行代码，你就可以方便的按 F7编译当前文件，F5运行之了。和GEdit 类似，VimTool命令在运行具体工具脚本前会设置若干环境变量来记录当前编辑的文件名，路径，当前vim工作目录等一系列信息，然后在工具脚本里面可以直接取出这些值来调用需要的外部工具链： 如上图，后台运行工具脚本进行编译，并且编译器的输出会被实时显示到下面的 quickfix窗口，选中错误的那行输出，会直接跳转：
+命令解释：VimTool - 执行用户自定义工具
+下面这条命令会运行名为 &amp;ldquo;~/.vim/vimmake.{name}&amp;rdquo; 的脚本：
+:VimTool {name}  在 Windows下的话，会运行名为： &amp;ldquo;C:\Users\yourname.vim\vimmake.{name}.cmd&amp;rdquo; 的批处理。
+{name} 后面还可以跟随一个名为 {target} 的参数：
+:VimTool {name} {target}  {target} 的内容会作为环境变量：$VIM_TARGET 传入到 vimmake.</description>
+    </item>
+    
+    <item>
+      <title>如何禁止 Win7 强制更新到 Windows 10 ?</title>
+      <link>https://skywind3000.com/blog/archives/1799/</link>
+      <pubDate>Mon, 04 Jul 2016 08:03:05 +0000</pubDate>
+      
+      <guid>https://skywind3000.com/blog/archives/1799/</guid>
+      <description>岳父岳母，爹妈的 Windows 7 纷纷被自动升级成 Windows 10 各种问题（一台画面变成非全屏，解析度被莫名奇妙降低，占不满显示器、运行卡，另一台台式机无线网卡不能用，还有一台某炒股软件跑不起来，按win键弹出菜单时会顿一下）。
+花费了我两个整天的时间帮他们降级，找了很多方法，网上大部分都不能对新版 Gwx起作用
+终于，找到了并且永久性锁定自动升级的最直接方式了：
+regedit： HKEY_LOCAL_MACHINE 下面 SOFTWARE\Policies\Microsoft\Windows 下面新建项目（目录）Gwx 然后在 SOFTWARE\Policies\Microsoft\Windows\Gwx 下面新建 DWORD 值： DisableGwx=1  好了，Windows 结扎手术完成，不用当心一不留神弄出个 Windows 10 来给大伙惹麻烦了。
+补充：本来上次回家时间就短，好些事情没办，好些朋友没见，好了，微软一个强制升级，就把你锁家里了。
+自己的事情也算小事了，爹妈平常和岳父母平日和我们聚少离多，也就爱炒个股看个基金寻找下乐趣，你把人家弄的用不了了，不好用了，老人家自己不会弄，又舍不得花钱请人修，只能眼巴巴花好几个月的时间等着你回去帮他们解决。这样的感受是很不好的，就像公园里两个大爷正高兴的下着棋，过来个顽皮小孩一把把老人的棋盘掀湖里去了，周围的人都会觉得小孩有些缺乏教养，没有公德心一般。
+很多喜欢宠物的人为了不给大家添麻烦都倡导给自己的狗或猫做节育手术，真爱宠物就要对它负责，所以我们也本着对windows负责的态度对它做个结扎，防止它趁你不留神在外面闯祸，避免给大家添麻烦，对，公德心嘛。</description>
+    </item>
+    
+    <item>
+      <title>如何在不同平台下打开新窗口运行程序？</title>
+      <link>https://skywind3000.com/blog/archives/1745/</link>
+      <pubDate>Thu, 12 May 2016 12:49:08 +0000</pubDate>
+      
+      <guid>https://skywind3000.com/blog/archives/1745/</guid>
+      <description>如果可以让自己的工作效率提升一点点，那么即便花费几天来开发一些工具也是值得的。在不同操作系统下自动打开终端窗口来运行指定的命令就是这样一件能提高工作效率的事情。
+就像 Visual Studio 调试命令行程序的人都对打开一个新窗口运行命令行程序的模式情有独钟。EditPlus 也提供新窗口运行程序（可惜只限windows）。
+而如果你在使用 Sublime/Atom/GEdit/GVim 之类的工具，你就会发现调试程序的时候程序基本上是在下面的面板中运行的，所有输出也是输出到下面的面板中。这时如果程序长时间运行是非常不方便的，又或者程序有交互（需要输入数据），基于GUI面板的运行方式也会显得十分笨重，而Vim/GVim之流更过分，一执行程序整个GUI就定住了，没法一边看代码一边查看一些长时间运行的程序状态，虽然Windows下的GVim可以用!start来解决（见Gim !start），但十分遗憾，Linux桌面或者Mac下面的Vim都没有这个 !start功能。
+同时，哪天你切换到Mac/Ubuntu下开发了，你会发现这个问题十分恶心，这时候你往往需要写一些脚本来做这件事情。而在不同的平台下正确的escape并传递参数，正确的生成中间脚本（bash，applescript，batch）并且通过管道传递又是一项比较浪费时间的事情。
+所以这两天写了: https://github.com/skywind3000/terminal 这个脚本来做这些，满足了我如下需求：
+ 在 Windows 下打开 cmd窗口执行若干命令 在 Linux 下打开 xterm/gnome-terminal 来执行若干命令 在 Mac OS X 下面打开 Terminal/iTerm 窗口来执行若干命令 不同的操作系统下提供统一的调用接口 可以方便设置：工作目录、窗口标题、窗口配置（Terminal/gnome-terminal/iterm） 新窗口内执行完程序以后可以会等待按任意键才关闭窗口 Windows 打开 Cygwin 的 Mintty窗口并执行 Cygwin命令（Windows下编辑，Cygwin下运行） Cygwin 下直接打开 Windows的 CMD窗口执行 Win32程序（Cygwin下编辑，Windows下运行） Cygwin 下直接打开 Mintty窗口并运行cygwin命令（Cygwin下编辑，cygwin下运行）  如此，不管你运行在哪个操作系统下，使用何种编辑器，都可以提供完全一致的调试体验。一边编辑代码的同时，一边查看另一个窗口的程序实时输出。</description>
+    </item>
+    
+    <item>
+      <title>钉钉真好用</title>
+      <link>https://skywind3000.com/blog/archives/1738/</link>
+      <pubDate>Mon, 09 May 2016 13:18:53 +0000</pubDate>
+      
+      <guid>https://skywind3000.com/blog/archives/1738/</guid>
+      <description>自从用了钉钉，腰也不酸了，腿也不疼了： * 设置组织架构和通讯录，新同事根据部门自动入企业群。 * 除了部门企业群外，跟微信一样随意建立临时会话，员工离职退出所有群。 * 每个企业群配套“云盘”，可以把部门相关文档传到群的云空间里，供群成员查看。 * 详细查看未读消息，长时间未读的人可以短信提醒。 * 企业内部员工免费电话。 * 全平台：windows，mac，iphone，android * 配套企业应用：请假，公章申请，报销申请，打卡，工资信息查询
+试过：泡泡，RTX，QQ企业，米聊，飞秋 以后最终发现还是钉钉最好用</description>
+    </item>
+    
+    <item>
+      <title>Vim异步编译工程</title>
+      <link>https://skywind3000.com/blog/archives/1731/</link>
+      <pubDate>Mon, 09 May 2016 09:30:19 +0000</pubDate>
+      
+      <guid>https://skywind3000.com/blog/archives/1731/</guid>
+      <description>针对 Vim的最新版本，7.4.1769+ 写了个脚本：build.vim 来实现异步编译。
+主要实现原理是利用 Python 开线程并在后台线程调用脚本（具体执行编译工作的bat/sh文件），实时把stdout/stderr输出的内容投递到队列，而前台UI线程则是使用了Vim最新版本中提供的 timer_start 功能启动一个100ms运行一次的时钟，每次运行时检测队列里面的东西并把他们取出来输出到Vim的 Quickfix窗口。
+几处细节处理是避免后台任务瞬间输出上千行的内容，批量塞入Quickfix的时候把vim 给卡死掉，此处增加了一个限制，即每次时钟发生时最大只塞入Quickfix中50条信息。
+如此，整个世界清静了，以前Vim一编译代码就完全无法编辑的情况可以得到很好的解决了。你可以绑定-到外部命令：job-1 job-4 这四个不同的脚本（windows下是 job-1.cmd - job-4.cmd），用来执行外部命令，每次执行前，把当前编辑的文件名等信息写入环境变量，这样后台job-n.cmd的批处理就可以根据环境变量决定需要编译的文件或者工程信息了：
+let $VIM_FILEPATH = expand(&amp;quot;%:p&amp;quot;) let $VIM_FILENAME = expand(&amp;quot;%:t&amp;quot;) let $VIM_FILEDIR = expand(&amp;quot;%:p:h&amp;quot;) let $VIM_FILENOEXT = expand(&amp;quot;%:t:r&amp;quot;) let $VIM_FILEEXT = &amp;quot;.&amp;quot; . expand(&amp;quot;%:e&amp;quot;) let $VIM_CWD = expand(&amp;quot;%:p:h:h&amp;quot;) let $VIM_RELDIR = expand(&amp;quot;%:h&amp;quot;) let $VIM_RELNAME = expand(&amp;quot;%:p:.&amp;quot;) let $VIM_CWORD = expand(&amp;quot;&amp;lt;cword&amp;gt;&amp;quot;) let $VIM_VERSION = &#39;&#39;.v:version let $VIM_MODE = &#39;&#39;. a:mode let $VIM_GUI = &#39;0&#39; let $VIM_SCRIPT = g:vimmake_path let $VIM_SVRNAME = v:servername if has(&amp;quot;gui_running&amp;quot;) let $VIM_GUI = &#39;1&#39; endif  上面这些环境变量初始化工作可以在每次调用后台脚本之前设置，这几个应该已经足够大家使用了。
+每次编译完还可以调用一下外部程序，播放一个音效（比如windows的感叹号音效），让你知道编译工作成功完成，方便你打开 Quickfix查看编译效果。</description>
+    </item>
+    
+    <item>
+      <title>GVim 中更好的运行程序</title>
+      <link>https://skywind3000.com/blog/archives/1708/</link>
+      <pubDate>Mon, 09 May 2016 08:24:10 +0000</pubDate>
+      
+      <guid>https://skywind3000.com/blog/archives/1708/</guid>
+      <description>GVim（Windows）下面使用!运行程序是非常恶心的事情，比如调用python运行当前脚本：
+:!python %  你会发现，整个VIM界面被冻结了，然后弹出cmd窗口，退出cmd后，还要返回GVim中按任意键才能编辑状态。
+比如你正在调试一个程序，这个程序运行起来不是一分钟能出结果的时候，你想边对照输出结果，边在 GVim 里面查看和修改你的代码，你就会发现傻逼了。正确的做法是：
+:!start python %  这样就不会卡住 Vim了，但是这个做法有个问题，程序结束的时候窗口马上关闭，因此还需要再进化一下：
+:silent !start cmd /c python % &amp;amp; pause  这时你会发现优雅的调用了 python 来跑当前程序，并且GVIM不会被挂起，照样可以编辑，当程序结束的时候，CMD窗口还会pause等待你按任意键一下，这就比较清爽了，你可以把这条命令map到你常用的快捷键上，和 EditPlus里面一样一键运行之。
+然而还是有几处需要完善的地方，首先直接使用 % 展开当前文件名不妥当，如果文件名包含空格就会错误，需要用 shellescape 来进行处理，同时我们有时候还希望运行前跳转到文件所在的目录，运行完又跳转回来，又或者需要运行前保存一下没有保存的文件。
+我写了个函数来做这个事情，放到你 .vimrc里即可使用，同时支持 GVim和终端 Vim：
+&amp;quot; run current file by detecting file extname. if cwd is non-zero, &amp;quot; it will change the current directory to the file location. &amp;quot; Unsaved files will be saved if needsave is non-zero function! VimExecute(cwd, needsave) let savecwd = getcwd() let cd = haslocaldir()? &#39;lcd &#39; : &#39;cd &#39; let ext = tolower(expand(&amp;quot;%:e&amp;quot;)) if bufname(&#39;%&#39;) == &#39;&#39; return endif if a:needsave != 0 silent! update endif if a:cwd != 0 let dest = expand(&#39;%:p:h&#39;) silent! exec cd . fnameescape(dest) endif if has(&#39;gui_running&#39;) &amp;amp;&amp;amp; (has(&#39;win32&#39;) || has(&#39;win64&#39;) || has(&#39;win95&#39;)) let fname = shellescape(expand(&amp;quot;%&amp;quot;)) if index([&#39;c&#39;, &#39;cpp&#39;], &amp;amp;filetype) &amp;gt;= 0 exec &#39;!start cmd /C &#39;. shellescape(expand(&amp;quot;%&amp;lt;&amp;quot;)) . &#39; &amp;amp; pause&#39; elseif index([&#39;py&#39;, &#39;pyw&#39;, &#39;pyc&#39;, &#39;pyo&#39;], ext) &amp;gt;= 0 silent exec &#39;!start cmd /C python &#39; . fname . &#39; &amp;amp; pause&#39; elseif ext == &amp;quot;js&amp;quot; silent exec &#39;!start cmd /C node &#39; . fname . &#39; &amp;amp; pause&#39; elseif ext == &#39;sh&#39; silent exec &#39;!start cmd /C sh &#39; . fname . &#39; &amp;amp; pause&#39; elseif ext == &#39;lua&#39; silent exec &#39;!</description>
+    </item>
+    
+    <item>
+      <title>更好的使用 Vim 标签（Tab）以及 Alt键映射</title>
+      <link>https://skywind3000.com/blog/archives/1690/</link>
+      <pubDate>Mon, 02 May 2016 15:19:01 +0000</pubDate>
+      
+      <guid>https://skywind3000.com/blog/archives/1690/</guid>
+      <description>更好的使用 Vim7.0以后推出的标签（TAB）功能，同现代编辑器一样用标签（TAB）来管理多文件，代替传统 Buffer List： 让Minibufexplor/tabbar这些上个世纪的插件都退场吧，直接使用标准的标签功能会更加舒服。 快捷键切换 TAB 第一件事情就是要搞定标签快速切换问题，不管是:tabn X还是 Xgt都十分低效，我们需要更快速的在各个文件之间切换。最简单的是设置 0-9 来快速切换tab（默认leader是反斜杠，即先按下\键，再按数字键），不管终端还是GVIM都兼容：
+noremap &amp;lt;silent&amp;gt;&amp;lt;tab&amp;gt;m :tabnew&amp;lt;cr&amp;gt; noremap &amp;lt;silent&amp;gt;&amp;lt;tab&amp;gt;e :tabclose&amp;lt;cr&amp;gt; noremap &amp;lt;silent&amp;gt;&amp;lt;tab&amp;gt;n :tabn&amp;lt;cr&amp;gt; noremap &amp;lt;silent&amp;gt;&amp;lt;tab&amp;gt;p :tabp&amp;lt;cr&amp;gt; noremap &amp;lt;silent&amp;gt;&amp;lt;leader&amp;gt;t :tabnew&amp;lt;cr&amp;gt; noremap &amp;lt;silent&amp;gt;&amp;lt;leader&amp;gt;g :tabclose&amp;lt;cr&amp;gt; noremap &amp;lt;silent&amp;gt;&amp;lt;leader&amp;gt;1 :tabn 1&amp;lt;cr&amp;gt; noremap &amp;lt;silent&amp;gt;&amp;lt;leader&amp;gt;2 :tabn 2&amp;lt;cr&amp;gt; noremap &amp;lt;silent&amp;gt;&amp;lt;leader&amp;gt;3 :tabn 3&amp;lt;cr&amp;gt; noremap &amp;lt;silent&amp;gt;&amp;lt;leader&amp;gt;4 :tabn 4&amp;lt;cr&amp;gt; noremap &amp;lt;silent&amp;gt;&amp;lt;leader&amp;gt;5 :tabn 5&amp;lt;cr&amp;gt; noremap &amp;lt;silent&amp;gt;&amp;lt;leader&amp;gt;6 :tabn 6&amp;lt;cr&amp;gt; noremap &amp;lt;silent&amp;gt;&amp;lt;leader&amp;gt;7 :tabn 7&amp;lt;cr&amp;gt; noremap &amp;lt;silent&amp;gt;&amp;lt;leader&amp;gt;8 :tabn 8&amp;lt;cr&amp;gt; noremap &amp;lt;silent&amp;gt;&amp;lt;leader&amp;gt;9 :tabn 9&amp;lt;cr&amp;gt; noremap &amp;lt;silent&amp;gt;&amp;lt;leader&amp;gt;0 :tabn 10&amp;lt;cr&amp;gt; noremap &amp;lt;silent&amp;gt;&amp;lt;s-tab&amp;gt; :tabnext&amp;lt;CR&amp;gt; inoremap &amp;lt;silent&amp;gt;&amp;lt;s-tab&amp;gt; &amp;lt;ESC&amp;gt;:tabnext&amp;lt;CR&amp;gt;  其次，GVIM/MacVim 下设置 ALT-0-9 来切换TAB：
+&amp;quot; keymap to switch table in gui if has(&#39;gui_running&#39;) set winaltkeys=no set macmeta noremap &amp;lt;silent&amp;gt;&amp;lt;c-tab&amp;gt; :tabprev&amp;lt;CR&amp;gt; inoremap &amp;lt;silent&amp;gt;&amp;lt;c-tab&amp;gt; &amp;lt;ESC&amp;gt;:tabprev&amp;lt;CR&amp;gt; noremap &amp;lt;silent&amp;gt;&amp;lt;m-1&amp;gt; :tabn 1&amp;lt;cr&amp;gt; noremap &amp;lt;silent&amp;gt;&amp;lt;m-2&amp;gt; :tabn 2&amp;lt;cr&amp;gt; noremap &amp;lt;silent&amp;gt;&amp;lt;m-3&amp;gt; :tabn 3&amp;lt;cr&amp;gt; noremap &amp;lt;silent&amp;gt;&amp;lt;m-4&amp;gt; :tabn 4&amp;lt;cr&amp;gt; noremap &amp;lt;silent&amp;gt;&amp;lt;m-5&amp;gt; :tabn 5&amp;lt;cr&amp;gt; noremap &amp;lt;silent&amp;gt;&amp;lt;m-6&amp;gt; :tabn 6&amp;lt;cr&amp;gt; noremap &amp;lt;silent&amp;gt;&amp;lt;m-7&amp;gt; :tabn 7&amp;lt;cr&amp;gt; noremap &amp;lt;silent&amp;gt;&amp;lt;m-8&amp;gt; :tabn 8&amp;lt;cr&amp;gt; noremap &amp;lt;silent&amp;gt;&amp;lt;m-9&amp;gt; :tabn 9&amp;lt;cr&amp;gt; noremap &amp;lt;silent&amp;gt;&amp;lt;m-0&amp;gt; :tabn 10&amp;lt;cr&amp;gt; inoremap &amp;lt;silent&amp;gt;&amp;lt;m-1&amp;gt; &amp;lt;ESC&amp;gt;:tabn 1&amp;lt;cr&amp;gt; inoremap &amp;lt;silent&amp;gt;&amp;lt;m-2&amp;gt; &amp;lt;ESC&amp;gt;:tabn 2&amp;lt;cr&amp;gt; inoremap &amp;lt;silent&amp;gt;&amp;lt;m-3&amp;gt; &amp;lt;ESC&amp;gt;:tabn 3&amp;lt;cr&amp;gt; inoremap &amp;lt;silent&amp;gt;&amp;lt;m-4&amp;gt; &amp;lt;ESC&amp;gt;:tabn 4&amp;lt;cr&amp;gt; inoremap &amp;lt;silent&amp;gt;&amp;lt;m-5&amp;gt; &amp;lt;ESC&amp;gt;:tabn 5&amp;lt;cr&amp;gt; inoremap &amp;lt;silent&amp;gt;&amp;lt;m-6&amp;gt; &amp;lt;ESC&amp;gt;:tabn 6&amp;lt;cr&amp;gt; inoremap &amp;lt;silent&amp;gt;&amp;lt;m-7&amp;gt; &amp;lt;ESC&amp;gt;:tabn 7&amp;lt;cr&amp;gt; inoremap &amp;lt;silent&amp;gt;&amp;lt;m-8&amp;gt; &amp;lt;ESC&amp;gt;:tabn 8&amp;lt;cr&amp;gt; inoremap &amp;lt;silent&amp;gt;&amp;lt;m-9&amp;gt; &amp;lt;ESC&amp;gt;:tabn 9&amp;lt;cr&amp;gt; inoremap &amp;lt;silent&amp;gt;&amp;lt;m-0&amp;gt; &amp;lt;ESC&amp;gt;:tabn 10&amp;lt;cr&amp;gt; endif  或者在 MacVim 下还可以用 CMD_0-9 快速切换，按着更舒服：
+if has(&amp;quot;gui_macvim&amp;quot;) set macmeta noremap &amp;lt;silent&amp;gt;&amp;lt;c-tab&amp;gt; :tabprev&amp;lt;CR&amp;gt; inoremap &amp;lt;silent&amp;gt;&amp;lt;c-tab&amp;gt; &amp;lt;ESC&amp;gt;:tabprev&amp;lt;CR&amp;gt; noremap &amp;lt;silent&amp;gt;&amp;lt;d-1&amp;gt; :tabn 1&amp;lt;cr&amp;gt; noremap &amp;lt;silent&amp;gt;&amp;lt;d-2&amp;gt; :tabn 2&amp;lt;cr&amp;gt; noremap &amp;lt;silent&amp;gt;&amp;lt;d-3&amp;gt; :tabn 3&amp;lt;cr&amp;gt; noremap &amp;lt;silent&amp;gt;&amp;lt;d-4&amp;gt; :tabn 4&amp;lt;cr&amp;gt; noremap &amp;lt;silent&amp;gt;&amp;lt;d-5&amp;gt; :tabn 5&amp;lt;cr&amp;gt; noremap &amp;lt;silent&amp;gt;&amp;lt;d-6&amp;gt; :tabn 6&amp;lt;cr&amp;gt; noremap &amp;lt;silent&amp;gt;&amp;lt;d-7&amp;gt; :tabn 7&amp;lt;cr&amp;gt; noremap &amp;lt;silent&amp;gt;&amp;lt;d-8&amp;gt; :tabn 8&amp;lt;cr&amp;gt; noremap &amp;lt;silent&amp;gt;&amp;lt;d-9&amp;gt; :tabn 9&amp;lt;cr&amp;gt; noremap &amp;lt;silent&amp;gt;&amp;lt;d-0&amp;gt; :tabn 10&amp;lt;cr&amp;gt; inoremap &amp;lt;silent&amp;gt;&amp;lt;d-1&amp;gt; &amp;lt;ESC&amp;gt;:tabn 1&amp;lt;cr&amp;gt; inoremap &amp;lt;silent&amp;gt;&amp;lt;d-2&amp;gt; &amp;lt;ESC&amp;gt;:tabn 2&amp;lt;cr&amp;gt; inoremap &amp;lt;silent&amp;gt;&amp;lt;d-3&amp;gt; &amp;lt;ESC&amp;gt;:tabn 3&amp;lt;cr&amp;gt; inoremap &amp;lt;silent&amp;gt;&amp;lt;d-4&amp;gt; &amp;lt;ESC&amp;gt;:tabn 4&amp;lt;cr&amp;gt; inoremap &amp;lt;silent&amp;gt;&amp;lt;d-5&amp;gt; &amp;lt;ESC&amp;gt;:tabn 5&amp;lt;cr&amp;gt; inoremap &amp;lt;silent&amp;gt;&amp;lt;d-6&amp;gt; &amp;lt;ESC&amp;gt;:tabn 6&amp;lt;cr&amp;gt; inoremap &amp;lt;silent&amp;gt;&amp;lt;d-7&amp;gt; &amp;lt;ESC&amp;gt;:tabn 7&amp;lt;cr&amp;gt; inoremap &amp;lt;silent&amp;gt;&amp;lt;d-8&amp;gt; &amp;lt;ESC&amp;gt;:tabn 8&amp;lt;cr&amp;gt; inoremap &amp;lt;silent&amp;gt;&amp;lt;d-9&amp;gt; &amp;lt;ESC&amp;gt;:tabn 9&amp;lt;cr&amp;gt; inoremap &amp;lt;silent&amp;gt;&amp;lt;d-0&amp;gt; &amp;lt;ESC&amp;gt;:tabn 10&amp;lt;cr&amp;gt; noremap &amp;lt;silent&amp;gt;&amp;lt;d-o&amp;gt; :browse tabnew&amp;lt;cr&amp;gt; inoremap &amp;lt;silent&amp;gt;&amp;lt;d-o&amp;gt; &amp;lt;ESC&amp;gt;:browse tabnew&amp;lt;cr&amp;gt; endif  这下很舒服了，和大部分主流编辑器一样切换tab十分轻松。那终端下 alt没法很好的映射怎么办呢？ 终端下映射 ALT-0-9 快速切换标签 不推荐把中断里的ALT键设置成ESC+，大部分终端（XShell, SecureCRT, iTerm, gnome-terminal）都提供ALT键改为ESC+的模式，即按下ALT-A，终端会连续发送ESC(27)和 A(65)两个字节，这样在emacs下挺好用，但是在vim下就糟糕了，比如你映射了A来代替 ALT-A，那么当你用ESC退出insert模式时，一秒钟内马上按下A来在行末追加内容，Vim会去触发你之前设置的ALT-A的功能，这就对 Vim 原有的功能造成了扰乱，那终端下如何正确设置 ALT功能键呢？ 我们使用终端自定义按键序列，大部分终端都支持自定义按键发送特定字符串（XShell,SecureCRT,iTerm,gnome-terminal），比如我们可以把ALT-1设置成发送 &amp;lt;ESC&amp;gt;]{0}1~ 这个字符串，而 ALT-2设置成发送 &amp;lt;ESC&amp;gt;]{0}2~ 这个字符串，于是我们可以在Vim里面建立快捷映射：</description>
+    </item>
+    
+    <item>
+      <title>后端工程师招聘启示</title>
+      <link>https://skywind3000.com/blog/archives/1681/</link>
+      <pubDate>Mon, 18 Apr 2016 07:27:00 +0000</pubDate>
+      
+      <guid>https://skywind3000.com/blog/archives/1681/</guid>
+      <description>创业一年多，走过不少弯路，公司最近终于开始有了点收入，说起来有点老泪纵横。虽然没有完全覆盖成本，但证明产品方向没有大问题，运营开展后，后端团队急需进一步扩大，方向是两个： 第一是游戏社交，陪玩竞技的APP，提供游戏用户专有的沟通工具。 第二是为云技术，为游戏或者其他应用开发商提供更好的即时通讯云技术，这点我在知乎里面阐述过：https://www.zhihu.com/question/32228281/answer/55844291 公司坐落在广州市科韵路，现在团队规模35人左右，后端主要技术是java/python/c，熟悉任意即可，有需要用别的语言学就是。 公司是有很强技术基因的公司，后端团队我会亲自带，创造和分享是我们一直以来秉持的理念。希望同更多有识之士共同进步和成长。 具体需求如下：
+ 后端开发1-3年经验，基础扎实。 熟悉：Python / Java / C （任意一种语言） 互联网或者游戏开发背景不限。 如果有兴趣，请加我QQ：贰三五六柒五贰。  </description>
+    </item>
+    
+    <item>
+      <title>使用 Markdown 写 Wordpress</title>
+      <link>https://skywind3000.com/blog/archives/1675/</link>
+      <pubDate>Sat, 02 Apr 2016 20:14:20 +0000</pubDate>
+      
+      <guid>https://skywind3000.com/blog/archives/1675/</guid>
+      <description>使用 Markdown 来再命令行写 WordPress 的感觉很不错，我整合了两个 Python 库，一个叫 blogpost， 另外一个叫做 markdown2，前者可以用来命令行发送 WordPress 文章，但是只支持 .html 或者 asciidoc 格式来写 WordPress，因此又引入了 python 的 markdown2，合成项目： https://github.com/skywind3000/markpress 但是标准 Markdown转换出来的 html 再 wordpress中高亮不正确，因此费了点时间修改了一版 markdown2 为 markdown3 ，调整了相关的样式，可以很好的在 wordpress 中显示，同时使用了 metadata，再文章中 可以指定标题和类别，使用很简单，首先克隆项目：
+ $ git clone https://github.com/skywind3000/markpress.git  然后创建你的工程目录 myblog（用来保存文章和相关中间数据，推荐提交到版本管理系统上来），目录为：
+myblog +- wordpress.ini # 站点配置文件，url，用户名，密码 +- doc # 存放 markdown 文章源文件的目录 +- data # 自动生成的 postid/html等，丢失会导致重新发文 +- images # 保存图片的目录，文章中图片都用 &amp;quot;../images/*&amp;quot; 引用  再 wordpress.ini 里面的 url 为 wordpress 的 xmlrpc.php 的路径：
+[default] url=http://example.com/wordpress/xmlrpc.php username=???? password=????  然后就可以再 doc 下写一篇名为：doc/post.1.md 的文章了（必须用 utf-8编码）：
+--- title: 文章的标题 categories: 文章类别 --- 文章内容  最后使用 markpress.py 发布该文章：
+$ cd myblog $ python /path-to-markpress/markpress.py post.1.md  注意：在myblog目录下运行 markpress.py，需要再当前目录寻找 wordpress.ini ，同时指定文章 名字的时候使用 &amp;ldquo;post.1.md&amp;rdquo; 而不是 &amp;ldquo;doc/post.1.md&amp;rdquo; ，markpress会自动到doc目录下去寻找 并且再 data 目录下面生成 html 和中间数据。 如果你将 myblog 目录放入 svn/git的话，可以很好的保存你的文章源文件，注意将 doc, data, images 都放入版本管理系统（data下面每次自动生成的 html, blogpost文件也需要一起放入版本管理），而 站点配置文件：wordpress.ini 到是不一定要放入版本管理。 所有 images下面的图片在 markdown 中需要用：&amp;rdquo;../images/abc.jpg&amp;rdquo; 来引用，这样转换到 data 下面的 html 也可以保持正确引用，同时上传的时候会自动判断图片是否有改动来判断是否需要上传新图片。 最后，WordPress 的 more 标志在markdown中新一行里写上 `` 就行。 如此，你可以自由的用你喜爱 markdown 编辑器来离线写 WordPress 了，并且配置上快捷键一键发布， 本篇博文即使用 MarkPress 写成十分方便。</description>
+    </item>
+    
+    <item>
+      <title>ATOM 同 Vim/Emacs/Sublime 的深度比较</title>
+      <link>https://skywind3000.com/blog/archives/1652/</link>
+      <pubDate>Wed, 16 Mar 2016 10:11:00 +0000</pubDate>
+      
+      <guid>https://skywind3000.com/blog/archives/1652/</guid>
+      <description>用过不少编辑器：UltraEdit / EditPlus / (G) Vim / GEdit / NotePad++ / TextMate / ProgrammerPad / Sublime 。确实是工作上用他们写过代码的。而 VSC / Emacs 只是体验了一下基本使用方法，算不上真用。用下来的结论是：Atom 比 Vim 更 Vim，比 Emacs 更 Emacs，同样，比 Sublime 更 Sublime。
+Atom 唯一的槽点就是“卡”，不过那是去年的情况了，1.0后性能数次大提升，比起sublime/vsc之类虽不算流畅，但同时编辑20个数千行的文件没有压力。如今让人感觉慢的地方主要是启动loading（也大大短于eclipse, idea），使用时并没察觉它比其他编辑器慢再哪。而文本编辑器的快慢，更重要的是“让你工作更快更有效率”。下面说说为何 Atom比其他更有效率：
+兼容VIM模式 这无疑团结了一大班 Vim过来的用户，Sublime虽然也有VIM模式，但是Sublime在 mac下面的vim模式有bug，我习惯用 hjkl来移动光标，sublime再mac下hjkl移动有问题，且我习惯CTRL_[来返回NORMAL，手指不离开主键盘区，而sublime的vim模式只支持ESC返回，加上其作者经常神秘消失，最稳定的2.x版本已三年没有更新，这些问题一直得不到修正。
+由于Atom的定制程度直追 Vim/Emacs，它的vim模式能够使用插件来实现，而不像sublime必须builtin，Atom的VIM模式除了官方实现外还有很多用户实现，各有所长，你不喜欢可以换，Sublime就傻逼了，觉得builtin的不行，你就没办法了，而且作者不更新你也没办法。
+Atom里的Vim模式并不是强制的，你可以用也可以不用，这样入门用户也不会觉得困难，但是如果你用惯Vim的话，使用Vim模式可以取得更好的效率，我觉得Vim / Atom-VimMode能够提升效率的地方有以下三方面：
+1. 手指不离开主键盘区：
+所有功能皆能在主键盘区完成，不用去按方向键，不用把手挪去按Home / End，更不用动鼠标。就像咏春中强调中线理论，认为一切动作围绕中轴线开展，守护自己中轴线的同时攻击别人的中轴线。Vim / Atom-VimMode中，双手不但从不离开主键盘，并且八根手指随时守护再HOME位（ASDF, JKL;）有动作就移动，然后马上归位。
+2. 细粒度微操作：
+星际、dota玩的好，微操是基本功，微操作更精确，效率更高，Vim/Atom-VimMode一样，比如：
+ if (xxxx) {
+}
+ 很多人编写代码的时候都会习惯“成对编码”，写了申请资源的代码，先把释放资源写了，写了左括号，先把右括号给补充完，当你写完第二行代码时，需要用到“再1-2行中间插入一行”，此时你的光标停留在第二行，传统编辑器你需要：按上箭头移动光标到第一行 -&amp;gt; 按END键去到第一行末尾 -&amp;gt; 按回车插入一行，mac下的END键还需要用CMD+右来组合出来，而Vim/Atom- VimMode中，你只需要shift+o即可，手指完全不离开主键盘区，不用像传统编辑器那样，右手先移动到箭头区又移动到HOME的小键盘区，再移动回主键盘区这么麻烦，类似还有：
+使用o直接再下一行插入，避免 END/回车
+使用I再行首插入，避免移动半天光标。
+向前/后移动一个单词到单词头、尾。
+快速更改当前单词，用/来快速搜索移动光标。
+dd+p来快速移动代码块，取代shift+方向键半天。
+shift-j 来两行合并成一行，代替 HOME, back 若干次。
+。。。
+你再编辑代码的时候，90%的情况可以直接一步完成，这就叫细粒度微操，而且整个过程手都不需要离开主键盘，不像传统编辑器那样，若干笨重的操作组合再一起，操作不够细步骤多的同时手还要再：主键盘区，方向键区，扩展键区 来回移动，效率奇低。而Vim/Atom-VimMode下，手指随时守护在home区（ASDF JKL；），所有微操都是围绕HOME区进行，不会移动到任何主键盘以外的区域，更别说用鼠标、触摸板。
+3. 批量操作：
+比如要给下面代码每行后面加一个分号：
+ var x = 1
+var y = 2
+var z = 3
+console.log(&amp;lsquo;result is &amp;rsquo; + (x + y + z).toString())
+ 一般做法是：移动光标到行末-&amp;gt;END-&amp;gt;分号-&amp;gt;移动光标到下一行，Vim里面不需要移动光标到行末，只需要循环敲入：“A;j” 即可，本来操作就少很多，但是这还不是最少操作，更少操作是利用Vim里面的句号“.”功能重复上一次操作，即第一行“A;”补充了一个分号后，第二行只需要按一下&amp;rdquo;.&amp;ldquo;即可重复，于是最后操作变为：
+第一行：A;
+后面所有行：J.
+超级爽快的操作，这样的操作还很多，你还可以单条命令对一万行代码重复上述步骤，或者把c代码拷贝到go里面先一句话把所有分号给删除了。Vim下面的名言：绝不重复。
+总之如果你熟悉 VIM模式，用 Atom能感到完全自由的方式，随心所欲的书写代码，而不是被书写这件事情费脑筋，解放大脑完全用于思考而不用于打字。但是同时对不习惯VIM的人照样友好，或者对想使用VIM的便利却又痛恨VIM这个软件的简陋的人带来了福音。
+脊柱记忆 “同样动作重复300次，肌肉就会有记忆，而一个动作重复600次，脊椎就会有记忆”
+-- 李小龙
+编辑器就是关于脊柱记忆的东西，所以多投入一些时间去了解你使用的编辑器，掌握他们的各种快捷操作和高级功能是一个能让你事半功倍的好主意。
+格斗游戏玩的好的人有很多，下等高手靠熟练，中等高手靠反应，上等高手靠意识。更熟练的掌握你的编辑器，让更多日常工作固化成记忆记录再你的脊椎上，使用的时候，脊椎这枚协处理器就能完成代码编写，一个操作，刚一想到，脊椎就自动执行出来了，小脑腾出空间来组织判断，大脑腾出空间来思考更重要的东西，就像你走路，你不用思考迈腿那么自然，别人一拳过来，你潜意识一动，一连串动作就出去了，一只飞蛾飞过来，你潜意识的闭上眼 睛保护眼部，这就是脊椎记忆，如果还要经过大脑绕一圈，反应慢不说，大脑这颗cpu都用在这些琐事上了，思考的时间自然少了不少。
+所以从内到外的了解你的编辑器，并且熟练掌握他们，是对你提高工作效率的最佳投资，Atom的全平台支持，开放源代码，深度可定制等三个特点，比起其他闭源的，平台支持不全的，扩展少的编辑器来说能让你有不同层面的了解机会，同时为你提供足够的空间。
+深度可定制系统 im/Emacs的精髓在于：“可以调教”，本来不顺手的东西，只要容易调教，假以时日，都会慢慢变得越来越顺手，越来越“懂你”，越来越“贴心”，以至于后面大家都离不开它了。而 Atom 也同样是一款容易被你调教的编辑器。先前给vim写过插件，给sublime写过插件，如今给Atom写过插件，横向对比下来，几个结论：
+插件能做事情多少：Atom &amp;gt; Vim &amp;gt;&amp;gt; sublime
+插件开发学习门槛：Vim &amp;gt; Atom &amp;gt; sublime
+插件开发文档丰富：Atom &amp;gt; sublime &amp;gt;&amp;gt; Vim
+Atom 的定制化程度远远高过sublime之类（不用实际看法，看看双方开发文档即可），直追 Vim / Emacs，sublime的大部分定制无外乎改改json，插件能做的事情相当有限。
+Atom 的定制化系统主要有三方面：
+1. 细致：
+设计之初就考虑的事情，方方面面都能定制，见官方文档，以及插件：vim-mode，minimap （稍微了解下这两个类似的功能再 Atom 和 sublime的实现就能知道 sublime被甩了多少条街了）。可以细粒度的控制编辑器内所有行为，小到移动一下光标，删除当前一个字符，大到打开一个面板，比如 “core:more-up” 可以向上移动一行光标，“window:focus-pane-on- left” 可以把焦点设置到左边的面板，atom内核和大量第一方第三方packages 都是以命令的方式把基础功能提供出来，你可以随意互相调用或者设置热键。
+除去命令外，API层面，几乎每个部件每个像素点都可控，比如这样的插件你永远无法再 Vim / Emacs / Sublime 下面见得到：activate-power-mode。
+2. 直观：
+由于使用 javascript/coffee进行开发，但 javascript/coffee是属于即便你没写过他们，读都能读得懂，VimScript就不一样了，虽然也能做相同的事情，但实话实说，晦涩难写，比如我要取得当前文件的路径和文件名，在 VimScript里面需要这么写：
+ let l:path = expand(&amp;lsquo;%:p:h&amp;rsquo;)
+let l:name = expand(&amp;lsquo;%:t:r&amp;rsquo;)
+或者
+let l:name = expand(&amp;lsquo;%&amp;lt;&amp;lsquo;)
+ 而在 Atom 里我们用atom自己的功能直接取出路径来，然后进行切割：
+ var fullpath =atom.workspace.getActiveTextEditor().getPath();</description>
+    </item>
+    
+    <item>
+      <title>Atom 编辑器的插件开发</title>
+      <link>https://skywind3000.com/blog/archives/1638/</link>
+      <pubDate>Mon, 14 Mar 2016 12:26:00 +0000</pubDate>
+      
+      <guid>https://skywind3000.com/blog/archives/1638/</guid>
+      <description>老王卖瓜，自卖自夸，Atom 比较方便的地方是可以用 javascript/coffee 给 Atom写插件，并且写起来很简单，我刚按说明给 Atom 写了一个插件： atom-shell-commands 用户自定义 Shell 命令，类似 NotePad++ 中的 &amp;ldquo;Run Commands”，EditPlus/UltraEdit里面的&amp;rdquo;User Tool&amp;rdquo;，以及 GEdit 中的 &amp;ldquo;External Tool&amp;rdquo; 和 TextMate 里的 “Shell Command”。 1. 用户可以自定义工具，并且配置到 Atom 中，比如一键调用编译器，一键运行， 2. 输出结果会显示再底部的 bottom panel 中 3. 点击错误输出可以跳转到对应有错误的文件上去 4. 自定义正则表达式匹配错误输出中包含的文件名和行号。 5. 全平台支持，再 Mac/Ubuntu/Windows 下充分的测试过。 初始化时，再你的用户配置中（Atom File-&amp;gt;Open Your Config或者 ~/.atom/config.cson），写入类似：
+ &amp;quot;atom-shell-commands&amp;quot;: commands: [ { name: &amp;quot;compile&amp;quot; command: &amp;quot;d:/dev/mingw/bin/gcc&amp;quot; arguments: [ &amp;quot;{FileName}&amp;quot; &amp;quot;-o&amp;quot; &amp;quot;{FileNameNoExt}.exe&amp;quot; ] options: cwd: &amp;quot;{FileDir}&amp;quot; keymap: &#39;ctrl-2&#39; } ]  的配置，就会创建一条名为 &amp;ldquo;atom-shell-commands:compile&amp;rdquo; 的命令，你可以通过 command palette来运行它或者使用快捷键 ctrl-2来直接运行。同时再 Atom 的 packages 目录下面的&amp;rdquo;Atom Shell Commands&amp;rdquo; 目录项下面也会多出一个名为“compile” 的命令。 注意，cson格式靠缩进来判断层次，同时 list 需要将 [ 和 key 写在同一行（commands，arguments），否则会被判断成字典。 靠，上面的代码缩进帖过来以后被弄没了，具体可以看：https://atom.io/packages/atom-shell-commands 上面的格式，CSON是靠缩进来判断层次的，同时注意：commands: [ 后面的中括号要和 commands写在一行，后面的 arguments也一样，cson的 list 需要把 [ 和 key 写在一行，否则会被判断为字典。 每条命令可以通过如下字段来表示：
+ name: 名字（必填） command: 可执行路径（必填） arguments: 参数（选填） options: 扩展参数用来配置当前工作路径，文件是否保存，快捷键，环境变量等 （选填）
+ 所有配置支持如下宏：
+ {FileName} 当前正在编辑的文件名（不包括路径） {FilePath} 包含全路径的文件名 {FileNameNoExt} 没有路径和扩展名的文件名 {FileExt} 文件扩展名 {FileDir} 文件路径 {ProjectDir} 工程路径（如果有工程的话） {ProjectRel} 文件相对于工程的路径（如果有工程的话） {CurRow} 当前行 {CurCol} 当前列 {CurLineText} 当前行的文本 {CurSelected} 当前选中文本
+ 有了这些宏，你几乎可以做任何事情，比如到工程目录下调用make或者cmake，或者仅仅编译单个文件不必理会负责的工程，或者调用 ant去跑 build.xml，或者调用 java来运行编译出来的.class，调用python来运行当前脚本，或者当前目录下执行下 grep 关键字并且把grep的结果显示再下面的 bottom panel，打开帮助文档跳转到你选中的API上，或者对当前文件调用 svn diff，把结果输出到 bottom panel。 比如：调用 gcc / cl 一键调用编译功能 比如：一键运行 比如：一键运行（打开独立窗口运行） 具体见项目主页： atom-shell- commands</description>
+    </item>
+    
+    <item>
+      <title>FlashDevelop 好用</title>
+      <link>https://skywind3000.com/blog/archives/1469/</link>
+      <pubDate>Mon, 27 Jul 2015 03:59:19 +0000</pubDate>
+      
+      <guid>https://skywind3000.com/blog/archives/1469/</guid>
+      <description>好几年没碰过 Flash 了，最近需要给 ActionScript 导出一些 C 接口，又抽空捡起来。项目大了以后 Flash Builder 卡的要死，经常是一个构建你就可以休息了，按一下 “.“ 它就开始搜索补全提示，你的符号多了以后，有时候 Flash Builder 近乎假死了。实在难以忍受，咨询了一些正在做页游的朋友，是否还在用 Flash Builder 。得到答案是：早就投奔 Flash Develop 了。
+试了一下 FlashDevelop 果然腰也不酸了，腿也不疼了，十分流畅，界面类似 Visual Studio，同时还是免费的，可以彻底和笨重的 Flash Builder 说再见了。再次感叹 AS3 写起来真爽之余，记录一下安装配置过程：
+[安装设置]
+安装下载 FlashDevelop 安装到比如 d:\Program Files\FlashDevelop 下面。
+管理员运行 FDMT.cmd，打开下面两项
+standalone mode (SDK和插件安装于 FlashDevelop/Apps 而不是系统用户目录）
+multi instance mode（可以启动多个 FlashDevelop IDE）
+成功后 FlashDevelop 目录会有 .local 和 .multi 两个文件，.local 以后插件会安装 Apps 目录
+[安装应用]
+FlashDevelop-&amp;gt;Tools-&amp;gt;Install Software 打开软件安装面板，选择必要软件：
+1. Flex SDK + AIR SDK
+2. Adobe AIR
+3. Flash Player (SA)
+[播放器设置]
+1. 下载播放器，位于 FlashDevelop/Apps/flashsa下面，
+2. FlashDevelop-&amp;gt;Tools-&amp;gt;Program Settings, 选择FlashViewer，填写 External Player Path 为播放器文件。
+[SDK]
+FlashDevelop-&amp;gt;Tools-&amp;gt;Program Settings 选择 AS3Context
+在 Installed Flex SDKs 中增加路径 Apps/flexairsdk/4.6.0+18.0.0
+[JAVA]
+如果 SDK 需要依赖 java 1.7 而系统中是 java 1.8 1.9 的话
+修改 Apps/flexairsdk/4.6.0+18.0.0/bin/jvm.config 里面的 java.home 以及 env 两项
+java.home=D:/Program Files/FlashDevelop/runtimes/java/jre-1.7.0_60
+注意路径分割使用 &amp;ldquo;/&amp;ldquo;，而不是 “\”，设置到你的 jre 1.7 对应目录去，我自己是单独下载了一个 jre 直接扔 FlashDevelop 安装目录的 runtimes 下面了，这里你需要改为你对应的 jre 路径。
+视情况如果内存报错，继续设置：
+java.args=-Xmx512m -Dsun.io.useCanonCaches=false -Djava.util.Arrays.useLegacyMergeSort=true
+[SWC]
+flashdevelop没有直接支持生成swc的工程，但flashdevelop生成swc也比较方便，不用任何插件。
+swc库是由 flexsdk的compc.exe生成的，其实我们通过这个命令行也可以直接生成swc。
+但还是直接在flashdevelop里F8一下，编译+生成来得方便。
+我先建立一个AS3 Project，取名为logic吧。
+1. 打开project Properties对话框，output那一页，把输出名字logic.swf改成logic.swc。
+2. 选择build tab页
+在Post-Build Command Line加入生成swc的执行命令，注意是Post-Build，不是Pre-Build。
+&amp;rdquo;$(CompilerPath)\bin\compc.exe&amp;rdquo; -include-sources &amp;ldquo;$(ProjectDir)\role&amp;rdquo; &amp;ldquo;$(ProjectDir)\item&amp;rdquo; -
+compiler.library-path &amp;ldquo;$(ProjectDir)\..\..\lib\protobuf.swc&amp;rdquo; -output &amp;ldquo;$(OutputFile)&amp;rdquo;
+这个命令把role和item目录下的AS代码生成swc的。-compiler.library-path,
+这个是指定引用其他swc的路径。-include-sources 和 -compiler.library-path 后面都可以接多个路径
+3. 关于Document-Class
+经过上面两项设置，F8，会提示须要一个Document-Class，我们要的是swc，不须要程序运行入口。我们争取能不
+用Document-Class也能编译。
+打开第一步的output那一页，把Compilation Target 从Application改成&amp;rdquo;Custom Build&amp;rdquo;。
+设置完后，F8，编译，接着就生成swc了。
+我的flashdevelop版本是：5.0.1.3
+[禁止更新]
+每次 FlashDevelop 更新都会打乱所有配置，不是特别必要，可以禁止更新：
+FlashDevelop-&amp;gt;Tools-&amp;gt;Program Settings，左边选择 FlashDevelop 然后右边查找 State 下面的
+Check for Update 改为 Never
+[插件]
+ColorBox - 不安装，干扰太大，不推荐
+NavigationBar - 安装，查看类结构，类似 VS 好用，关闭 FlashDevelop 双击 NavigationBar_2.</description>
+    </item>
+    
+    <item>
+      <title>如何提高编程的手速</title>
+      <link>https://skywind3000.com/blog/archives/1458/</link>
+      <pubDate>Wed, 22 Jul 2015 03:33:53 +0000</pubDate>
+      
+      <guid>https://skywind3000.com/blog/archives/1458/</guid>
+      <description>可以使用经典的 TT 来测试你的打字速度，注意是包含数字和符号的文章（Menu-&amp;gt;Test-&amp;gt;All key）
+软件很简单，按照箭头指着的位置，快速输入上面的单词即可，输入完会有评分的。
+TT是比较好的打字练习程序，直到今天，公司内都用作给新人练习打字速度用。不当能测试，还有比较详细的课程，教你从纯单词打起，逐步到数字，标点符号等。
+我做过一个 DOSBOX版本的 TT （tt.exe 是 DOS下的程序），双击 TT.BAT 即可在 Win7/8 启动
+http://www.skywind.me/mw/images/e/eb/TT-Dosbox.7z
+我当时用 TT 测试 All Key 的时候，已经写过好多年程序了，自己觉得自己打字不慢，英文可以流利盲打，数字和符号需要看一下，结果 TT 测试下来，打字速度只有 31 WPM ，属于垫底的角色，丢死人了。
+于是开始用 TT的课程进行练习，每天练习的不多，每天两次，每次15分钟，主要是先打10分钟的课程，然后做5分钟的测验，不能练多，练多了手麻，但是要坚持每天都练习两次左右。一开始纯英文的指法挺简单乏味，觉得没意思，因为我本身可以流利的盲打英文，觉得自己主要是被数字和符号拖累了。但是坚持了一段时间练习纯英文速度后，我发现纯英文速度从 42WPM提高到 55WPM。
+后来开始继续练习数字和符号，这就比较痛苦了，就是单调乏味的重复练习，这部分手指动作跨度大，即便记得住在哪里，经常手指过去就按错了，但是一旦数字和符号分实现了盲打，整体 WPM的提高是非常大的。
+TT 有专门练习数字和符号的的课程：
+几个星期后，All Key的打字速度 WPM 终于从31 提高到 45 了，通过了打字测验。这时候我回来输入程序，我发现对自己编程帮助确实比较大。以前碰到数字和符号经常要低下头去看在哪里，指法也不标准，比如按shift组合键的时候是比较山寨的打发，现在纠正了一下实现全键盘盲打了，感觉写程序顺畅了很多。
+很多人觉得程序主要是思考，你思路对了，打字只是小事，经常听到说某某高手打字是二指禅。以前我也这么认为，但是专门抽时间练习了以后，发现真正打字流畅的人，打字的 cpu占用很低，不会因为打错字而影响思考，更不会因为要低下头去看数字符号打断你的思路。
+到了 45的 WPM 以后，再往下提高就比较难了，经常一个多星期没啥提高，我后来发现我的指速不够，就是即便全部盲打，手指不够熟练，灵巧度不高，再怎么盲打也是白打。因此买了一个机械键盘来专门练习指速。
+先单纯练习从 A打到 Z，最开始是15秒，慢慢熟练到10秒，最后到5秒。又从最基本的单词开始，不断的重复同一节 TT的课程，同一个动作重复 300次，肌肉就会有记忆，而同一个动作重复600次，脊柱就会有记忆。别人打字要经过大脑，大脑一个字母一个字母，一根手指一根手指的指挥，是比较费脑的，而你打字如果真正进入了脊柱反应的条件反射时代，那么看到一个单词或者一串数字，大脑只需要下一个指令，脊柱这个协处理器就自动完成了，根本不需要过大脑。
+所以实现全盲打后，又经过一段时间的指速练习，从 45 WPM 不断的提高到 50 WPM，55 WPM，60 WPM 最后到 65WPM （TT的 All Key模式），单纯打英文的速度也从原来的 35 WPM提高到 71 WPM，整整翻了一倍：
+虽然 TT 是 DOS 时代的软件了，现在市面上出过很多打字练习软件，但是说道科学性和系统性，还是没有超过 TT的。现在偶尔抽空还是会拿出 tt 来练习一下，就当打游戏。但是自己手指的灵巧度感觉还是不够，可能这是先天的，因为即便我达到了 65 WPM，公司内还是有很多70，75以上的同事打的比我快多了。
+现在再看到那些诸如某大牛只用二指禅来敲代码的言论，我都会嗤之以鼻了，字都打不好还写啥程序呀？不管有多牛，即便写代码的思路再好，但是手速跟不上，打字还要费大脑的话，还是有所局限的。
+只有很流畅的打字了，让打字变为一种不经大脑的条件反射，你的注意力才能完全集中在思考你的程序上。我把自己的打字速度从 30 WPM 提高到 65WPM的过程中，对这一点感触是比较深的。因为先天手指笨拙，我好像要比同事们练习的更多才能有他们同样的提高，但是我还是能够感受到提高手速对编程的改变，所以有空我都还是会拿出 TT 来练习一下，全当打游戏了，希望有一天 All Key 的 WPM能上 70。
+-&amp;mdash;&amp;mdash;&amp;mdash;&amp;mdash;&amp;mdash;&amp;mdash;&amp;mdash;&amp;mdash;
+PS: TT 下载地址（DosBox版本）http://www.skywind.me/mw/images/e/eb/TT-Dosbox.7z
+整合了 DOSBOX + TT，运行 “TT.BAT&amp;rdquo; 就可以在 Win7/Win8下启动，运行&amp;rdquo;TT放大版.BAT&amp;rdquo;，就可以设置 DOSBOX放大两倍显示（如今高分屏看起以前低分辨率的文字有点累，放大两倍后效果比较好）。
+Ubuntu / OS X下，先安装 DOSBOX，把上面的 tt 下载下来，再用 ubuntu的 dosbox 启动 tt.exe 即可。
+-&amp;mdash;&amp;mdash;&amp;mdash;&amp;mdash;&amp;mdash;&amp;mdash;&amp;mdash;&amp;mdash;
+不要用《金山打字通》：
+金山打字通测试文章中，符号和数字偏弱，标点就是逗号和句号，比起TT的 All Key （每篇文章至少包含一定数量的电话号码，门牌号码，各种符号）
+金山打字通测试是：每秒钟敲下多少字母，不是 WPM（每分钟敲下多少个单词），比字母的话，我最快5秒钟可以从 A-&amp;gt;Z，应该是 312字母/分，没啥意义呀。
+编辑于 2015-07-03</description>
+    </item>
+    
+    <item>
+      <title>什么时候用C而不用C&#43;&#43;？</title>
+      <link>https://skywind3000.com/blog/archives/1407/</link>
+      <pubDate>Tue, 16 Jun 2015 04:00:18 +0000</pubDate>
+      
+      <guid>https://skywind3000.com/blog/archives/1407/</guid>
+      <description>知乎问题《什么时候用C而不用C++？》：
+ 前两天不是有一个问题是“什么时候用C++而不用C”，我一直觉得问错了，难道不是“能用C++就不用C”么？那么当然就要讨论什么时候用C而不用C++啦。
+一直以来都严格遵循OO的原则来进行开发（用的工具是C#和Qt），直到最近，开始接手某同事的代码，整个项目20多个小工程（代码量并不多），除了界面部分用了MFC这种不伦不类的OO以外，所有的代码都是C写的。但是模块化做的非常好。后来跟他讨论为何不用C++，他说其实没有什么特别的，就是习惯和爱好而已，后又补充：
+如果不用多态的话，其实不管怎么写，不管用那种语言写，都算不上真正的OO
+忽然觉得很有道理……
+ 其实这是一个好问题，
+题主开始欣赏到纯 C代码所带来的 “美感” 了，即简单性和可拆分性。代码是自底向上构造，一个模块只做好一个模块的事情，任意拆分组合。对于有参考的 OOP系统建模，自顶向下的构造代码抽象方法是有效率的，是方便的，对于新领域，没有任何参考时，刻意抽象会带来额外负担，并进一步增加系统耦合性，设计调整，往往需要大面积修改代码。
+有兴趣你可以读读《Unix编程艺术》，OOP的思维模式，是大一统的；C的思维模式，是分离的。前者方便但容易造成高耦合，后者灵活但开发开发太累。用 C开发，应该刻意强调 “简单” 和 “可拆分”。一个个象搭积木一样的把基础系统搭建出来，哪个模块出问题，局部替换即可。
+自底向上的开发模式，并不是从不站在大局考虑问题，而是从某个子系统具体实现开始，从局部迭代，逐步反思全局设计，刻意保持低偶合，一个模块一个模块的来，再逐步尝试组合。
+自底向上强调先有实践，再总结理论，理论反过来指导实践，又从实践中迭代修正理论。这和人类认识世界的顺序是一样的，先捕猎筑巢，反思自然是怎么回事，又发现可以生火，又思考自然到底怎么回事情。
+它的反面，是指大一统设计，你一开始用 UML画出整套系统的类结构，然后再开工设计。这种思维习惯，如果是参考已有系统做一个类似的设计，问题不大，全新设计的话，他总有一个前提，就是 “你能完整认识整个大自然”，就像人类一开始就要认识捕猎和筑巢还有取火一样。否则每次对世界有了新认识，OOP的自顶向下设计方法都能给你带来巨大的负担。
+所以有些人才会说：OOP设计习惯会依赖一系列设计灵巧的 BaseObject，然而过段时间后再来看你的项目，当其中某个基础抽象类出现问题是，往往面临大范围的代码调整。这其实就是他们使用自顶向下思维方法，在逐步进入新世界时候，所带来的困惑。
+当然也有人批判这种强调简单性和可拆分性的 Unix思维。认为世界不是总能保持简单和可拆分的，他们之间是有各种千丝万缕联系的，你一味的保持简单性和可拆分性，你会让别人很累。这里给你个药方，底层系统，基础组建，尽量用 C的方法，很好的设计成模块，随着你编程的积累，这些模块象积木一样越来越多，而彼此都无太大关系，甚至不少 .c文件都能独立运行，并没有一个一统天下的 common.h让大家去 include，接口其他语言也方便。
+然后在你做到具体应用时根据不同的需求，用C++或者其他语言，将他们象胶水一样粘合起来。这时候，再把你的 common.h，写到你的 C++或者其他语言里面去。当然，作为胶水的语言不一定非要是 C++了，也可以是其他语言。
+-&amp;mdash;&amp;mdash;&amp;mdash;&amp;mdash;
+PS: 这里主要在探讨 OOP存在的问题，并没有讨论嵌入式这种资源限制的情况，以及操作系统和底层等需要精确控制硬件和内存的情况，更没有讨论 C++在语言设计层面的事情。
+-&amp;mdash;&amp;mdash;&amp;mdash;&amp;mdash;
+转部分答疑：（点击more展开）
+Q：“实际上是，如果你能清晰的知道你要做什么事情，那C很好。但如果你只能确定流程基本是对的，而很多系列可能在后续维护中不断更改，或者增加更多的支持，那c的overhead就很大了。当工程非常庞大的时候会很难维护。比如开发一个数学算法库，其实跟数学没有关系，就是一个大数（任意精度）的一系列计算程序。这个程序可以是没有GUI的。开始自己设计一个大数的运算内核，然后还有很多更高级的计算算法。将来有一天想 把内核替换成GMP库，或者用户可以动态替换自己的内核”
+A：就以你说的大数计算为例，大数计算底层驱动根据CPU更换函数指针是个不错的选择，见polarssl openssl，我还真建议你用C来写大数的底层，因为你今天要算个求幂取模，明天要算个gcd，后天要生成质数，你无法预测你的大整数里面究竟有多少个接口，这时候用c的分治思想就很合适。大数不是一辆飞机，它会飞，会降落，会拐弯，这都是飞机的主动行为，主动行为是有限的，确定的，适合oo的。而一个数字，它几 乎没有啥主动行为，相反全是无限的，不可控的被动行为，正合适塞到不同的.c文件中。这种时候你想刻意在一个大数类里设置满无限的方法是不合适的，不该oo的。况且你要夸语言，大数基础库用c接口到其他语言方便。所以你会看到openssl polarssl到其他语言的很多绑定，可你从来不会看到crypto++除了c++外被导出到其它任何语言了。在你用C实现了大整数基础功能并导给其它语言接口后，针对c++用户， 专门包个class的壳，选择一些基础方法放进去，给cpp用户提供点方便。下面核心算法变了，比如你实现了一个sse版本的乘法，运行时换函数指针即可，外层完全不可见，多好！polarssl中还用了一些宏来代替为数不多的几处用模版很方便的地方。</description>
+    </item>
+    
+    <item>
+      <title>C&#43;&#43;的反思</title>
+      <link>https://skywind3000.com/blog/archives/1398/</link>
+      <pubDate>Tue, 16 Jun 2015 03:48:23 +0000</pubDate>
+      
+      <guid>https://skywind3000.com/blog/archives/1398/</guid>
+      <description>最近两年 C++又有很多人出来追捧，并且追捧者充满了各种优越感，似乎不写 C++你就一辈子是低端程序员了，面对这种现象，要不要出来适时的黑一下 C++呢？呵呵呵。
+咱们要有点娱乐精神，关于 C++的笑话数都数不清：
+笑话：C++是一门不吉祥的语言，据说波音公司之前用ADA为飞机硬件编程，一直用的好好的，后来招聘了一伙大学生，学生们说我靠还在用这么落后的语言，然后换成C++重构后飞机就坠毁了。
+笑话：什么是C++程序员呢？就是本来10行写得完的程序，他非要用30行来完成，并自称“封装”，但每每到第二个项目的时候却将80％打破重写，并美其名曰 “重构”。
+笑话：C容易擦枪走火打到自己的脚，用C++虽然不容易，但一旦走火，就会把你整条腿给炸飞了。
+笑话：同时学习两年 Java的程序员在一起讨论的是面向对象和设计模式，而同时学习两年 C++的程序员，在一起讨论的是 template和各种语言规范到底怎么回事情。
+笑话：教别人学 C++的人都挣大钱了，而很多真正用 C++的人，都死的很惨。
+笑话：C++有太多地方可以让一个人表现自己“很聪明”，所以使用C++越久的人，约觉得自己“很聪明”结果步入陷阱都不知道，掉坑里了还觉得估计是自己没学好 C++。
+笑话：好多写了十多年 C++程序的人，至今说不清楚 C++到底有多少规范，至今仍然时不时的落入某些坑中。
+笑话：很多认为 C++方便跨平台的人，实际编写跨平台代码时，都会发现自己难找到两个支持相同标准的 C++编译器。
+-&amp;mdash;&amp;mdash;&amp;mdash;&amp;mdash;&amp;ndash;
+Q：那 C++为什么还能看到那么多粉丝呢？
+A：其实是因为 Windows，因为 Windows的兴起带动了 C++，C++本来就是一门只适合开发 GUI的语言。
+Q：为何 C++只适合开发 GUI呢？
+A：你看 Unix下没有 GUI，为啥清一色的 C呀？所有的系统级问题都能在 C里找到成熟的解决方案，应用级问题都能用其他高级语言很好地解决，哪里有 C++什么事情呀？
+Q：你强词夺理，Unix下也有 C++的项目呀。
+A：有，没错，你任然可以用任何语言编写任何糟糕的代码。
+Q：别瞎扯了，你都在说些什么？连C++和 Windows 都扯到一起去了。
+A：回想下当年的情景，一个大牛在教一群初学者如何编程。一边开发一边指着屏幕上说，你看，这是一个 Button，我们可以用一个对象来描述它，那是一个 panel我们也可以用一个对象来描述它，并且你们有没有发现，其实 Button和 Panel是有血缘关系的，你们看。。。这样就出来了。。。。下面的学生以前都是学着学校落后的教材，有些甚至还在用 turboc的 bgi库来画一些点和圆。哪里见过这么这么华丽的 Windows 界面呀。大牛说的话，象金科玉律一样的铭刻在自己幼小的心理。一边学着 Windows，一边发现，果然，他们都需要一个基类，果然，他们是兄弟关系，共同包含一些基本属性，可以放到基类去。他们越用越爽，潜意识里觉得因为 C++这么顺利的帮他们解决那么多界面问题，那看来 C++可以帮他们解决一切问题了。于是开发完界面以后，他们继续开发，当他们碰到各种设计问题时，反而认为肯定自己没有用好 C++。于是强迫自己用下去，然后就完蛋了。
+（点击 more展开）
+-&amp;mdash;&amp;mdash;&amp;mdash;&amp;mdash;&amp;ndash;
+关于 C++的笑话我有一箩筐，各位 C++粉用不着对号入座。言归正传，为什么要黑 C++呢？谈不上黑不黑，我从94年开始使用 C++（先前是 C 和 Pascal），一路看着 C++成长壮大，用 C++写过的代码，加起来应该超过 10MB了吧，C++的各种宝典我也都读过，一直到 2004年开始切回 C，主要原因是发现很多没法用 C++思路继续解决下去的问题，或者说用 C++思路解决下去会很糟糕的问题。
+那时候（2004-2005）正是 C++满天飞的时候，言必称 C++，用必用模版，我跳出来说你们醒醒吧，别过火了，这个世界并不是都是抽象数据结构和算法就可以描述清楚的。于是很多人激动的跳出来说：“你没领会到 C++精髓，你根本都不会用 C++”。我问他们：“语言是用来解决问题的，如果一个语言学了三四年都会经常掉沟里，算好语言么？如果编写十多年 C++的程序员都很难掌握得了，这算好语言么”。他们又说：“语言是死的，人是活的”。
+我记得当时一位国内 C++大牛，为了纠正我的 “错误观点”，给我看过他写的一套十分强大的库，我打开一看，倒吸了一口冷气，全部是 .h文件。我只能回他三个字：“你牛逼”。当然这是一个极端的例子，那家伙后来终于也开始把 .h里面的东西逐步挪到 .cpp里面了，这是好事。
+当时和云风在一家公司，2004年新人培训时，他给新人布置了一个实现内存分配器的作业，批改作业的时候，他经常边看边问人家，“不够C++呀，你能不能百分之百OOP？”，“1%的 C都不要留”。我当时在公司内部邮件列表里面发过关于 C++的问题，大部分人都表示：“你看没有C++我们怎么写3D引擎呢？”。我跟他们讲：“John Carmack直到 Quake3都还在用着 ANSI C，后来因为不得不支持 D3D，改用 C++了。为啥 C不能写 3D引擎了？”。他们告诉我：“你看，Point，就是个对象，Matrix也是个对象，那么多 Vector的代数计算，用 C++的算术重载是多么美妙的事情，三维世界就是对象的世界。”。
+确实当时客户端 GUI的话，只有 C++，图形引擎也只有 C++，这两个正是C++最强的地方，所以我也没和他们争辩，强迫他们承认 C也可以很漂亮的写图形，而且C写的可以写的很优雅。我又不是闲着没事情，何必去质疑人家的核心价值观呢，呵呵。当年我正在接手一个 C++项目，代码超过 800KB，每次崩溃都需要花费很长时间去定位，项目中大量的前后依赖，改一个地方，前后要看好几处，一处遗漏，整个系统就傻逼了。我开始重构后，画了两个星期，将性能敏感的核心部分剥离出来用 C实现（代码量仅 200KB），然后导出 Python接口，用Python来完成剩下的部分，整个脚本层代码量只有 150KB。整个世界清爽了，整个 C++项目原来的工期为 2个程序员四个月，我一个人重构的时间加起来就 1.5个月，而且代码量比远来少了两倍还多，各种奇特的 BUG也一扫而尽。我看看左边的 800KB一团乱麻的 C++代码，再看看右边整洁的 300多 KB 纯 C + Python，琢磨着，这个项目干嘛不一开始就这么做？
+跨语言接口
+现代项目开发，不但需要更高的性能，而且需要更强大的语言描述能力。而 C++正处在一个尴尬的地方，比底层，它不如 C能够精确的控制内存和硬件，各种隐式构造让你防不胜防；比描述能力，比快速业务开发和错误定位，它又赶不上 Python, Ruby, Lua等动态语言，处于东线和西线同时遭受挤压和蚕食的地步。
+很快，2006-2007年左右，其他项目组各种滥用 C++的问题开始显现出来：当时脚本化已经在工程实践中获得极大的成功，然而某些项目一方面又要追求 100%的 C++，另一方面又需要对脚本导出接口，他们发现问题了，不知道该怎么把大量的 C++基础库和接口导给 Lua。
+C的接口有各种方便的方式导给脚本，然而整个项目由一群从来就不消于使用脚本的cpp大牛开发出来，当他们要吧cpp类导出接口给脚本时，他们设计了一套牛逼的系统，lua自动生成机器码，去调用c++的各种类，没错，就是c++版本的cffi或者ctypes。他为调用vc的类写了一套机器码生产，又为调用gcc的类写了一套代码生成。那位cpp大牛写完后四处炫耀他的成果，后来他离职了，项目上线一而再再而三的出现无 可查证的问题，后来云风去支援那个项目组，这套盘根错节的c++项目，这套盘大的代码自生成系统深深的把他给恶心到了。后来众所周知云风开始反C++，倡导回归C了，不知道是否和这个项目有关系。
+于是发现个有趣的现象，但凡善于使用脚本来提高工程效率的人，基本都是C加动态语言解决大部分问题（除了gui和图形），但凡认为c++统治宇宙的人很多都是从来没使用过脚本或者用了还不知道该怎样去用的人。
+凭借这样的方法，我们的产品同竞争对手比拼时，同样一个功能，同样的人力配置，竞争对手用纯C++要开发三月，我们一个月就弄出来了，同样的时间，对手只能试错一次，我们可以试错三次。后来，据我们招聘过来的同事说，竞争对手也开始逐步降低 C++的比例，增加 java的比例了，这是好事，大家都在进步嘛。
+ABI的尴尬
+ABI级别的 C++接口从来没有标准化过，以类为接口会引入很多隐藏问题，比如内存问题，一个类在一个库里面实例化的，如果再另外一个库里面释放它们就有很多问题，因为两个动态库可能内存管理系统是不一样的。你用这里的 allocator分配一块内存，又用那里的 allocator去释放，不出问题才怪。很多解决方法是加一个 Release 方法（比如 DX），告诉外面的人，用完的时候不要去 delete，而是要调用 Release。
+项目写大了各个模块隔离成动态库是很正常的，而各种第三方库和自己写的库为追求高性能引入特定的内存管理机制也是很正常的。很多人不注意该调用release的地方错写成delete就掉沟里去了。更有胜者跨 ABI定义了很多inline方法的类，结果各种隐式构造和析构其实在这个库里生成，那个库里被析构，乱成一团乱麻。C就清晰很多，构造你就调用fopen，析构你就fclose，没有任何歧义。其实C++的矛盾在于一方面承认作为系统级语言内存管理应该交给用户决定，一方面自己却又定义很多不受用户控制的内存操作行为。所以跨 ABI层的c++标准迟迟无法被定义出来，不是因为多态 abi复杂，而是因为语言逻辑出现了相互矛盾。为了弥补这个矛盾，C++引入了operator new，delete，这new/delete重载是一个补丁并没从逻辑上让语言变得完备，它的出现，进一步将使用者拖入bug的深渊。
+其实今天我们回过头去看这个问题，能发现两个基本原则：跨abi的级别上引入不可控的内存机制从语言上是有问题的，只能要靠开发者约定各种灵巧的基类和约定开发规范来解决，这个问题在语言层是解决不了的；其次你既然定义了各种隐式构造和析构，就该像java或者动态语言一样彻底接管内存，不允许用户再自定义任何内存管理方法，而不是一方面作为系统极语言要给用户控制的自由，一方面自己又要抢着和用户一起控制。
+因此对象层 ABI接口迟迟无法标准化。而纯 C的 ABI不但可以轻松的跨动态库还能轻松的和汇编及各类语言融合，不是因为C设计多好，而是C作为系统层语言没有去管它不该管的东西。当年讨论到这个话题时 C++大牛们又开始重复那几句金科玉律来反驳我：“语言只是招式，你把内功练好，就能做到无招胜有招，拿起草来都可以当剑使，C++虽然有很多坑，你把设计做好不那么用不就行了”。我说：本来应该在语言层解决好的事情 ，由于语言逻辑不完备，将大量问题抛给开发者去解决极大的增加了开发者的思维负担，就像破屋上表浆糊一样。你金庸看多了吧，武术再高，当你拿到一把枪发现子弹不一定往前射，偶尔还会往后射时，请问你是该专心打敌人呢？还是时刻要提防自己的子弹射向自己？
+系统层的挫败
+C++遭受挫败是进军嵌入式和操作系统这样靠近硬件层的东西。大家觉得宇宙级别的编程语言，自然能够胜任一切任务，很快发现几个问题：
+ 无法分配内存：原来用 C可以完全不依赖内存分配，代码写几千行一个 malloc没有都行。嵌入式下处理器加电后，跳到特定地址（比如起始地址0），第一条指令一般用汇编来写，固定在0地址，就是简单初始化一下栈，然后跳转到 C语言的 start函数去，试想此时内存分配机制都还没有建立，你定义了两个类，怎么构造呀？资源有限的微处理器上大部分时候就是使用一块静态内存进行操作。C++写起来写爽了，各种隐式构造一出现，就傻了。 标准库依赖：在语言层面，C语言的所有特性都可以不用依赖任何库就运行，这为编写系统层和跨平台跨语言代码带来了很方便的特性。而C++就不行，我要构造呀，我要异常呀，你为啥不能给我强大的运行时呢？什么你还想用 stl？不看看那套库有多臃肿呀（内存占用，代码尺寸）。 异常处理问题：底层开发需要严格的处理所有错误返回，这一行调用，下一行就判断错误。而异常是一种松散的错误处理方式，应用层这么写没问题，系统层这么写就很狼狈了。每行调用都try一下和 C的调用后if判断结果有什么区别？C++的构造函数是没有返回值的，如果构造内部出错，就必须逼迫你catch构造函数的异常，即便你catch住了，构造异常的时候当然会自动触发相关内部对象的析构，但是有很多并没有析构的资源（比如系统资源，比如C接口的资源，他们都没有一个析构），整个过程是很难控制的，此时这个实例是一个半初始化实例，你该怎么处理它呢？于是有人把初始化代码移除构造函数，构造时只初始化一下变量，新增加一个带返回的init函数，这样的代码写的比C冗余很多。何况硬件中断发生时，在你不知道的情况下，同事调到一些第三方的库，你最外层没有把新的exception给 catch住，这个exception该往哪里抛呀？内存不够的时候你想抛出一个 OutOfMemoryException，可是内存已经不够了，此时完全无能力构造这个异常又该怎么办呢？ 处理器兼容：C++的类依赖基地址+偏移地址的寻址方式，很多非 Intel系列的微处理器上只有简单的给定地址寻址，不支持这样一条语句实现BASE+OFFSET的寻址，很多C++代码编译出来需要更多的指令来运算地址，导致性能下降很多，得不偿失。 隐式操作问题：C的特点是简单直接，每行语句你都能清楚的知道会被翻译成什么样子，系统会严格按照你的代码去执行。而用C++，比如 str1 = str2 + &amp;ldquo;Hello&amp;rdquo; + str3; 这样的语句，没几个人真的说得清楚究竟有多少次构造和拷贝，这样的写法编写底层代码是很不负责任的，底层需要更为精细和严格的控制，用C语言控制力更强。  当然，说道这里很多人又说，“C++本来就是 C的超集，特定的地方你完全可以按照C的写法来做呀。没人强迫你构造类或者使用异常呀”，没错，按 Linus的说法：“想要用 C++写出系统级的优秀的可移植和高效的代码，最终还是会限于使用 C本身提供的功能，而这些功能 C都已经完美提供了，所以系统层使用 C的意义就在于在语言层排除 C++的其他特性的干扰”。</description>
+    </item>
+    
+    <item>
+      <title>二十年前是怎样开发游戏的？</title>
+      <link>https://skywind3000.com/blog/archives/1250/</link>
+      <pubDate>Fri, 10 Apr 2015 15:50:00 +0000</pubDate>
+      
+      <guid>https://skywind3000.com/blog/archives/1250/</guid>
+      <description>知乎上有人问：“贴吧都是十五六岁就用引擎写游戏的天才，大家怎么看？”，感觉现在做游戏真实一件幸福的事情呀，不尽想起当年开发游戏的各种艰辛。
+现在做游戏很简单，大把代码给你参考，大把框架给你使用，Windows帮你作完了大部分事情。我们那个年纪写游戏时，家里还没有Internet，什么资料都查不到，什么开源引擎都没有，95年左右你要写一个游戏，你起码面临：
+ 同显卡打交道，显卡著名的 ModeX显示模式，估计现在没几个人听过了吧，直接写显卡端口，N多trick才能初始化成功。 直接访问显存，记得当年有个优化是，((char*)0xa0000L)[x + (y &amp;lt;&amp;lt; 8) + (y &amp;lt;&amp;lt; 6)]=c，把y两次左移相加代替y * 320。 用调色板绘图，256色的调色板，建立若干索引表，来快速索引两个颜色混色的结果。 保护模式编程，自己初始化GDT和LDT，后来找到 dos4gw，牛逼的 watcom c++。 自己实现线程，编程8254时钟控制器，给CPU的IRQ0发中断，来调度不同最多32个任务，到时间靠一条IRET指令实现切换。 自己控制声卡，通过220端口控制声卡（估计也没几个人用过吧），再用DMA传送音频，实现声音播放。 自己实现混音，同时播放多个音源时，需要重采样成声卡格式，并且每次DMA中断时混音后给声卡。 自己播放音乐，利用声卡338端口的 FM Synth合成器来播放MIDI音乐里面不同音轨的乐器音符，并用之前实现的线程系统，在后台线程运行。 大量汇编代码，图形拷贝，图块缩放，RLE，显卡控制，多边形填充，键盘中断接管。 自己绘制字体，HZK16，估计听过的人也没几个了。 自己读取图片，GIF，PCX, BMP。 自己播放视频，自己实现解码播放 animator, 3ds输出的 FLC视频格式的视频。 自己实现脚本，没有LUA，没有PYTHON，但是你需要给你的游戏实现脚本来描述一些简单的剧情，没见过其他游戏是怎么做的，没有任何参考代码的情况下，意识到开发游戏需要靠脚本来提高效率，然后自己实现一套脚本系统。 凭空实现游戏，从来没见过任何一款游戏代码的情况下，自己想想状态机应该怎么写，游戏对象应该怎么同时移动，图像前后遮挡该怎么做，游戏各种逻辑该如何写。 学习美术设计，虽然没有美术功底，但得熟练应用当时常用的animator，3ds，等软件，自己制作一些简单的界面和角色，自己能对其他图片进行二次加工，画像素图，合并调色板。   -&amp;mdash;&amp;mdash;&amp;mdash;&amp;mdash;&amp;mdash;&amp;mdash;&amp;mdash;&amp;mdash;&amp;ndash;
+记住，当初你没网络，没有现在那么多开源软件，书店里书基本都是C语言调用BGI绘图的，偶尔一两本讲显卡原理的，偶尔一两本讲声卡原理的，你就算捡到宝了，《电脑报》《编程技巧与维护》上面，谁发一篇文章教你FLC格式的视频动画格式原理，你可以欣喜弱狂了。
+记住，当初你没网友，没有朋友可以交流，很多东西都考仔细观察，猜测和反复试验来完成，我记得95年我看到仙剑奇侠时很惊讶它的效果，根本不知道斜45度图像该如何现实，如何处理遮挡关系，身边没有问不了任何人，然后左思右想，发现远来可以靠 (x+y)进行对象排序，自己一实验，果然成了。我记得92年小学时，写第一个游戏，以前编程都是从头到尾一件事情一件事情的干，想不通十多量飞机怎么能同时飞，当时又没多任务，我 也还没实现模拟任务系统，绞尽脑汁，有一天在书上看到介绍UNIX分时系统的逻辑是每个任务运行一小段然后切换，顺着这个思路想下去，终于想通所谓状态机模型，每帧处理每架飞机时根据当前的状态移动一小步，然后更新状态，再处理下一辆飞机。然后兴奋的跑到电脑面前，编码一整天，终于实现。然后拉着同学来自己家玩，看到她们玩的那么兴奋的样子，突然感觉创造游戏，是一件多么令人愉快的事情呀。
+当年做款游戏都快要写出半个操作系统来了，整个城市就你一个人在研究这些，老师只会教NOI，书本上只会教你用BGI绘图，没有任何一本游戏开发相关书籍出版，关键是你还在读中学，什么组成原理编译原理，计算机图形学你都没学过，全靠书店几本破书，杂志上的零零碎碎和自我领悟。比起今天的小孩，windows都帮她们做了那么多的事情了，自己买本书，照着书上实现下三角形绘制，模型导入，场景管理，碰撞检查，不懂可以问知 乎，不行可以随便上 gamedev.net，游戏写不来可以看人家的代码照着抄，脚本可以用lua，python。简直是生在天堂里呀，有什么值得称道的地方呢？
+行业总是要发展的，我也从《编程技巧与维护》《VGA显示原理》。。。和各种杂志上获取了不少知识，当年写这些文章的人，和身边搞计算机的，都比我大很多，我幼小的心灵里总有一份冲动，冥冥之中觉得将来自己肯定能超过他们，这不是因为我看不起她们，异或我狂妄自大，而是只有这样，站在她们肩上，才能对得起大家共同爱好的这个行业，大家共同追求的事业。
+而今天，我会尽量利用业余时间，于各处培训游戏开发，帮助大家该如何实现各种东西，目的也只有一个，让今天的小孩将来有一天能够超过我，不是因为她们狂妄自大，异或我妄自菲薄，而是因为只有这样，让她们站在我的肩上，才能对得起大家共同爱好的这个行业，大家共同追求的这个事业。</description>
+    </item>
+    
+    <item>
+      <title>程序高手的境界</title>
+      <link>https://skywind3000.com/blog/archives/1188/</link>
+      <pubDate>Mon, 06 Apr 2015 15:08:00 +0000</pubDate>
+      
+      <guid>https://skywind3000.com/blog/archives/1188/</guid>
+      <description>程序员也有三六九等：
+初等程序员靠知识来挣钱，会别人会的东西，喜欢折腾架构和框架，以掌握更多新潮东西而沾沾自喜，以模仿各种奇技淫巧重新实现一遍而四处炫耀，常见台词：“为啥还在用png存图片？为啥不用webp这种高压缩比的格式？”，“我们使用 Erlang的高并发特性来实现同时支持5万人的效果”，“我们使用RTMFP来降低流量成本，又使用H265来给用户提供更高品质的视频画质”，这些人能够迅速的学会各种项目需要的架构套件，以自己的生产力来挣钱。
+高等程序员靠智慧挣钱，会别人不会的东西，上能抉择技术方向，下能解决性能瓶颈；讨论方案时，腾讯怎么做的，阿里怎么做的，我们该怎么做，如数家珍；写完代码后，初读让人赏心悦目，再读让人恍然大悟，三读让人心悦诚服。常见台词：“webp压缩比不高，我改了一版新webp，用H265帧内预测来保存RGB，用lzma2来保存alpha比webp好多了”，“erlang大家不熟悉，我做了一个库，让大家可以象写erl ang一样来写C++，照顾大家开发习惯，又可以象erlang一样写多线程”。“Micheal Abrash这几行代码还有很大优化空间，其实性能还可以更好！”她们都是以解决别人不能解决的问题来挣钱。
+上等程序员靠创新来挣钱，能促进行业的发展，在这个充满咨询的年代，学习大家都掌握的东西只是一个基本过程，没什么值得称道的，当你baidu上找不到方案，google里没有参考，国内外没有任何人能给你启示的时候，任然能够充满创造的分析问题，抽象问题，并解决问题。找到别人完全没有走过的路，创造前人从来没有创造过的东西，这是他们的价值所在。他们的常见台词是：“别烦我！”，“忙着呢！”，“谷歌搜呀，这都问我？ ”，上等程序员是国宝，他们的时间不应该浪费在无意义的事情上。
+即便做到上面几点，在神级程序员眼里，也只不过如此罢了。真正的神级程序员，不靠知识和智慧挣钱，更不靠创新来挣钱，而是靠意志来挣钱，十八般语言门门精通，上能架构操作系统，下可开发嵌入芯片；成功项目无数份，胸中代码千万行！不果这些也只是基本功而已，牛逼的神级程序员，左手抱四十八斤人体工学键盘，右手提二百斤纯铁鼠标，竞争对手哪怕有千军万马，也近不得他办公桌前半步！三十六小时连续编码依旧气定神闲，体力耐力无 人能及。上市公司首席科学家，创新项目的领导者，在他们看来，也只是尘土而已，不出三回合，毕斩其首级于电脑前。他们常见的台词是：“杀！”，“弄死你！”，高手们总是睥睨天下而又冷言少语。</description>
+    </item>
+    
+    <item>
+      <title>[转载] 《论语》魔兽版</title>
+      <link>https://skywind3000.com/blog/archives/705/</link>
+      <pubDate>Wed, 20 Apr 2011 08:14:44 +0000</pubDate>
+      
+      <guid>https://skywind3000.com/blog/archives/705/</guid>
+      <description>曾子曰：吾日三省吾身。
+曾子墨说：我一天要检查三次装备、药水和道具
+曾子曰：君子思不出其位。
+曾子墨说：牧师专心加血，不要乱跑。
+子曰：父母在，不远游。游必有方。
+孔子说：奶妈奶爸在后面，战士不要跑太远，即使要走也是带着盾牌走。
+子曰：以约失之者，鲜矣。
+孔子说：因为公会活动而下副本跑掉，听着都新鲜。
+子曰：德不孤，必有邻。
+孔子说：德鲁依单干不好，必须有同伴。
+子曰：吾未见刚者。
+孔子说：我连一件甲板都没有。
+子曰：兴于诗，立于礼。成于乐。
+孔子说：联盟的优点在于有爱唱诗的牧师英雄和彬彬有礼的骑士，大功告成自然众人高兴了。
+子曰：吾自卫反鲁，然后乐正。
+孔子说：有个德鲁依在野外偷袭我，我快乐的原因是因为我打跑了他。
+子曰：吾未见好德如好色者也。
+孔子说：我还从来没见过像色狼一样喜欢德鲁伊的人。
+子曰：后生可畏，焉知来者之不如今也？四十、五十而无闻焉，斯亦不足畏也已。
+子曰：新来的玩家似乎很牛b，你怎么知道他不是用钱买的？有的战士四五十级还不会嘲讽，下副本根本不鸟他。
+子曰：不患人之不己知，患其不能也。
+孔子说：我不怕你看我的装备，就怕你近不了身。
+子曰：由！知德者鲜矣。
+孔子说：哟，知道怎么善用德鲁依很少。
+子曰：工欲善其事，必先利其器。
+孔子说：你想要去燃烧，还不快去找把像样的武器。
+子曰：性相近也，习相远也。
+孔子说：职业相同，天赋配点会相差很远。
+子曰：唯上知与下愚不移。
+孔子说：只要超级高手和初级菜鸟，pk的时候才不怎么动。
+子曰：“学而时习之，不亦说乎？有朋自远方来，不亦乐乎？”
+孔子说：玩魔兽要多学习，这还用说么？有部落的朋友来较量武艺，不也是很开心的事么？
+子曰：“吾十有五而志于学，三十而立，四十而不惑，五十而知天命，六十而耳顺，七十而从心所欲不逾矩。”
+孔子说：我15级了还想着继续学习，30级开始出去闯，40级可还是什么都没捞到，50级才学会复活术，60级等了大半年，70级终于可以随心所欲去燃烧了。
+子曰：“攻乎异端，斯害也已。”
+孔子说：副本里面乱引怪，这会害了自己的。
+孔子谓季氏，“八佾舞于庭，是可忍，孰不可忍也！”
+孔子对季氏 “对方八个60级都跑到你们新手区杀人了，这都可以忍受，还有什么不能忍受呢”
+子曰：“苟志于仁矣，无恶也。”
+孔子说：喜欢外形美观的玩家一般喜欢联盟，不喜欢部落
+子曰：“唯仁者能好人，能恶人。”
+孔子说：只有追求游戏技术的高手，才既用联盟，又用部落
+子曰：“朝闻道，夕死可矣。”
+孔子说：“想45分钟dk就要知道路，迟了人质就要死了”
+子曰：“德之不修，学之不讲，闻义不能徙，不善不能改，是吾忧也。”
+孔子说：德鲁依肉搏不强，魔法一般，看到有好的野兵不能做宠物，玩了这么久又不能换职业，我真郁闷啊
+子曰：“回也非助我者也，于吾言无所不说。”
+老师说：被别人逼着无敌加回城，其实我一点也不爽。
+季路问事鬼神。子曰：“未能事人，焉能事鬼？”曰：“敢问死。”曰：“未知生，焉知死？”
+季路来问怎么玩鬼族。老师说：“人族都没玩好玩什么鬼？”季路又问：“怎么打败对方？”老师说：“怎么保命都不知道，学什么打败别人？”
+子曰: 二三子以我为隐乎 吾无隐乎尔
+孔子说: 你们以为我要隐身么，对付你们两三个菜鸟还用隐身？
+子曰：邦有道，危言危行。
+孔子说：下副本有规则，不要刷屏，小心行动
+子在川上，曰：“逝者如斯夫！不舍昼夜。
+孔子边上厕所边说：时间过得好快，排队排了一天一夜还进不去
+子曰：朽木不可雕也。
+孔子说：拿着这个烂盾牌还想做MT？
+老子：道可道，非常道
+老子说：被玩家广泛传颂的攻略，未必是好攻略
+老子：祸兮福之所以，福兮祸之所伏
+老子说：被敌人杀了未必就是坏事，杀了一个敌人未必是好事，说不定有更多的危险在潜伏着
+古谚：匹夫无罪，怀壁其罪
+古代谚语说：怪本来是没有罪过的，就是因为他们掉好装备，才招徕杀身之祸
+左传：欲加之罪，何患无词
+左转说：想要给一个怪加个罪名让玩家推，不会怕找不到罪名
+子曰：“君子和而不同，小人同而不和。”
+孔子说：君子就算不组队也会互相帮助，小人就算组队也不尽心配合
+子曰：“入太庙，每事问。”
+孔子说：进入黑暗神庙这种高级的副本，每一件不懂的事情都要请教团员。
+子曰：逝者如斯夫，不舍昼夜
+孔子说：点卡流失的好快，昼夜不停
+子曰：朝闻道，夕死可以
+孔子说：学会了更高级的法术，哪怕马上被部落杀，也很值
+子曰，三人行，必有我师！
+子曰：三个人组队，必须要有法师，或牧师！</description>
+    </item>
+    
+    <item>
+      <title>断点-C语言</title>
+      <link>https://skywind3000.com/blog/archives/199/</link>
+      <pubDate>Sat, 09 Apr 2011 21:02:20 +0000</pubDate>
+      
+      <guid>https://skywind3000.com/blog/archives/199/</guid>
+      <description>看着那密密麻麻的反汇编，连眼睛红了都没有发现， 听到你说错误很难重现，人数还一点一点再往下减； 我转过我的脸，不和你争辩， 未检测边界肯定，非常的危险； 发誓从今天，不再用 C语言， 我真想改用脚本重构好几遍！ 我点上一根烟，在这个需求善变的年代， 再好的程序员也不能幸免； 打开的源文件，设满很多断点， 只想在睡前让程序能够，撑到明天。</description>
+    </item>
+    
+    <item>
+      <title>欧洲旅游-2010</title>
+      <link>https://skywind3000.com/blog/archives/699/</link>
+      <pubDate>Fri, 25 Jun 2010 07:30:00 +0000</pubDate>
+      
+      <guid>https://skywind3000.com/blog/archives/699/</guid>
+      <description>佛罗伦萨
+琉森
+阿尔卑斯山
+梵蒂冈
+威尼斯
+佛罗伦萨
+佛罗伦萨
+威尼斯
+因斯布鲁克
+琉森
+苏黎世
+瑞士郊区
+凡尔赛</description>
+    </item>
+    
+    <item>
+      <title>伟大的埃及</title>
+      <link>https://skywind3000.com/blog/archives/649/</link>
+      <pubDate>Mon, 07 Sep 2009 06:44:00 +0000</pubDate>
+      
+      <guid>https://skywind3000.com/blog/archives/649/</guid>
+      <description>地标
+亚历山大
+红海酒店
+酒店
+世界上最大的清真寺
+某著名教堂
+亚历山大图书馆
+图书馆
+卢克索神庙
+地中海
+柜员机</description>
+    </item>
+    
+    <item>
+      <title>2009 旧金山</title>
+      <link>https://skywind3000.com/blog/archives/672/</link>
+      <pubDate>Fri, 04 Sep 2009 12:57:00 +0000</pubDate>
+      
+      <guid>https://skywind3000.com/blog/archives/672/</guid>
+      <description>地标
+街区
+地标
+街道
+街道
+GDC 2009
+小岛秀夫
+街上
+海岸
+勇闯夺命岛
+巧克力工厂</description>
+    </item>
+    
+    <item>
+      <title>[转载] 二十六史 - 毛太祖本纪</title>
+      <link>https://skywind3000.com/blog/archives/626/</link>
+      <pubDate>Tue, 19 Feb 2008 09:25:00 +0000</pubDate>
+      
+      <guid>https://skywind3000.com/blog/archives/626/</guid>
+      <description>本朝太祖毛姓讳泽东字润之，湖南湘潭人氏。其寿诞之日为西夷之圣诞日。帝少有大志。未冠之时即作咏蛙诗，以述其志。及少壮，游学长沙，师从杨昌济，后入京，供职于京师太学藏书阁，问学于鸿儒陈仲甫、胡适之、李守常等。适之昔日留学于美夷，恃才傲物，因帝未忝科名，适之甚轻之。适之门生傅斯年、罗家纶之辈亦甚轻帝。后帝一统天下，欲灭群儒，盖因此三人故耳。帝受仲甫命，返湘结党，得仲甫提携，得以拜见于前朝太祖，官侍读学士 。前朝太祖崩，时，前朝武厉帝为大司马大将军，阴结其党，欲灭帝党人。帝谏以兵击之，仲甫不许，武厉得以蓄积羽翼，民朝十六年武厉于松沪，前朝摄政王汪公于江夏，大杀帝党人。八月帝与诸党人会于汉口议事，帝曰：枪杆子里面出政权！众皆异之，后受命返湘，策反南军卢尔德铭部，九月九日兴兵起事，围长沙，不克，败走江西。军次三弯，帝重编余部，至队官皆有帝之党人监军。帝据井岗，与朱武胜公所部合兵，屡败官军，威名远扬，号朱 毛军。武厉怒，令江西巡府鲁涤平统兵十万进剿，帝诱敌深入，引兵击之，涤平败，帝擒官军先锋总兵张辉瓒。武厉闻信，令兵部尚书何应钦统兵二十万进剿，帝大败之。武厉益恐，统兵三十万再战，又败于帝。一载余，武厉又率五十万劲旅进剿。时帝因党争，被削兵权，虚职赋闲。官军犯境红朝震恐，朱武公与周文正公掌兵权，问计于帝，帝授奇计再破官军。武厉败绩，再整旗鼓，以西夷部番将参赞军机，以百万之众犯境。时自俄狄归国之儒生博古 辈摄政，番将李德与周文正公参赞军机，博古一儒生耳，挟俄狄酋斯大林之威，夺帝兵权，唯俄狄之命是从，事无巨细，皆听命于李德。李德辈纸上谈兵，屡战屡败。引兵西走，兵渡湘水，不足三万，众将皆恶李德，兵次遵义，诸将议政，帝之威众人咸服，周文正、朱武胜公皆附之，夺博古、李德兵权，帝得以再统雄兵。帝帅余部，转战滇、黔、川诸省。过雪山，与张国焘部合兵，国焘忌帝之官居其右，欲害帝，大将军叶剑英闻信，间道驰告帝，帝得 脱。国焘部将陈昌浩欲引兵击帝，大将军徐向前拍案而起，国焘、昌浩乃罢。民朝二十四年入陕，据陕北以抗官军。官军进剿屡败于帝。帝令徐向前率所部西征，败于西北回军，丧师数万，向前等仅以身脱。丙子双十二，帝策反满洲王张公、陕西镇守使杨公兵谏，囚武厉，帝使周文正公谒武厉，晓以大义，武厉罢兵。
+民朝二十六年夏，倭寇兵临幽州寻衅，幽州节度使宋与寇战，不克，败走保定，倭寇陷幽燕。帝令周文正公再谒武厉，武厉许以招安，北军三万余朱、彭为帅，南军两万余叶、项为帅，两军均受帝节制。合官军与倭寇血战八年，民朝三十四年倭寇败降，帝与周文正赴陪都谒武厉，共商国事。民朝三十六年兵火起，官军伐帝。帝令大将军林、罗取满洲，世祖与大将军刘取中原，大将军陈、粟取华东，大将军彭取西北，大将军聂取幽燕。诸军屡败官军。民 朝三十七年大将军林、罗与官军战于满洲，大破之，尽占满洲地。世祖、大将军刘与陈、粟部合兵大破官军于徐蚌，陈兵长江，京师震恐。林、罗入关与大将军聂合兵，合围幽州，幽州节度使傅作义降。大将军彭横扫西北，兵临西域，帝移驾幽州，以之为都，改称北京，北方遂定。民朝乞和，帝不许，令世祖与刘、陈、粟诸将合百万众，渡长江，取金陵。以陈、粟取华东，林、罗取华中，世祖与刘将军取西南。诸军势如破竹，官军尽溃不成军。帝以世 祖为西南节度使，坐镇成都，以图吐蕃。
+武厉败走东海夷州，据澎湖以抗王化。民朝三十八年，太祖武帝开国元年，帝登天安门，诏告天下。帝定鼎，君临八方。初，倭寇败降，西夷美利坚助武厉以军资，以抗帝军，帝怒，斥之曰：美帝国主义都是纸老虎。开国元年作《别了，司徒雷登》以示美夷。开国二年高丽内乱，南高丽乞师西夷，美夷合西夷十五部落进兵北高丽，势如破竹，北高丽溃不成军。酋帅麦克阿瑟狂言饮马鸭绿水。北高丽酋长金日成乞师天朝，帝令西北王彭公为东征元帅，太 子岸英监军。统兵二十五万，以将军邓华为先行，东征高丽。彭公与美夷战，大破之。开国三年，太子阵亡，帝大怒，令彭公进兵，美夷乞和，帝不许，彭公再战，五战五捷，阵斩酋帅沃克，天下皆慑于帝之威。开国五年，彭公平美夷于高丽，班师还朝。
+开国初年，帝与周文正公巡幸北狄俄罗斯，与狄酋王斯大林盟，约为兄弟之邦。国经战乱，百废待兴，帝以刘殇公为太师摄政王，周文正公为相国。免天下钱粮。世祖平定西南，传檄吐蕃，吐蕃降。征西将军王震，进兵西域，前朝西域督护陶峙岳降。帝令官军平寇，前朝余孽星散。行三反、五反，斩天津知府刘青山等以清吏治，天下安定。开国九年行反右，帝定奇计曰：引蛇出洞。初令天下无论军民妇孺皆可谏国事，言政弊。后将直言者尽数收监，交 有司论罪。天下儒生遂不敢以古讽今，枉谈国事。行大跃进，民不聊生，饿殍千里，三年饿毙两千余万口。俄狄发难，帝令翰林作文与俄狄论战。后会诸侯于庐山，彭公谏八万言书，帝怒，黜彭公，以林幽公代之。吐蕃达赖阴兵起事，帝令军平之，达赖间道天竺。吐蕃遂定。天竺、俄狄入寇，帝大破之，天下皆慑于帝之天威。
+开国十二年，天下饥荒，帝与群臣皆不食肉，以示与民共苦。会诸侯于京，曰七千人大会，帝下罪己诏。储君刘殇公曰：三分天灾，七分人祸。帝甚不悦，始有废储之意。开国十七年，江后令大学士姚文元作《评海瑞罢官》，文革始起。林庄幽公赞太祖曰：大海航行靠舵手——陛下一句顶一万句——令天下无论妇孺老幼皆习帝之语录，舞忠字舞。每日晨起为帝作三忠于、四无限。帝大喜，遂立林公为储君，封摄政王，出入免跪拜。百万红卫于天安门拜 谒帝，自林庄幽公、周相国等皆顿首叩拜，山呼万岁。帝下挟书令，罢科举，焚诸子书，禁百家言。以共产之学为国学，以愚黔首。臣民偶语诗书、以古讽今者，或弃市，或收监，或黥为城旦。
+开国十八年，太祖武皇帝文革元年，天下大乱，帝名为文革，实为灭功臣之意。开国初，帝以高岗为东北王，饶漱石为华东王，刘伯承为西南王，林彪为中南王，彭德怀为西北王，诸王势力，人莫能及。帝行削藩策，废高、饶，以林、彭、刘等主军机，因功臣俱在，帝甚忌之，故先废高、饶，再废彭公，又以文革为名，阴使江后与林庄幽公结党戮功臣，摄政王刘殇公请乞骸骨，帝不许，后杀刘殇公于开封，密不发丧。十年大乱，计杀功臣名将贺、彭等 无算。京师大兴县灭四类分子，满门抄斩数十户。广西民杀逆党，人相食。红色恐怖，人皆股栗。走五七道路，行上山下乡，使万民妻离子散，荒废学业，此皆太祖之大恶也。
+文革六年，再会诸侯于庐山，林公令大学士陈伯达谏，欲加帝尊号，帝不许。有废储之意。摄政王林庄幽公不得已谋叛，欲弑帝。帝令周文正公平叛，林公北逃，与王妃叶群、王世子立果均身死漠北。帝诏上海知府王洪文入京，加王爵。欲立为储君，因周相国、朱太师等勋臣力谏乃罢。
+文革十一年，相国周文正公薨，天下悲泣，京师万民送葬。十里长街，哭不绝声。四月，京师民变，帝以为世祖所谋，黜世祖。七月，太师朱武胜公薨，未几，地大震于唐山，丧丁二十余万口。
+帝自林庄幽公之乱后，龙体日衰。文革十一年，天降星雨于吉林，民以为上将归天，人心惶惶。帝废世祖职，以右丞相华国锋为储君，赐遗诏曰：你办事，我放心。以大司马兵部尚书叶剑英为辅政王，仿刘蜀主托孤之意，委政于叶公。九月九日帝崩于寝宫，寿八十三岁，天下色变，亿万臣民俱悲，如丧考妣。废帝国锋葬太祖于天安门前，号曰：至圣革命真龙伟大导师领袖统帅舵手太祖武皇帝。
+太祖文韬武略，历代帝王所不及也。太祖文传于《太祖选集》，诗存于《太祖诗词选》及《太祖语录》中，皆官修定稿。
+太祖后三人，杨后开慧，为太祖结发妻，因太祖起事，亡于前朝。贺后子珍，因不敬之罪，贬为庶民。李后云鹤又称江青，因阴结其党，欲废储君华国锋，效武则天事，为大司马辅政王叶公所废，后自缢于室。因共产之道学定曰：帝王不得多嫔妃。故帝晚年所幸之张妃未得以正名加封。太子岸英，公子岸青，岸龙为杨后所生，公主李敏为贺后所生，公主李讷为李后所生。太子岸英阵亡，岸龙早夭，起事之时，又有子女数人，失于乱中，不知所终。诸嫔 妃或有生子女者，皆不得知也。公子岸青，公主李讷、李敏均为闲官，皇孙新宇，举进士，入翰林，供职太学。
+帝之功过尽在民心，桃李不言，下自成蹊。
+古人作事无巨细，寂寞豪华皆有意。书生轻议冢中人，冢中笑尔书生气。</description>
+    </item>
+    
+    <item>
+      <title>春运生存手册</title>
+      <link>https://skywind3000.com/blog/archives/202/</link>
+      <pubDate>Thu, 10 Jan 2008 04:05:01 +0000</pubDate>
+      
+      <guid>https://skywind3000.com/blog/archives/202/</guid>
+      <description>在书写正文之前，笔者将使用推理手法，预测春运的规模、环境和潜在危机，并给出自己的分析结果，在此判断的基础上，以春运的各个阶段为分界线书写手册正文。再次说明笔者并非专业人士，文中的各种结论和推导过程仅供参考。 必要储备与使用方法 1. 水 没有食物，一个人可以生存1-2个月；但是没有水，生命最多只能支撑10天。一个成人在正常情况下日消耗2-3升水，限量供应下一天至少需要500毫升水。（大瓶可乐为 1.25升，冰红茶为500毫升，缺乏量具时可代替使用。）水可以在春运开始前，确定等车地点所处环境即将缺水时储存。届时把家中所有可以存水的大型器皿全部盛满水（黑色、很结实的塑料袋也可以存水，注意把袋口封好，避光储存），并采取定量供应，有机会就外出采水。 2. 食物 所有食物都应在阴凉、干燥、通风处保存，贴上标签、写明储存日期和保质期，先存的先用，并在春运时实行定量配给，以吃到半饱为准（不会饿死的）。因为笔者无法预测春运会持续多长时间，所以请各位自行决定储备的种类和数量。 盐：盐份为人体所必需，按年纪、身体状况、气温、和劳动强度不同，一个人平均每天消耗10-15克盐，储备时应选择加碘盐。注意，不能干吞盐粒，那会损伤肾脏，应用开水溶解后饮用或做进菜里（如果那时候你还能弄到新鲜食物）。 白糖、醋、烧烤用的各种调料粉： 白糖为身体提供热量，水一冲就能喝，也是不错的调味品；醋可以为储备的干肉之类食物增加味道（吃起来别有风味），也可以用来消毒和预防疾病；烧烤用的调味料中含盐份和各种香料，可以撒在食物上或者做汤，储备它的目的也就是让春运时饭菜的口味看起来并不那么糟糕。 芥末：芥末有很好的消毒杀菌止泻作用，买牙膏状的芥末需冷藏，推荐芥末粉。 干肉、鱼干、虾干或虾皮： 干肉类首推咸牛肉和牛肉干，它们营养丰富、口味一流、保存时间长、可在天冷时提供大量热量；鱼干类首推海鱼干，它们种类繁多、价格便宜、容易保存；虾干或虾皮中含有丰富的营养及矿物质，可在做汤时加入。 罐头食品：种类繁多，口味不错，保存时间非常长，但是价格昂贵。如有多余的钱，那可以储备一些。 维生素片：犹豫了很久，还是把维生素片列为食物一类，因为在春运时很难弄到新鲜食物，而人体在紧张状态下维生素消耗得非常快，因此要把它当作食物那样储存它。不悔推荐的是21金维他（安利的太贵了），80多元6瓶，每瓶可以供一个成人一月的消耗量，细算下来还是比较便宜的。 3. 药品 在使用任何药物之前都应看清保质期，并仔细阅读说明书或遵医嘱，切记。 抗生素：青霉素、四环素、头孢菌素： 抗生素绝不能乱用，其副作用和危害与它们的疗效一样显著，以上所列为常用抗生素的几个大类，在使用前必须遵医嘱或仔细阅读说明书。 高锰酸钾： 在水中加入高锰酸钾充分搅拌，呈红色时可以消毒，呈深红色时可以灭菌。注意，加过高锰酸钾的水不能饮用，只能用作消毒剂。 浓度2%的碘酒： 碘酒用来消毒、治疗皮肤病，在紧急状态下可以净水（饮用水），具体方法为每500毫升水加入5滴，充分摇晃10-20分钟。 抗疟疾药、抗痢疾药： 在春运时我们的生存环境将比现在糟糕百倍，一些非常少见的传染病可能会大肆传播，因此这些药品必须储备。抗疟疾药可以用来预防和治疗，抗痢疾药有预防和治疗两类，它们的种类非常多，药店一般都有售。再说一遍，使用前必须遵医嘱或仔细阅读说明书，在无法准确判断疾病种类时不要乱用药，那只会使情况更糟糕。 胃药、止痛药： 我们在平时吃惯了新鲜可口的饭菜，到了春运时身体可能无法立即适应品种单一、存储多时的食物，储备些胃药，可以给身体更多的适应时间。还有，除非到绝对必要的时候，否则不要使用止痛药，它会使医生无法准确判断病情，对身体也有一定的损害，慎用。 防治皮肤病类药： 在缺水、脏乱环境下患皮肤病的可能性较大，不悔准备的是皮炎平和达克宁，都不错，买两支储存起来。 止血药、纱布、消毒棉、绷带： 止血药推荐云南白药，其他辅料都可在药店以很便宜的价格买到。要说明的是药品可以买到，但各种护理知识却是买不到的，限于篇幅，本文不做介绍，请自行在互联网上搜索、并学习相关知识，或者有能力的兄弟站出来，再写一篇关于春运时护理的文章，谢谢。 4. 燃料 燃烧会消耗大量氧气，并释放二氧化碳和一氧化碳，所以使用任何燃料都应在窗口或其它通风处。 煤、木炭、金属罐装的固体酒精： 煤气和天然气是常用燃料，但无法大量储备，也不安全，而煤弄湿了晒干还能燃烧，且价格便宜；木炭无污染，可直接烧烤食物，还要用作过滤，应多备些；固体酒精是在紧急状态下的燃料，非到万不得已不要使用它（在野外可以捡树枝作燃料，用火要小心，临走时熄灭火堆，最好再带走木炭）。 5. 其他装备 本文是为普通平民准备的，所考虑的就是如何以最少的资金换取最大的安全机会，以下列举的物资一般家里都有，如果购买，价格也比较便宜，并可应付大部分突发事件。 口罩、和密闭程度非常高的游泳眼镜： 这些装备可以帮助你在大火中分辨道路，免于浓烟和粉尘的袭击，也可以在短时间内作为紧急防毒面具使用。具体制作方法是两三个口罩叠套，当中放上木炭颗粒、沙土、甚至大量剥开的香烟过滤嘴，用水浸湿，缝上边缘；游泳眼镜周围垫上少许浸过水的脱脂棉。需要说明的是这样简陋的装备防护性是非常差的，笔者没有做过相应实验，现场人员必须尽快抵达安全地带。 使用5号电池的AM、FM收音机： 要小一点、带耳机的。当电视电话互联网全部中断之时，可能只有收音机才能为你提供消息。 口哨： 挂在胸前。失散或者其他需要援救时可以用很少的力气引起他人的注意，也可以作为简单的通讯工具。 使用5号电池的小手电筒： 小手电筒轻便、可随身携带，用作照明与发送信号，电池可与收音机互换，这样只需储备一种电池（不要忘了储备电池）。 肥皂、牙膏牙刷、毛巾： 肥皂用于日常清洁，也可以洗去化学制剂和沾染核辐射的尘土。注意，为保护环境，即使在春运时也应远离水源使用。 被单、夹子、绳子： 被单应挑选全棉的，夹子和绳子的强度要高一点，并至少学会3种打绳结的方法，用它们可以制作吊床、遮阳篷或雨篷，被单撕碎可以当绷带。综合用途很多。 火柴、打火机、放大镜、蜡烛： 以上物品都是用来引火的，用火柴或打火机点着蜡烛，然后再用蜡烛点火，蜡烛应该多备些，还要用作照明，注意节约使用。 一大瓶50度以上的烈性白酒： 在缺水状态下可以为伤口和器皿消毒，必要时也可以当燃料和引火物使用。 防水帐篷、毛毯、睡袋： 远离城镇或找不到旅店时使用。毛毯应该每户人家都有，防水帐篷在超市里卖300元左右，普通人家应该负担得起，春运前就应练习搭建帐篷。在天气寒冷、无法携带被子的情况下（体积重量都太大），睡袋是个很好的选择，但是价格和帐篷一样昂贵，如果资金不足，那还是拿出备用的衣服，和衣而睡吧。 雨衣： 雨衣比雨伞好，使用时双手都可以干活，也可以用作挡雨布或接雨水。 救生圈： 多买几个，在桥梁被炸断或紧急渡河用，不仅是人可以用，在手推车上捆几个，并配合牵引绳的帮助也可以让它安然渡河。 手套、鞋： 应准备三种手套：防寒手套（气温寒冷时使用）、线织手套（干粗活时使用）、橡胶手套（面对污染物品或其他紧急状况下使用）。三双鞋：球鞋（用于长途跋涉）、拖鞋（在夏季或过浅滩时使用）、大一号的雨鞋（天气寒冷且下雨时使用，垫上厚鞋垫，多穿几双袜子或塞入保暖物）。 指南针、地图： 春运时的必须品，但要事先学会使用。 袖珍工具箱： 在春运时你可能需要自行维修各种物品或房屋，工具箱是必不可少的。 刀、小型多用途组合刀具： 需要一柄长度在20厘米左右、带刀鞘的不锈钢刀，用途很多，在春运时应随身携带，最好是做个坚固的挂带，当右手自然下垂时正好可以握住刀柄（如果你习惯使用右手），方便随时拔刀。可随身携带小型多用途组合刀具是必不可少的，德国双立人和瑞士军刀是极品，可惜价格太高了，挑选质量好些的国产刀具，性价比也不错的。 笔记本、笔： 要小一点，可随身携带的。写下拥有的所有物资，每天记录使用情况和剩余。 便携式烧烤炉、小号铁锅、铝制饭盒、汤勺： 身处野外时有这些装备可以省不少事情，价格也不贵。 质地坚固的塑料袋： 用途广泛（比如充气后不慎落水时可当救生圈、还可以用作储水），应多储备。 带包装的消毒纸巾： 用途很多（保洁、引火、止血、保暖），注意节约使用。 登山包、超市用的手推车、防水帆布： 这是春运时的必备品。登山包应挑选重量轻、强度高的，即使价格贵一些也是值得的。超市里的手推车价格便宜、载重量大（有效负载在150公斤以上）、结构简单，且轮子是实芯的，就算被钉子什么的戳破了也可以照常使用，春运时用硬纸板做内衬，挡住底部和边缘，装入物品后用帆布覆盖，并用绳子捆扎严实。 以上列举的所有物资（包括供应三口之家三月的粮食燃料药品在内），大约共花费1500元左右，一般家庭应该都能负担，但是那些下岗工人——他们可能连1000元存款都没有，希望春运时的政府可以凭票分配食物和其他生活必须品，尽可能让更多的中国人可以在这场春运中生存下去。 6. 格斗术 笔者无法想象数百万乃至上千万民众拥挤在公路上挤车的情况。那是何等混乱而悲惨的时刻，不时的误打误撞、流动人口和黑社会的抢劫杀人、乃至惊慌失措的民众相互践踏…… 如果你们受到黑社会的袭击或抢劫（这是有很大可能的），那么别无选择——你的退让和害怕只能激起他们进一步的贪婪与残暴，不要犹豫，立即拿起储备物资中随身携带的刀具进行自卫。 致命攻击部位有： 肾脏： 在背部两边最后一节肋骨下，用尽全力把刀自下而上捅进去，如果位置正确，那么对方会很快乏力直至死亡。 肝脏： 位于右下腹，被杀伤后能造成大量出血，不及时抢救会立即死亡。 腹股沟： 腿和肚子连接处，那里有大动脉，刺中后至少残废，无及时抢救会导致死亡。 颈动脉： 在喉结左边，被刀切断后几乎没有得救的可能。心脏也是非常理想的目标，但是很难准确攻击，也容易被肋骨卡住，从性价比来说还是攻击其他致命部位来得稳妥。 具体战术： 一人在正面，持刀看着攻击目标的眼睛（要凶狠些），尽量吸引对方的注意力，侧面一人小心持刀，不要引起他们的注意——侧面的才是主攻，一旦动手就绝不要让对方活下去，直到他们全部被杀或部分逃跑为止，即使出现团队伤亡（这些战术需要事先练习，否则无法配合默契）。这是没有办法的事情，不是他们死就是你们的团队被抢劫、被轮奸、被杀，没有选择。 备用战术： 踢裆；在地上抓一把沙土扔向他们的脸；用备用的白酒制作燃烧瓶（如果来得及）；女性成员在左右手隐蔽处各备一把浸过强酸的单面剃刀，在男性队员无法收拾场面或有勇气战斗时用剃刀全力划敌人的脸和脖子，不要停，浸过强酸的剃刀所带来的伤害非常恐怖，在缺乏及时医疗的情况下被攻击几乎就是致命的（溃烂、失血而死），但是不要管对方的脸成了什么样子，继续协同队友攻击，直到目标死亡或彻底失去战斗力。 听起来相当残忍，但笔者也没办法，这是战争，而他们是试图抢劫我们的财物、试图剥夺我们生命与尊严的一份子春运后面对审判，你也有话说——毕竟我是在自卫。 如果你的团队顺利到达预定地点，而当当地能够有不错的医疗补给，那么恭喜你（恭喜恭喜），马上架设营地，开始休整（如果这是你农村亲友的家，那么不要住在他们家里——他们可能也很困难，拿出储备的物资建设营地，准备开始下一阶段的出行）。</description>
+    </item>
+    
+    <item>
+      <title>年度旅游-2007（日本）</title>
+      <link>https://skywind3000.com/blog/archives/450/</link>
+      <pubDate>Tue, 04 Dec 2007 16:21:00 +0000</pubDate>
+      
+      <guid>https://skywind3000.com/blog/archives/450/</guid>
+      <description>天守阁路上
+天守阁：丰臣秀吉取得天下后的城堡
+古代日本部队
+大板商业区
+大富翁头像
+小镇清晨
+岚山
+山脚红叶
+岚山山谷
+山里人家
+东大寺
+奈良某路口
+东大寺格局
+地热温泉
+富士山下
+铜像
+富士山下
+两个太阳（效果不是很好）
+东京铁塔
+东京湾彩虹桥
+五合目
+信玄老家</description>
+    </item>
+    
+    <item>
+      <title>比尔·云风传奇</title>
+      <link>https://skywind3000.com/blog/archives/204/</link>
+      <pubDate>Tue, 11 Sep 2007 21:06:09 +0000</pubDate>
+      
+      <guid>https://skywind3000.com/blog/archives/204/</guid>
+      <description>1. 比尔·云风刚出生便会说话，邻居描述，刚落地时他就向东南方向走了七步，每走一步地上就出现一个“@”符号，只见他七步之后，伸左手指天，伸右手指地，开口说道：“2D/3D唯我独尊”。。。。 2. 《徐庶走马荐比尔，刘玄德三顾茅庐》：徐庶：“主公不必难过，五步之内必有芳草，远来的和尚，未必念得了真经，蜀国如要上市，庶愿保举一人”，刘备：“知道是你好朋友诸葛孔明，这人人品不行，我面试过。他要我联伊 抗美，与基地组织共出奇兵占领NASDAQ机房，奉股市而令不臣，控制所有上市公司。靠！备乃仁义之团队，向来讲求信誉，强调共赢，怎忍心做此等伤天害理之事”，徐庶：“是是是，主公是讲求信誉，力主双赢的仁义团队，但是我要推荐的另有其人”， “哦，应届生？现在何处？开口多少？”，“这人复姓比尔，双名云风，家住荆州长沙郡，现在幽州雪碧九游戏当差。”，备：“哦，没听过”，庶：“这位好汉十八般语言门门精通，上能构 架操作系统；下能设计嵌入芯片！”，备：“有这种怪人？”，庶：“不当如此，比尔·云风左手提一百二十斤混铁鼠标，右手抱三百五十斤工学键盘，竞争对手虽有千军万马，近不得他办公桌前一步！三十六小时持续编码依旧气定神闲，体力耐力无人能及。”，刘备：“赞！是块加班的好料，想起来了，水镜先生也向我推荐过，说他‘手握设计无数种，胸中代码千万行’，备若得此一人，何患《汉室》30万在线！他在雪碧九拿多少？”徐庶：“X XX”，刘备：“大伯如何？”徐庶：“至少再多500元”，刘备：“恩，只要他证明他的能力，再多600都不在乎，我们向来尊重人才，QQ，MSN，MAIL统统给我”，徐庶：“听说他最近ADSL欠费，手机停机，就连email都发不出去，主公要见，恐怕只有亲自前往”，刘备：“如此说来，备当前往看看”。。。。 （未完，待续）</description>
+    </item>
+    
+    <item>
+      <title>[翻译] MUD玩家分类理论</title>
+      <link>https://skywind3000.com/blog/archives/171/</link>
+      <pubDate>Tue, 01 May 2007 20:18:38 +0000</pubDate>
+      
+      <guid>https://skywind3000.com/blog/archives/171/</guid>
+      <description>游戏设计需要基础性理论，Richard A. Bartle，第一款MUD（被称为MUD1）的开发者，该文章起于1990年，经作者多次整理而成。在游戏设计“难有统一理论”的情况下，该文论点受到了决大多数开发者的一致接受和好评。可见基础性理论不但有利于我们的分析与设计，更重要的是大家能在同一层面上用同样的术语进行更有效的沟通： http://www.skywind.me/resource/hcdsc.htm 最近在阅读 XBOX360 Live方面的文档，作为其中提及的一个重要概念“Bartle&amp;rsquo;s player type”的论文，似乎影响了整个第四代Live的设计，恰巧最近我也在整理一些Live相关资料，就顺带将这个基础理论进行了翻译。</description>
+    </item>
+    
+    <item>
+      <title>现实主义题材需要拯救</title>
+      <link>https://skywind3000.com/blog/archives/457/</link>
+      <pubDate>Fri, 02 Mar 2007 07:34:00 +0000</pubDate>
+      
+      <guid>https://skywind3000.com/blog/archives/457/</guid>
+      <description>**1. 参考游戏 vs 参考生活：
+**
+以前人做游戏，参考的是生活；现在人做游戏，参考的是游戏。前者作出来的游戏属于创新，后者作出来的游戏最多属于“综合+改良”，这还是比较好的了，最差的情况还有抄袭的嫌疑，感觉作者设计出来的内容宏大而没有主题，似乎只是个“游戏大杂烩”是个把自己记忆中好玩的游戏全部杂凑在一起的“六十四合一”。
+艺术的本源来自于生活，不管电影、文学、还是游戏，这点在我玩ndsl游戏时候特别有感触，最近国外出了个很火的游戏InkLink&amp;ndash;画图猜词，就有点象我们年会上的游戏，一个人描述一个人猜成语，只不过该游戏用画画的方式进行，界面就像一个带聊天框的画板，万家轮流在上面用图画描述系统给他的单词，然后所有玩家根据他正在画的内容猜，越快猜出来的得分越高。这个游戏不大，但是的确让人眼前一亮的感觉。
+**2. 电影选材 vs 游戏选材：
+**
+前段时间王朔跳出来还说：“只写自己经历过的事情”，刘欢在回答自己为什么很长时间不出专辑以及评价现在流行音乐不成熟的时候说：“成熟的行业，绝不做前人做过的事情”。参考电影和音乐我们可以简单的画出一个发展脉络：
+创新阶段 -&amp;gt; 改良阶段（商业化阶段） -&amp;gt; 抄袭阶段（泛滥阶段） -&amp;gt; 枯竭阶段
+目前游戏选材是第二到第三阶段的过度，而电影选材早在95年就出现了选材枯竭现象，但是经历了10年的沉淀与反思，相信下一个电影创作高峰不会太远，而游戏也会象电影一样，过几年将进入一个题材休眠期。
+**3. 创新 vs 改良：
+**
+之前读到姚壮宪一篇文章，文中主张不要轻提“创新”因为游戏历史已经有三十多年，“今后大部分制作都是一边看着前人的游戏，一边想着自己的设计”“人類既是依賴習慣的動物，也是追求新鮮感的動物”认为“综合+改良”是上乘功夫，若只是混合属于一般功夫，“若学其形而无其实，乃摸象之流”。。。
+姚壮宪这个话放在《仙剑奇侠》的单机游戏时代，是很正确的，当时创新太多，意再规劝人们“改良”，而放在现在改良期已经进入尾声再来说这个话的时候，便会适得其反，因为现在的人太习惯改良了，再劝说他们改良，只能禁锢思想，因为习惯改良的成功就代表害怕新的设计。
+**4. 现代题材 vs 古典题材：
+**
+国内那批六十年代电影学院毕业的第四代导演们被评价位“中国电影创作的主力军”，那我们的游戏设计者究竟还要经过几代，才能迎来一个崭新的全盛时期？
+问题之一是古典游戏题材泛滥了，为什么古典题材会放浪呢？抛开审批问题，因为做古典题材相对容易，太多东西可以参考了，几大名著，二十六史，各类神怪传说全部是现成的；而相对来讲作现实题材确难的多，因为游戏设计者的思路会受到文学和电影发展束缚，不是需不需要避讳的问题，而是没有现成资料需要游戏设计者自己挖掘的问题。
+**5. 五千年的文化成为包袱：
+**
+现实的情况是，很多人对古代史的熟悉程度似乎超过了现代史。说起诸子百家，三教九流，四大名著很多人都口若悬河，然而说起五四后的现代史，说起建国后的各个历史阶段，社会生活，却都知其一不知其二，能顺利的说出战国四公子是谁谁谁，却不能数出北洋政府执政过的几大军阀；数得出隋唐时期的十路烟尘，却连新中国的十大元帅都记不全；唐宋元明清的皇帝全能背诵却根本不知道七十年代初到八十年代末的几阶政治局常委是谁；知道古代军 队的布阵却又不知现代军队的编制。
+文化太悠久，名著太多，是好事，也是包袱，做不做现代题材，不是内容需不需要避讳的问题，也不是审批同步通过的问题，而是不愿花时间从现实生活中挖掘一手资料的问题。如果一不愿体查挖掘现实生活，二不能查资料作考证，那就只能做成科幻或者玄幻。国外游戏只有三到四成是古典题材，而国内游戏却有八九成徘徊在古典题材上，这是个不正常的比例。
+**6. 现代题材才是更加贴近生活的东西：
+**
+现代题材的发掘过程应该是先从作家们开始（八十年代初已经开始了），然后再到导演们（八十年代末已经开始了），然后再到游戏（似乎没有开始）。不得不说现在的游戏制作者更偏爱历史而疏于现实，日本的养成游戏《心跳回忆》作到中国来却只能做成《金陵十二钗》或者《金瓶梅》，Westwood的即时战略游戏《C&amp;amp;C》作来中国却只能做成：《官渡》《战国风云》《赤壁》等，这就是一个怪圈。
+**7. 反思：
+**
+为什么会有如此的怪圈？归根结底一句话，从94-95年开始几款成功经典的国产游戏都是古典题材的。国内似乎难以找到成功的现代题材游戏，中关村启示录失败，地雷战失败，非常男女失败，铁甲风暴失败，似乎形成了思维惯性，思维定点于古代其实导致我们对很多现代题材缺乏敏感，比如《劲舞团》（似乎和大部分设计者不熟悉音乐不喜爱跳舞有关）比如《街头篮球》，再比如超现代的《第二人生》。
+**8. 拯救：
+**
+张艺谋在八十年代时就曾经下决心要拯救现代主义题材的电影，王朔前段时间也说过类似的话，而反观游戏，今天的确需要我们回到生活中去，重新思考并挖掘题材，这样从题材上或许可以绕开目前游戏同类化严重的怪圈，重新进入一个新的原创阶段。
+PS: “做中国文化特色的游戏来避免国外竞争”的说法我觉得值得商权，两点：
+1) 中国文化特色不等于古典文化，更多的应该是现代文化，很多人似乎把它们划了等号
+2) 这个观点的意思是会让人潜移默化的习惯“守住”而不是去“开拓”
+更实际的情况是，如果一味想守，是守不住的，八国联军只需要本地化一下招聘本地员工开发本地游戏，什么问题都解决了。之前wps就是个教训，97年求伯君全国循讲他卖别墅做wps97时就说，金山的优势在于金山了解中国人的习惯，几年之后仍然抵挡不住微软本地化的策略，office2000迅速普及，所以说希望靠守住本地文化来抵御竞争是不明智的做法，归根结底是要有新的好的设计。</description>
+    </item>
+    
+    <item>
+      <title>文莱旅游-SINPLAY</title>
+      <link>https://skywind3000.com/blog/archives/610/</link>
+      <pubDate>Wed, 15 Mar 2006 07:33:00 +0000</pubDate>
+      
+      <guid>https://skywind3000.com/blog/archives/610/</guid>
+      <description>我们是红旗下成长的少年&amp;mdash;-愿乘长风，破巨浪，帮助他乡人民早日得解放。。。。
+苏丹王宫&amp;ndash;世界上最大的屋子（占地两公顷多的一栋房屋）
+王徽
+苏丹纪念官
+授位仪式
+南无阿米托佛&amp;ndash;马来难得一遇的庙宇建筑
+早晨
+微型碑文
+热带雨林-寻找长鼻猴
+。。。
+出航
+沿河道前进
+沿河道前进
+水乡&amp;ndash;继续沿河道前进
+黄昏
+夕阳无限好
+日幕
+天气变冷了
+摸索中前进
+孤单的椰子树
+码头
+游船
+似乎是高度指示标
+目的地岛屿&amp;ndash;Jaya 岛
+岛上风光
+年少的我喜欢一个人在海边
+在海边&amp;mdash;Tang帅，准备自己下海了
+天山折梅手
+纯洁的马来乡下姑娘
+热情起舞的英俊青年
+甜美的微笑
+外星人出现！！
+“奇怪的地球人，他们在干什么”
+外星人好帅
+海天一色
+海天一色
+回到祖国鸟
+十字路口
+大爷干嘛呢？
+进城立交
+立交
+街头
+永明
+中银
+写生
+奇怪的左行道
+老房子
+警察局欢迎你
+警察局也可以走后门
+好怀旧
+入境边检处路口
+街头美女
+这里是街口&amp;ndash;行人请小心车辆</description>
+    </item>
+    
+    <item>
+      <title>游戏高手的境界</title>
+      <link>https://skywind3000.com/blog/archives/458/</link>
+      <pubDate>Sun, 12 Mar 2006 08:31:00 +0000</pubDate>
+      
+      <guid>https://skywind3000.com/blog/archives/458/</guid>
+      <description>游戏高手也分三流九等，随着游戏软件已经越来越复杂，而人和人之间的竞技性也越来越白热化。
+我是一个有十七年游戏经验的老玩家了，从世嘉八位机到现在的网游，虽然不敢说有什么高深的见地，但，在大多数游戏中，我所碰到的对手，都经不起我两三个回合的摧残。深刻相信“游戏，是人的本性”的我不太喜欢打一些慢节奏的游戏，觉得只有格斗和即时战略才能体现竞争的残酷，成王败寇的铁则跟现实没什么两样。而我说到我最纯熟的当数格斗和星际，星际成都第二，格斗成都第三的都死在我的键盘之下，这几年打这两个游戏的玩家少了， 所以我旦逢一遇到对手，听说“某某某格斗打的还可以，谁谁谁星际还挺行”我就会异常激动，不远千里请他过来过一招半式，我要声东击西，指南打北，用变化无穷的战术和他比个高下，但是一次次的我失望了，看着对手低头离去，我仰头看着他的背影，心中一片胜利过后的空虚，一个人提着键盘站在电脑旁，茫然四顾，试问天下之大，尽难逢我的对手。
+星际里我凭借无穷的战术，运筹帷幄决胜千里；格斗中我拳打北山猛虎，脚踢南海威龙。我有座右铭：“凭你先选人物，再凭你让我选”。一般高手的能在一个游戏上出类拔萃，但除此之外都平平无奇；顶极高手在许多游戏中都能至人于死地，虽然，在我看来他们都根本达不到所谓达人的境界。真正的高手，凭借的不是再某款游戏上精湛技巧，而是凭借自己惊人的学习能力和触类旁通的天性。一个游戏，我可以输给你，但是我保证，数盘之后你再没有 可能赢我。
+星际四川省第一的人曾经说过“打星际最重要的控制节奏”，就是说丝毫不能慌乱，该怎么着就怎么着，我觉得每个游戏都是这个道理。三流高手比技巧，二流高手比反应，一流高手比心性。不管局势如何，哪怕我只剩最后几个兵，只有最后一丝血，心里面一定不能出乱子，一定要沉住性子。首先要顺应自身的规律，其次要顺应游戏的规律，最后做到以自身的规律配合游戏的规律，人的左右手和眼睛随着游戏的变化而变化，但是人的心不能变只有做到 心如止水，才能以不变应万变。打游戏是这个道理，做人做事同样是这个道理。
+古人能在象棋中参悟人生，今人也能在游戏里反思诸己。在游戏技巧达到至善的境界的一些高手，面对问题的反应是那么的自然得体，别人出一招想都不必想，应对的法子就能够自然施展开来，而这样紧急的过程也不容思考。有人问:什么人才能游泳游的好，游泳的人回答：不在乎水的人；有人问：什么人游戏才打得好？游戏达人回答：不在乎对手的人。所以说：首先配合自身的自然，其次配合游戏的自然，最终做到以自身的自然配合游戏的自然，达 到所谓“以天合天”的境界，在主体意识还没有来得及反应的时候就下意识或者很自然的作出了正确的反应，正所谓“意未至而神先行”。兵来将掸，水来土淹，凭借的是一种从容不迫的心态；封山开路，遇水搭桥，讲求的是一种坚定不移的气度。
+微操作并不是最重要的，大局观也不是最重要的，象韩国人那种只追求APS的做法，在我看来只能称为武术的招式而已，都是一些外家功夫，而真正领略游戏普遍原理奥意的玩家，才能够在内功上有所精进。只要练就深厚的内力，就能做到以无招胜有招，拿起草来也可以当剑使，最普通的招式也能胜过变化无穷的战术。
+这就是我作为一名游戏高手的境界
+（本文纯粹YY）</description>
+    </item>
+    
+    <item>
+      <title>文莱沙巴旅游照片</title>
+      <link>https://skywind3000.com/blog/archives/501/</link>
+      <pubDate>Sun, 12 Mar 2006 07:35:00 +0000</pubDate>
+      
+      <guid>https://skywind3000.com/blog/archives/501/</guid>
+      <description>项目团队
+系统结构图
+The Empire Hotel – 1
+The Empire Hotel - 2
+文莱25世苏丹修的清真寺
+沙巴海上清真寺
+沙巴 The Pacific Hotel 窗外拍
+小亚马逊河
+&amp;hellip;
+台风要来了
+次日
+离开文莱岛（机翼下面依稀看得到）</description>
+    </item>
+    
+    <item>
+      <title>两次结对开发尝试</title>
+      <link>https://skywind3000.com/blog/archives/456/</link>
+      <pubDate>Fri, 20 Jan 2006 07:46:00 +0000</pubDate>
+      
+      <guid>https://skywind3000.com/blog/archives/456/</guid>
+      <description>前段时间，项目三个开发者主要忙于确定一些具体技术，工作效率很低，两个同事一个负责服务器进程间通信模块的制作，一个负责数据库的线程池访问。这些知识他们都有，只是不够熟练，这些地方都是很容易耽误时间的，一位同事调整一个线程池，三天一下就投进去了，有时就是漫无目的的查资料，我当时看着干着急。
+那天晚上回家，突然想起来，唉，干脆试试结对开发怎么样，连夜总结了一下问题和要点，于是连续几天的XP就开始了，起得了一些好的效果。回顾一下自己一直以来认同XP却异或结对开发，主要有几个阶段：
+好奇阶段：早在一年前的事情了，一样和大家好奇的查阅资料，抽时间的认真尝试了几回，自己就先疑惑起来，同时通过查阅资料我也找到了很多负面报道，比如国外已经跳出人来说结对开发有问题，又比如中科院有家研究所，花了半年测试XP，得出结对开发不行的结论，七八条专家理由，自已也怀疑了。
+排斥阶段：觉得结对开发有打压开发者的效果，首先是一个人写一个人看，写的那个人再高明难免犯错看的人抓住口实后和你争论，你一边写代码一边想问题，自然言语落下风，轻者散失声誉，重者没了自信。“平等、妥协”难以单方面强求，所以当时认为开发者应该适当保持距离的同时做一定的重复劳动满足自我价值实现。觉得挨得那么近结对开发，似乎对个人成就感是种磨灭，因为剥夺了代码的个人所有权，大家觉得价值得不到体现了，所以当时 的心态比较极端。
+重新认识：
+第一点：前提
+首先得双方都能做到平等和妥协，所以最好双方之前都有合作经验，彼此了解对方的水平，当然在水平差距不太大的情况下，进行XP。当你也犯了错，我也犯了错，大家就公平了，注意力容易集中在问题上面，不会有太多的抬杠行为，上午你写，下午我写，无意识的保持着每分钟交流一次。
+第二点：效果
+后来发现“提高效率，避免出错”的同时，双方能在初期对项目关键部分形成共识，关键部分都经历了开发了就必然知道以后相关部的开发该注意什么，两个人决定设计，规避了未来可能出现的较大意见分歧，提高了开发效率和质量的附带效果是开发者水平都得到了提高。
+独立开发时，碰到问题容易苦思冥想，代码写半小时删半小时，这是思维死循环了；或者就漫无目的的查找资料，找不到就容易变成上网聊天，这是思维出现异常了。结对开发的监督效果的确能很好的规避这些现象，经常两三个小时不理IM和邮件－－独立开发效率小于结对开发效率同时碰到问题的时候可以迅速解决，通过极兴讨论能在短时间把方案订下来了。胜过三五个人的中型会议，因为两个人都达成共识的方案已经很不错了－－“两人订设计” vs“设计讨论”
+第三点：应用
+不建议将结对开发贯穿项目始终，好刀要用在关键的地方。我自己以为关系到某些公共模块，接口等最好采取结对的方式。也就是说项目的关键部位，前后有承接的地方，需要再别人工作基础上二次开发或者开发后别人会再自己基础上二次开发的模块，来点XP，是一件很快乐的事情：
+1. 规避关键接口的潜在错误，在关键接口上就形成共识，免得以后设计意见不合。
+2. 大家都经历了开发过程，必然懂得在使用这些模块和接口的时候需要注意什么，有什么限制。
+3. 关于代码风格，没必要强求，我想学公司一位老同事，和谁配合就按谁的风格写代码。
+比如本来我写封包解包，你写加密算法，那么我们就应该结对。本来我写引擎层，你写应用层，那么我们之间的接口编写，最好结对，否则以后分歧大了不说错误也多。比如我写绘图，你写GUI，那么我们应该结对开发。但是如果我写绘图，你写HTTP下载，咱俩最好就分开干了。因为我可能对HTTP不感兴趣。
+按钮和滚动条是亲戚，但是按钮和精灵就属于远亲了，所以说结对开发的两位程序员，对于开发的内容，应该和其他的工作多少沾亲带故。上面是前星期XP的一些心得，鉴于二期项目规模都普遍增大了，推荐各个项目组可以使用一下，值得再次尝试一回，当然，附带要解决的就是开发时候的划分问题了。
+PS: 说太多效果和分析了，实际用的时候，更多的时候是自己觉得某模块开发很关键，然后找个同学搬把椅子往别人边上一坐，大家一边 “Enjoy Losing Face” 一边顺其自然的就开始了。</description>
+    </item>
+    
+    <item>
+      <title>治安问题闲扯</title>
+      <link>https://skywind3000.com/blog/archives/459/</link>
+      <pubDate>Thu, 05 Jan 2006 08:56:00 +0000</pubDate>
+      
+      <guid>https://skywind3000.com/blog/archives/459/</guid>
+      <description>前段时间关于个人所得税改革，升高了低收入的收税起征点，有专家反驳，说：“剥夺了大部分人上税的合法权利” 有人骂专家，说“再收税，恐怕就出陈胜吴广了”，我在广州这点感触深啊，公司东边是飞车党，西边是砍手党，北面是背包党，南面是踩脚党。
+在广州，2/3的上班女性都有被抢的经历：砍手党就是抢你东西，你不给就砍你的手；踩脚党是故意把脚放在你面前，你只要踩了他，他就找茬。治安问题，珠江三角已经提前迈了一步了，从前几年的流动人口为主的乱，发展到现在的地下组织形式为主的乱了。
+何新：“我曾经研究中国秦汉以下两千年的中国历史&amp;hellip;结论是，除了外族入侵，基本上中国发生天下大乱的原因只有一个，就是土地兼并导致大量农民失去土地，无业可就，成为流民，从而揭竿而起。 现在人们似乎忘记了历史。目前中国的社会失业问题严重到已接近可怕的程度。无数青年人失去了机会，铤而走险。&amp;hellip; ”
+前两久听评书，曾国藩处理天津教案，说道黑龙会蛊惑群众烧教堂，太象了，和现在一些形式。
+参考天津教案的情况，下面是关系图：
+农民失去土地 + 政治问题 -&amp;gt; 无业人口 -(涌入城市)-&amp;gt; 黑社会(黑龙会) -&amp;gt; 团结底层人民
+无业游民增加 + 知识分子失业 -&amp;gt; 城市边缘人口增加 -&amp;gt; 城市边缘文化成为主流
+黑龙会 + 官商勾结 -&amp;gt; 产生老百姓自己解决“公正”的“地下公堂” -&amp;gt; 政府信誉下降
+地下公堂 + 突发事件 -(政府处理不当)-&amp;gt; 法国公使桥头开枪 -&amp;gt; 火烧教堂 -&amp;gt; 乱
+原来全国地痞流氓都很均匀，但现在他们都来南方混了，虽然说他们目前这样是不会有出息的，后期拥有群众基础和政治组织能力会获胜，虽然这些人多是一群无赖而已，但怕就怕读书人和无赖呆一起。
+李昌平说了，以后会有很多人挂毛泽东像章的。那可能就要等到问题再多些，知识分子被迫“落草”当绿林了有点水平的“流氓”再本着点“劫富济贫”的道义，懂得在维护本土治安的基础上收买人心，再来几个知识分子加于决策情况就不大好了。
+有人说：“水浒似乎越来越现实了”，认为“不能说他们就是占山为王的土匪，虽然主要因为主要山内的占山派太强了，动不动就要‘夺了那鸟位’”，但是“他们有理想的嘛，信仰共产主义啊，梁山就是理想国”，这是极左的说法。
+有人评论“毛泽东其实用的不是马克思主义”。既然毛披着西洋外衣玩土特产，既然真理是为阶级斗争服务的，文攻武卫嘛。那么试想，如果没有马克思主义，仅凭斗争论为主体的毛泽东思想，中国革命会去向何方？有两种可能： 一种可能是形成另一派思想，有文章说毛泽东思想是中国墨家的。
+另一种可能性比较大：如果脱离马克思，没有那么多的人信仰毛思了。因为前者又有马克思，又有苏联革命，毛思要是不批上马列衣服，似乎来头就小了点，就没有那么多的“宗教”特点那么吸引人。
+但是这也没有办法，只能说是历史问题决定的，知识分子的认识也必然受制于当时的历史环境，理论也无法脱离当时社会的具体格局。所以几年前还再讨论，说儒学复兴要不要马哲让路。
+但是可惜，这个马克思是绕不过去的，是左派不能让马克思主义在孔子之下。现在国家主义派的都是把毛泽东思想和马克思主义分开，然后从中国古代去寻找理论基础。毛泽东是中国传统文化和现代社会的结合体，虽然他的思想还有需要完善的地方，没有矛盾，毛泽东也需要儒家带来的秩序、道德，如果要社会稳定那是没办法的。
+所以我之前开玩笑说：新儒学的人应该出来几个证明，其实马哲是“儒家”的，孔子三千年前就有共产主义理想了，懂得辩证法了，然后证明马克思的思想规根揭底就是“仁”，之类的。对付现在一些崇洋的情节，我们要用外国人的东西来证明中国正确。
+由于马哲太复杂，内部派别多，非左即右，不容易统一，儒家口实太多，深奥晦涩。所以何新推从“通俗易懂”的“国家主义”，来“兼并包容”各路思想，易获支持也避免了流派争论，屏弃“中体西用和西体中用”，以“东方复兴”取而代之。《亮剑》本来就有这个色彩。如果我们看见有一天毛泽东思想悄悄地取代了马克思主义，那么国家主义就大获全胜了。</description>
+    </item>
+    
+    <item>
+      <title>关于“面向显示器编程”</title>
+      <link>https://skywind3000.com/blog/archives/114/</link>
+      <pubDate>Thu, 05 Jan 2006 04:05:03 +0000</pubDate>
+      
+      <guid>https://skywind3000.com/blog/archives/114/</guid>
+      <description>原创 关于“面向显示器编程” 收藏 最近吃饭的时候听公司两位同事聊起“面向显示器编程”（screen oriented programming）。sop这个东西我虽偶有所闻，却未有什么了解。这两位同事跟我说AOP其实是退化了的SOP，这个说法让我觉得SOP会有点意思。 个人觉得，OOP完成了对数据的重用，AOP完成了对算发的重用，而SOP则完成了对显示器的重用。 基于对SOP的应用，我们只需要在电脑前多加一把凳子，就可以通过工作空间上的复用，和项目时间上的压缩，达到了为公司节省资源，提高工作效率的目的。。。。 Life is :-( Life is :-) /\/\ ～～ (-.-;) 呵呵，哈哈﻿</description>
+    </item>
+    
+    <item>
+      <title>未来三五年游戏研发问题预测</title>
+      <link>https://skywind3000.com/blog/archives/117/</link>
+      <pubDate>Sun, 25 Dec 2005 13:32:17 +0000</pubDate>
+      
+      <guid>https://skywind3000.com/blog/archives/117/</guid>
+      <description>下面根据以往经验对未来三五年游戏开发问题做一个预测，所论述问题，缺乏严格证明。大家全当看故事，茶余饭后消遣娱乐一下： 1. 研发瓶颈从技巧演变成为规模，解决复杂度问题将成为国内一流开发者的主要矛盾，而未能进军一流水平的二流开发者将会进一步沦落成软件工厂和外包工作室。 2. 对于开发游戏，多人视频，新的输入设备，可看不可玩，三年内国内由于该方向知识薄弱，即便国外有大的成就，国内一时也难以效仿。 3. 日下国内过于注重技巧的世风，在面对突入其来的规模问题，以及国外先进开发工具的双重夹击，会导致诸多游戏项目连续不断的失败，国内将再一次引发游戏开发方法的大讨论，各种为游戏行业量身订制的软件工程及开发理念纷纷出现，目不暇接。 4. 微软两年内会推出崭新开发平台，为改良DirectX和传统VisualIDE逐渐力不从心的被动，新平台将结合Vista系统优势，也是对1990年MS平台开发战略的再 一次体现，当时英国记者评论“只有不断降低开发门槛，使未来全世界的开发者都习惯傻瓜编程了，才能有力的压制一切可能形成威胁的力量”这次统一Win/XBOX的编程接口自然不在话下，结合长期捆绑和专利等方面的蚕食，对OpenSource和其他轻量级开发工具实施致命打击。 5. 数月前微软宣布放弃几年前启动的GAPI的发布转而变出DX10，紧接着又宣布 VS.Net2005 Express的永久免费，现在已暴露出自己越来越大的野心了。三年后，高校合作工程开花结果，等第二，三批微软专家们成为国内研发主力的同时，结合Vista的下一代游戏开发工具的主流化，国内使用DX11/12的从业者必将遭遇类似DOS &amp;gt;Win的门槛面临失业和转变的选择，MS教徒们在2008年末必定会乘虚而入，钻入行业主力研发队伍。 6. Shockwave等等其他游戏开发工具由于迫于主流平台压力，会进一步在WEB方面发挥自己的优势，WEB平台游戏开发将会再次引起人们重视。 7. 第一二批开发者离开一线开发阵营，开始反思，一批优秀文化作品将会面世，各种关于游戏开发的故事，程序员文化引发二次回归，成为游戏文化的一个主流。 8. 一切该发生的事情，终究会发生，即使有人道破了也不可能形成改变。虽然MS节节胜利，但其十多年设计的战略“从控制全球软件过渡到控制全球开发者”第一步在未来五年内仍然不能顺利走完。 总之未来三五年日美游戏研发爆发的再度危机将会波及中韩，兄弟国家市场饱和。中国游戏的海外市场进一步受困于日韩封锁。伴随自身的研发危机将会使整个行业陷入比2000年以前更厉害的的大萧条，形势相当严峻，并非危言耸听。 基于上面可能发生的情况，有八条必要的建议： 1. 早日树立软件工程方面的“英雄”，在当今唯“低层技术论”的世风做一个分化和引导，帮助大家作出正确的职业规划，没必要往一条道上挤。喜欢软件工程的，研究软件工程去，研究重用和XP，解决规模问题；喜欢低层技术的，钻研低层去，加大分化，避免重复劳动。 2. 警惕微软对华战略，依靠OpenSource和其他机构，顺应目前轻量级系统合围对抗微软的趋势。 3. 对外以宣扬“低层技术”为主，对内却宣扬“软件方法”，吸引那些高手的同时迷惑对手。 4. 早日形成实用于自己的别人偷不了的开发方法，避免和抵制今后各种理论冲击下内部形成的意识分歧。 5. 开展长期预研并依靠高校，开展中期预研并结合老员工，工开展短期预研并结合新员工，要创造核心技术的同时解决规模问题，才能抵制被国外牵着鼻子走。 6. 宣传优秀研发人员个人品德和人格作风，如通过选编一些优秀事迹利用小册子和邮件列表等，推举一种程序员的“理想人格”，突出差别“程序员也有三六九等”，造就一批有十年编程经验的程序员“追求技术同时需要追求人格”，最终可以获得人格/事业成就，成为长久追求。 7. 如果有条件可以改变称谓，比如管老员工叫“前辈”或者“老师”，尝试在日常礼仪方面做小调整。 8. 最终完善精神文明建设，形成独立思考，避免受之前美国灌输给中国的印度式“软件工厂”之类理念的影响，避免因为表面繁荣落入外国意识形态上的圈套，沦为真正的“工厂”永世不能翻身。 PS：本文纯粹YY Life is :( Life is :) 2005&amp;frasl;12 skywind</description>
+    </item>
+    
+    <item>
+      <title>庐山旅游</title>
+      <link>https://skywind3000.com/blog/archives/474/</link>
+      <pubDate>Sat, 12 Nov 2005 08:26:00 +0000</pubDate>
+      
+      <guid>https://skywind3000.com/blog/archives/474/</guid>
+      <description>只原生在此山中（庐山小路上）
+山顶湖
+江西
+腾王阁
+渔舟唱晚，响穷彭蠡之滨（赣江）</description>
+    </item>
+    
   </channel>
 </rss>

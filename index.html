@@ -82,7 +82,7 @@
                             <div class="post-meta">
                                 <span>|</span>
                                 
-                                <span class="meta-category"><a href="https://skywind3000.com/categories/%E6%8A%98%E8%85%BE">折腾</a></span>
+                                <span class="meta-category"><a href="https://skywind3000.com/categories/%E6%9C%AA%E5%88%86%E7%B1%BB">未分类</a></span>
                                 
                             </div>
                             
@@ -138,9 +138,338 @@ int main(void)
                             <p class="readmore"><a href="https://skywind3000.com/posts/intro/">阅读全文</a></p>
                         </article>
                     
+                        <article class="post">
+                            <header>
+                                <h1 class="post-title">
+                                    <a href="https://skywind3000.com/blog/archives/2250/" title="如何实现和优化 SVM（支持向量机）？" >如何实现和优化 SVM（支持向量机）？</a>
+                                </h1>
+                            </header>
+                            <date class="post-meta meta-date">
+                                2019年4月8日
+                            </date>
+                            
+                            <div class="post-meta">
+                                <span>|</span>
+                                
+                                <span class="meta-category"><a href="https://skywind3000.com/categories/%E4%BA%BA%E5%B7%A5%E6%99%BA%E8%83%BD">人工智能</a></span>
+                                
+                            </div>
+                            
+                            <div class="post-content">
+                                <p>学习 SVM 的最好方法是实现一个 SVM，可讲理论的很多，讲实现的太少了。</p>
+
+<p>假设你已经读懂了 SVM 的原理，并了解公式怎么推导出来的，比如到这里：</p>
+
+<p><img src="https://skywind3000.github.io/word/images/svm1.png" alt="" /></p>
+
+<p>SVM 的问题就变成：求解一系列满足约束的 alpha 值，使得上面那个函数可以取到最小值。然后记录下这些非零的 alpha 值和对应样本中的 x 值和 y 值，就完成学习了，然后预测的时候用：</p>
+
+<p><img src="https://skywind3000.github.io/word/images/svm2.png" alt="" /></p>
+
+<p>上面的公式计算出 f(x) ，如果返回值 &gt; 0 那么是 +1 类别，否则是 -1 类别，先把这一步怎么来的，为什么这么来找篇文章读懂，不然你会做的一头雾水。</p>
+
+<p>那么剩下的 SVM 实现问题就是如何求解这个函数的极值。方法有很多，我们先找个起点，比如 Platt 的 SMO 算法，它后面有伪代码描述怎么快速求解 SVM 的各个系数。</p>
+
+<p><strong>第一步：实现传统的 SMO 算法</strong></p>
+
+<p>现在大部分的 SVM 开源实现，源头都是 platt 的 smo 算法，读完他的文章和推导，然后照着伪代码写就行了，核心代码没几行：</p>……
+                            </div>
+                            <p class="readmore"><a href="https://skywind3000.com/blog/archives/2250/">阅读全文</a></p>
+                        </article>
+                    
+                        <article class="post">
+                            <header>
+                                <h1 class="post-title">
+                                    <a href="https://skywind3000.com/blog/archives/2229/" title="别让 cd 浪费你的时间" >别让 cd 浪费你的时间</a>
+                                </h1>
+                            </header>
+                            <date class="post-meta meta-date">
+                                2019年2月8日
+                            </date>
+                            
+                            <div class="post-meta">
+                                <span>|</span>
+                                
+                                <span class="meta-category"><a href="https://skywind3000.com/categories/%E9%9A%8F%E7%AC%94">随笔</a></span>
+                                
+                            </div>
+                            
+                            <div class="post-content">
+                                终端下工作最烦躁的就是路径切换，没有自动路径切换的帮助，就像在泥里走路，于是大家发明了各种 autojump / z / fasd 等工具来提升路径切换的效率，今天向大家介绍一个更好用的工具：z.lua，用熟练了以后就像终端里溜冰，路劲切换从此指哪打哪。
+z.lua 是一个会学习你使用习惯的 cd 命令，它会跟踪你在 shell 下访问过的路径，通过一套称为 Frecent 的机制（源自 Mozilla），经过一段简短的学习之后，z.lua 会帮你跳转到所有匹配正则关键字的路径里 Frecent 值最高的那条路径去。
+正则将按顺序进行匹配，&rdquo;z foo bar&rdquo; 可以匹配到 /foo/bar ，但是不能匹配 /bar/foo。
+特性说明：  性能比 z.sh 快三倍，比 fasd / autojump 快十倍以上。 支持 Posix Shell：bash, zsh, dash, sh, ash, busybox 等等。 支持 Fish Shell，Power Shell 和 Windows cmd。 使用增强匹配算法，更准确的带你去到你想去的地方。 低占用，能够仅在当前路径改变时才更新数据库（将 $_ZL_ADD_ONCE 设成 1）。 交互选择模式，如果有多个匹配结果的话，跳转前允许你进行选择。 交互选择模式，支持使用 fzf 进行可视化结果筛选（可选）。 快速跳转到父目录，或者项目根目录，代替反复 “cd ../../..&rdquo; 。 为不同的操作系统，不同的 Shell 程序提供统一的使用体验。 兼容 lua 5.1, 5.2 和 5.3 以上版本。 自包含且无额外依赖，单个 z.lua 文件完成所有工作。  软件安装： 将下面对应语句添加到你的 .bashrc / .zshrc / .profile 或者对应 shell 的初始化脚本末尾：
+eval &quot;$(lua /path/to/z.lua --init bash enhanced once echo)&quot; # BASH 初始化 eval &quot;$(lua /path/to/z.lua --init zsh enhanced once echo)&quot; # ZSH 初始化 eval &quot;$(lua /path/to/z.lua --init posix enhanced once echo)&quot; # 其他 Posix Shell 初始化 source (lua /path/to/z.lua --init fish enhanced once echo | psub) # Fish Shell 初始化 iex ($(lua /path/to/z.lua --init powershell enhanced once echo) -join &quot;`n&quot;) # Power Shell 初始化  然后重新登陆，即可使用。
+用户评价： “我喜欢它的原理，我在命令行下面的行为十分有规律，并且我十分懒惰，懒得管理和维护一套书签或者路径别名。“
+“总之，z.lua 做到了它所宣称的目标。如果你需要快速的在目录间切换，它可能是最好的选择。“
+”我终于可以在自己的树莓派1上使用 autojump 类似的功能了，而不用像以前传统 autojump 那样每次打开终端都要等待 30 秒。”
+基本使用： cd 到一个包含 foo 的目录：
+z foo  cd 到一个以 foo 结尾的目录：
+z foo$  对长路径使用多个关键字进行匹配： 假设路径历史数据库（~/.zlua）中有两条记录：
+10 /home/user/work/inbox 30 /home/user/mail/inbox
+&ldquo;z in&rdquo;将会跳转到 /home/user/mail/inbox 因为它有更高的权重，同时你可以传递更多参数给 z.lua 来更加精确的指明，如 &ldquo;z w in&rdquo; 则会让你跳到 /home/user/work/inbox。
+交互选择： 使用 -i 参数进行跳转时, 如果有多个匹配结果，那么 z.……
+                            </div>
+                            <p class="readmore"><a href="https://skywind3000.com/blog/archives/2229/">阅读全文</a></p>
+                        </article>
+                    
+                        <article class="post">
+                            <header>
+                                <h1 class="post-title">
+                                    <a href="https://skywind3000.com/blog/archives/2193/" title="VimScript 五分钟入门（翻译）" >VimScript 五分钟入门（翻译）</a>
+                                </h1>
+                            </header>
+                            <date class="post-meta meta-date">
+                                2018年5月26日
+                            </date>
+                            
+                            <div class="post-meta">
+                                <span>|</span>
+                                
+                                <span class="meta-category"><a href="https://skywind3000.com/categories/%E9%9A%8F%E7%AC%94">随笔</a></span>
+                                
+                            </div>
+                            
+                            <div class="post-content">
+                                译注：折腾 Vim 当然要能看懂和改写相关脚本，而中文资料匮乏，缺一个提纲挈领的教程。本文翻译自 Andrew Scala 的 《Five Minute Vimscript》，立足于让你用最短的时间掌握 VimScript 的基础和要点，你可以把它看成一份语言速查表。
+Vim有着丰富的内建文档系统，使用 :h &lt;关键词&gt; 就可以阅读，如果你想在方便的尝试各种 vimscript ，你可以通过 NORMAL 模式下使用 gQ 命令进入 VimScript 的交互式环境调试命令。
+注意：下面的例子中会包含一些形如 &lt;符号&gt; 的符号，意味着正式使用时应该被完全替换成真实的东西，包括左右两边的尖括号。而单独的 &lt; 和 &gt; 在 VimScript 中被用作比较符号。
+变量
+ let 命令用来对变量进行初始化或者赋值。 unlet 命令用来删除一个变量。 unlet! 命令同样可以用来删除变量，但是会忽略诸如变量不存在的错误提示。  默认情况下，如果一个变量在函数体以外初始化的，那么它的作用域是全局变量；而如果它是在函数体以内初始化的，那它的作用于是局部变量。同时你可以通过变量名称前加冒号前缀明确的指明变量的作用域：
+ g:var - 全局 a:var - 函数参数 l:var - 函数局部变量 b:var - buffer 局部变量 w:var - window 局部变量 t:var - tab 局部变量 s:var - 当前脚本内可见的局部变量 v:var - Vim 预定义的内部变量  你可以通过 $name 的模式读取或者改写环境变量，同时可以用 &amp;option 的方式来读写 vim 内部的设置值。
+数据类型
+Number：32 位有符号整数 -123 0x10 0177
+Float: 浮点数，需要编译 Vim 的时候，有 +float 特性支持 123.456 1.15e-6 -1.1e3
+String: NULL 结尾的 8位无符号字符串 &ldquo;ab\txx\&ldquo;&ndash;&rdquo; &lsquo;x-z&rdquo;a,c&rsquo;
+Funcref: 函数引用，函数引用类型的变量名必须以大写字母开头 :let Myfunc = function(&ldquo;strlen&rdquo;) :echo Myfunc(&lsquo;foobar&rsquo;) &ldquo; Call strlen on &lsquo;foobar&rsquo;. 6
+List: 有序列表 :let mylist = [1, 2, [&lsquo;a&rsquo;, &lsquo;b&rsquo;]] :echo mylist[0] 1 :echo mylist[2][0] a :echo mylist[-2] 2 :echo mylist[999] E684: list index out of range: 999 :echo get(mylist, 999, &ldquo;THERE IS NO 1000th ELEMENT&rdquo;) THERE IS NO 1000th ELEMENT
+Dictionary: 无序的 Key/Value 容器 :let mydict = {&lsquo;blue&rsquo;: &ldquo;#0000ff&rdquo;, &lsquo;foo&rsquo;: {999: &ldquo;baz&rdquo;}} :echo mydict[&ldquo;blue&rdquo;] #0000ff :echo mydict.foo {999: &ldquo;baz&rdquo;} :echo mydict.foo.999 baz :let mydict.blue = &ldquo;BLUE&rdquo; :echo mydict.blue BLUE
+没有布尔类型，整数 0 被当作假，其他被当作真。字符串在比较真假前会被转换成整数，大部分字符串都会被转化为 0，除非以非零开头的字符串才会转化成非零。
+VimScript 的变量属于动态弱类型。
+:echo 1 . &quot;foo&quot; 1foo :echo 1 + &quot;1&quot; 2 :function! TrueFalse(arg) : return a:arg?……
+                            </div>
+                            <p class="readmore"><a href="https://skywind3000.com/blog/archives/2193/">阅读全文</a></p>
+                        </article>
+                    
+                        <article class="post">
+                            <header>
+                                <h1 class="post-title">
+                                    <a href="https://skywind3000.com/blog/archives/2173/" title="Windows 10 - 1803 更新又给我出幺蛾子" >Windows 10 - 1803 更新又给我出幺蛾子</a>
+                                </h1>
+                            </header>
+                            <date class="post-meta meta-date">
+                                2018年5月2日
+                            </date>
+                            
+                            <div class="post-meta">
+                                <span>|</span>
+                                
+                                <span class="meta-category"><a href="https://skywind3000.com/categories/%E9%9A%8F%E7%AC%94">随笔</a></span>
+                                
+                            </div>
+                            
+                            <div class="post-content">
+                                Windows 10 的 1803 版本更新后，Cygwin 的 Open SSH 服务无法始用，调查半天，Windows 10 新建了个 sshd 的服务，原来的 Cygwin Open SSH 服务被删除了，也安装不上去，解决方法是 ssh-host-config 后面加个参数 \--name sshd2 换个新名字重新安装服务。……
+                            </div>
+                            <p class="readmore"><a href="https://skywind3000.com/blog/archives/2173/">阅读全文</a></p>
+                        </article>
+                    
+                        <article class="post">
+                            <header>
+                                <h1 class="post-title">
+                                    <a href="https://skywind3000.com/blog/archives/2084/" title="Vim 8 下 C/C&#43;&#43; 开发环境搭建" >Vim 8 下 C/C&#43;&#43; 开发环境搭建</a>
+                                </h1>
+                            </header>
+                            <date class="post-meta meta-date">
+                                2018年4月21日
+                            </date>
+                            
+                            <div class="post-meta">
+                                <span>|</span>
+                                
+                                <span class="meta-category"><a href="https://skywind3000.com/categories/%E9%9A%8F%E7%AC%94">随笔</a></span>
+                                
+                            </div>
+                            
+                            <div class="post-content">
+                                <p>挺多人问怎么在 Vim 中搭建 C/C++ 开发环境，我本来想找篇文章发给人家，结果网上看了一圈，要不就是内容太过陈旧，要不就是太过零碎，不成体系。2018 年了，Vim 8 发布已经一年半，各大 Linux 发行版和 Mac OS X自带的 Vim 都已经跟进到 8了，不少文章还在介绍一些十年前的老方法。于是有了这篇文章。</p>
+
+<p>那如何高效的再 Vim 8 中开发 C/C++ 项目呢？假设你已经有一定 Vim 使用经验，并且折腾过 Vim 配置，能够相对舒适的在 Vim 中编写其他代码的时候，准备在 Vim 开始 C/C++ 项目开发，或者你已经用 Vim 编写了几年 C/C++ 代码，想要更进一步，让自己的工作更加顺畅的话，本文就是为你准备的：</p>
+
+<h3 id="插件管理">插件管理</h3>
+
+<p>为什么把插件管理放在第一个来讲呢？这是比较基本的一个东西，如今 Vim 下熟练开发的人，基本上手都有 20-50 个插件，遥想十年前，Vim里常用的插件一只手都数得过来。过去我一直使用老牌的 <a href="https://github.com/VundleVim/Vundle.vim">Vundle</a> 来管理插件，但是随着插件越来越多，更新越来越频繁，Vundle
+这种每次更新就要好几分钟的东西实在是不堪重负了，在我逐步对 Vundle 失去耐心之后，我试用了 <a href="https://github.com/junegunn/vim-plug">vim-plug</a> ，用了两天以后就再也回不去 Vundle了，它支持全异步的插件安装，安装50个插件只需要一分钟不到的时间，这在 Vundle
+下面根本不可想像的事情，插件更新也很快，不像原来每次更新都可以去喝杯茶去，最重要的是它支持插件延迟加载：</p>
+
+<pre><code class="language-viml">&quot; 定义插件，默认用法，和 Vundle 的语法差不多
+Plug 'junegunn/vim-easy-align'
+Plug 'skywind3000/quickmenu.vim'
+&quot; 延迟按需加载，使用到命令的时候再加载或者打开对应文件类型才加载
+Plug 'scrooloose/nerdtree', { 'on':  'NERDTreeToggle' }
+Plug 'tpope/vim-fireplace', { 'for': 'clojure' }
+&quot; 确定插件仓库中的分支或者 tag
+Plug 'rdnetto/YCM-Generator', { 'branch': 'stable' }
+Plug 'nsf/gocode', { 'tag': 'v.20150303', 'rtp': 'vim' }
+</code></pre>
+
+<p>定义好插件以后一个：<code>:PlugInstall</code> 命令就并行安装所有插件了，比 Vundle 快捷不少，关键是 vim-plug 只有单个文件，正好可以放在我 github 上的 vim 配置仓库中，每次需要更新 vim-plug 时只需要 <code>:PlugUpgrade</code>，即可自我更新。</p>……
+                            </div>
+                            <p class="readmore"><a href="https://skywind3000.com/blog/archives/2084/">阅读全文</a></p>
+                        </article>
+                    
+                        <article class="post">
+                            <header>
+                                <h1 class="post-title">
+                                    <a href="https://skywind3000.com/blog/archives/2071/" title="Bash 中文速查表/Cheatsheet （全网最全）" >Bash 中文速查表/Cheatsheet （全网最全）</a>
+                                </h1>
+                            </header>
+                            <date class="post-meta meta-date">
+                                2018年3月7日
+                            </date>
+                            
+                            <div class="post-meta">
+                                <span>|</span>
+                                
+                                <span class="meta-category"><a href="https://skywind3000.com/categories/%E9%9A%8F%E7%AC%94">随笔</a></span>
+                                
+                            </div>
+                            
+                            <div class="post-content">
+                                Bash 的知识点向来比较凌乱，有时候写点小脚本，你忘记了条件判断怎么写了，就打开网页搜索一半天；忘记怎么分割字符串，又搜索一半天；忘了怎么解压缩某后缀名，又打开网页搜一半天。
+关键大部分搜出来的东西都十分琐碎，东一处，西一处，质量又参差不齐，而且看到一处有些细节有疑问，你还得接着搜索。
+连记点笔记也是这一篇那一篇的，用起来找来找去的十分不爽，所以我一怒之下春节期间整理了一份 bash 的 cheatsheet，以图以后有关于 bash 的事情就查看这个文件就够了：
+https://github.com/skywind3000/awesome-cheatsheets/blob/master/languages/bash.sh
+对于一些工具性的东西，有时候一份速查表比你翻书查网页都高效数倍。
+-- 相关阅读：
+韦易笑：有哪些命令行的软件堪称神器？
+终端调试哪家强？
+为什么说 zsh 是 shell 中的极品？……
+                            </div>
+                            <p class="readmore"><a href="https://skywind3000.com/blog/archives/2071/">阅读全文</a></p>
+                        </article>
+                    
+                        <article class="post">
+                            <header>
+                                <h1 class="post-title">
+                                    <a href="https://skywind3000.com/blog/archives/2060/" title="为什么说 zsh 是 shell 中的极品？" >为什么说 zsh 是 shell 中的极品？</a>
+                                </h1>
+                            </header>
+                            <date class="post-meta meta-date">
+                                2018年3月7日
+                            </date>
+                            
+                            <div class="post-meta">
+                                <span>|</span>
+                                
+                                <span class="meta-category"><a href="https://skywind3000.com/categories/%E9%9A%8F%E7%AC%94">随笔</a></span>
+                                
+                            </div>
+                            
+                            <div class="post-content">
+                                （这是之前我在知乎上回答的一个可能对大家有点用处的答案，关于 zsh 的一些演示）
+色彩高亮 并不是传统基于正则表达式的色彩高亮，而是真的会判断你输入的是啥的色彩高亮：
+白色代表普通命令或者程序，红色代表错误命令，这个很管用，你再一个个字母的敲命令，前面都是红色的，如果敲对了最后一个字母的话，你会看到整条命令连着前面的都变成了白色，代表你敲对了。以前无高亮的时候敲错了都不知道，还要往上翻着左右检查。下面青色的代表内建命令或者 alias （echo 和 ls ），这些都不是正则判断出来的，是真的去检查的。
+细心的人会发现非零的错误码，也会高亮显示在最右边（上一条 data命令错误，返回127）。
+命令提示 注意，命令提示和补全是两个完全不同的系统，很多时候提示比补全更有用：
+你才输入完 “tar”命令，后面就用灰色给你提示 tar 命令的参数，而且是随着你动态输入完每一个字母不断修正变化：
+比如你输入到 - 后，没有跟着它上面的提示，而是输入了一个c字母，它马上明白你是要压缩，不是解压，然后随即给出你压缩对应的命令提示。
+这个命令提示是基于你的历史命令数据库进行分析的，随着你输入的命令越来越多，提示将会越来越准确和顺手，某些不常输入的命令特别管用，比如偶尔查看下网卡配置：
+刚输入完：cat /etc/n 它后面已经猜出你可能要查看网卡配置了，然后马上给出你提示，用不着你 tab 补全半天，你才敲 gc ，它就猜测出你可能想运行 gcc，然后马上给出完整建议：
+如果你觉得它提示的正确，你可以 CTRL+F 表示采纳，后面就会自动帮你一次性全部输入完了，不用一个字一个字的照着敲。前面的高亮就不说了，用惯这套提示系统，你就再也难以回到光秃秃的 bash 时代了。
+智能补全 传统 shell 的补全在 zsh 面前基本都可以下班了：
+即便可以在终端下舒适工作的人，面对有些任务也会觉得烦躁，比如频繁的切换路径，这种缩写路径补全是我用 zsh 的一大痛点之一，特别是路径比较长的时候，比如 OS X 下工具链层层套的那种路径，比如某 java 代码树，有了这种缩写补全，能让你切换路径流畅不少。
+当补全内容较多时，不用像 bash 一样持续提示你需要继续输入，也不会像 cmd 永无止境的循环下去，连续敲击两次 TAB 键 zsh 给你一个补全目录，让你上下左右选择：
+这叫选择模式，由两次连续 TAB 进入，进入后，除了 tab/shift+tab 可以前后切换外，你还可以使用光标键上下左右移动，或者使用 emacs 键位：ctrl + f/b/p/n (左右上下：forward, backward, previous, next) 。如果你觉得光标键太远难按，CTRL+f/b/p/n 太伤小拇指，可以跟我一样新定义出一套：ALT+hjkl （左下上右）来选择，十分顺手。回车表示确认选择，用 CTRL+G 表示退出。
+命令参数补全更不在话下，输入 svn 后面按 TAB：
+就出现了 svn 的参数，这种一级参数补全基本只会对很少用的命令才有效果，svn/git 这种一级参数基本都不需要补全的，我们一般会需要到二级参数补全，比如已经输入了 svn commit，但是有一个 commit 的参数我忘记了，我只记得两个减号开头的，于是：
+这时候两次 TAB 进入选择模式就比较管用了，svn 的二级参数往往很长，选择模式比如信任 server 那个，选择完回车确认，或者 CTRL+G 退出选择模式。
+zsh的补全真的太强了，我这里只说了十分之一不到，没法一一展开了，但就上面几个已经让我有充分的理由切换到 zsh 了。
+快速跳转 前面也说过命令行工作中，不同的路径间切来切去是个头疼的问题，除了上面提到的缩写补全外，有无更快的办法让我马上切换到我最近跳转过的某个路径？当然有“cd -”命令：
+输入 cd 后面加一个减号后，按一次 tab 马上就列出本次登陆后去过的最近几次路径，接着根据下面的提示输入数字按回车就过去了，比如输入：
+$ cd -5 &lt;回车&gt;  就跳转到 ~/software/libclang-python3 路径下了。当然你还可以不输入数字，而是再按一次 tab 进入选择模式，上下键或者 ctrl+n/p 来选择，回车确认，ctrl+g 返回。
+自动跳转 有了前面的路径缩写展开，和这里的最近访问路径切换，你已经没法再回到过去那种按部就班输入路径外加点弱智补全的方式了，但是可能你还会问，能否更进一步，不限于本次登陆或者最近去过的几级路径，有没有办法让我快速进入自我开始用 zsh 之后进入过的某个路径呢？当然可以，我们用 z 命令，查看历史上进入过的目录：
+敲入 z 命令，列出了自从我开始用zsh进入过的目录和他们的权重，进入次数越多，权重越大，便于演示，我删除了我的历史，随便 cd 了一下，保持列表的简洁。z 后面加一个关键词就能跳转到所有匹配的历史路径中权重最高的那个了：
+比如所有历史路径都包含 o ，那么 z o 就会跳转到权重最高的 ~/software 目录中。使用：“z -l foo&rdquo; 可以列出包含 foo 的所有历史路径：
+比如我们查询包含关键字为 c 的所有历史路径和他们的权重，有时你搞不清楚权重，可能会跳转错了，比如有两个路径：
+project1/src project2/src  那么你 z src 的时候可能并不能如你愿跳转到你想要去的路径，那怎么办呢？第一个办法是实际 cd project1/src 过去，增加它的权重，权重超过 project2/src 那么下次 z src 的时候就会跳转过去，你可以实时用 z -l src 查看包含 src 的所有路径权重。
+更加可靠的方法是，增加一个关键字，比如 z 1 src ，空格分隔多个关键字，z会先匹配出第一个来，比如1 ，然后再匹配第二个 src ，马上锁定 project1/src 了。大家实际使用起来，一般是 z + 最后一级目录名，比如：
+$ z vim # -&gt; /home/skywind/software/vim $ z tmp # -&gt; /home/skywind/tmp $ z local # -&gt; /home/skywind/.……
+                            </div>
+                            <p class="readmore"><a href="https://skywind3000.com/blog/archives/2060/">阅读全文</a></p>
+                        </article>
+                    
 
                     
 
+
+<ol class="page-navigator">
+    
+
+    
+    <li  class="current">
+        <a href="https://skywind3000.com/">1</a>
+    </li>
+    
+    <li >
+        <a href="https://skywind3000.com/page/2/">2</a>
+    </li>
+    
+    <li >
+        <a href="https://skywind3000.com/page/3/">3</a>
+    </li>
+    
+    <li >
+        <a href="https://skywind3000.com/page/4/">4</a>
+    </li>
+    
+    <li >
+        <a href="https://skywind3000.com/page/5/">5</a>
+    </li>
+    
+    <li >
+        <a href="https://skywind3000.com/page/6/">6</a>
+    </li>
+    
+    <li >
+        <a href="https://skywind3000.com/page/7/">7</a>
+    </li>
+    
+    <li >
+        <a href="https://skywind3000.com/page/8/">8</a>
+    </li>
+    
+    <li >
+        <a href="https://skywind3000.com/page/9/">9</a>
+    </li>
+    
+    <li >
+        <a href="https://skywind3000.com/page/10/">10</a>
+    </li>
+    
+    <li >
+        <a href="https://skywind3000.com/page/11/">11</a>
+    </li>
+    
+    <li >
+        <a href="https://skywind3000.com/page/12/">12</a>
+    </li>
+    
+    <li >
+        <a href="https://skywind3000.com/page/13/">13</a>
+    </li>
+    
+    <li >
+        <a href="https://skywind3000.com/page/14/">14</a>
+    </li>
+    
+
+    
+    <li class="next">
+        <a href="https://skywind3000.com/page/2/">下一页</a>
+    </li>
+    
+</ol>
 
 
 
@@ -169,6 +498,38 @@ int main(void)
         <a href="https://skywind3000.com/posts/intro/" title="个人主页搬迁到新系统">个人主页搬迁到新系统</a>
     </li>
     
+    <li>
+        <a href="https://skywind3000.com/blog/archives/2250/" title="如何实现和优化 SVM（支持向量机）？">如何实现和优化 SVM（支持向量机）？</a>
+    </li>
+    
+    <li>
+        <a href="https://skywind3000.com/blog/archives/2229/" title="别让 cd 浪费你的时间">别让 cd 浪费你的时间</a>
+    </li>
+    
+    <li>
+        <a href="https://skywind3000.com/blog/archives/2193/" title="VimScript 五分钟入门（翻译）">VimScript 五分钟入门（翻译）</a>
+    </li>
+    
+    <li>
+        <a href="https://skywind3000.com/blog/archives/2173/" title="Windows 10 - 1803 更新又给我出幺蛾子">Windows 10 - 1803 更新又给我出幺蛾子</a>
+    </li>
+    
+    <li>
+        <a href="https://skywind3000.com/blog/archives/2084/" title="Vim 8 下 C/C&#43;&#43; 开发环境搭建">Vim 8 下 C/C&#43;&#43; 开发环境搭建</a>
+    </li>
+    
+    <li>
+        <a href="https://skywind3000.com/blog/archives/2071/" title="Bash 中文速查表/Cheatsheet （全网最全）">Bash 中文速查表/Cheatsheet （全网最全）</a>
+    </li>
+    
+    <li>
+        <a href="https://skywind3000.com/blog/archives/2060/" title="为什么说 zsh 是 shell 中的极品？">为什么说 zsh 是 shell 中的极品？</a>
+    </li>
+    
+    <li>
+        <a href="https://skywind3000.com/blog/archives/2051/" title="Vim 中文速查表/Cheatsheet（全网最完善）">Vim 中文速查表/Cheatsheet（全网最完善）</a>
+    </li>
+    
 </ul>
     </section>
 
@@ -179,11 +540,43 @@ int main(void)
 <ul class="widget-list">
     
     <li>
-        <a href="https://skywind3000.com/categories/%E6%8A%98%E8%85%BE/">折腾(1)</a>
+        <a href="https://skywind3000.com/categories/%E4%BA%BA%E5%B7%A5%E6%99%BA%E8%83%BD/">人工智能(8)</a>
     </li>
     
     <li>
-        <a href="https://skywind3000.com/categories/%E9%9A%8F%E7%AC%94/">随笔(2)</a>
+        <a href="https://skywind3000.com/categories/%E5%9B%BE%E5%BD%A2%E7%BC%96%E7%A8%8B/">图形编程(20)</a>
+    </li>
+    
+    <li>
+        <a href="https://skywind3000.com/categories/%E5%A4%A7%E6%B5%AA%E6%B7%98%E6%B2%99/">大浪淘沙(12)</a>
+    </li>
+    
+    <li>
+        <a href="https://skywind3000.com/categories/%E5%BC%80%E6%BA%90%E9%A1%B9%E7%9B%AE/">开源项目(8)</a>
+    </li>
+    
+    <li>
+        <a href="https://skywind3000.com/categories/%E6%9C%AA%E5%88%86%E7%B1%BB/">未分类(6)</a>
+    </li>
+    
+    <li>
+        <a href="https://skywind3000.com/categories/%E6%B8%B8%E6%88%8F%E5%BC%80%E5%8F%91/">游戏开发(27)</a>
+    </li>
+    
+    <li>
+        <a href="https://skywind3000.com/categories/%E7%BC%96%E7%A8%8B%E6%8A%80%E6%9C%AF/">编程技术(45)</a>
+    </li>
+    
+    <li>
+        <a href="https://skywind3000.com/categories/%E7%BC%96%E8%AF%91%E6%8A%80%E6%9C%AF/">编译技术(6)</a>
+    </li>
+    
+    <li>
+        <a href="https://skywind3000.com/categories/%E7%BD%91%E7%BB%9C%E7%BC%96%E7%A8%8B/">网络编程(14)</a>
+    </li>
+    
+    <li>
+        <a href="https://skywind3000.com/categories/%E9%9A%8F%E7%AC%94/">随笔(57)</a>
     </li>
     
 </ul>
@@ -193,7 +586,75 @@ int main(void)
         <h3 class="widget-title">标签</h3>
 <div class="tagcloud">
     
+    <a href="https://skywind3000.com/tags/ai/">ai</a>
+    
+    <a href="https://skywind3000.com/tags/android/">android</a>
+    
+    <a href="https://skywind3000.com/tags/as3/">as3</a>
+    
+    <a href="https://skywind3000.com/tags/c&#43;&#43;/">c&#43;&#43;</a>
+    
+    <a href="https://skywind3000.com/tags/cygwin/">cygwin</a>
+    
+    <a href="https://skywind3000.com/tags/dos/">dos</a>
+    
+    <a href="https://skywind3000.com/tags/kcp/">kcp</a>
+    
+    <a href="https://skywind3000.com/tags/linux/">linux</a>
+    
+    <a href="https://skywind3000.com/tags/p2p/">p2p</a>
+    
+    <a href="https://skywind3000.com/tags/python/">python</a>
+    
     <a href="https://skywind3000.com/tags/shell/">shell</a>
+    
+    <a href="https://skywind3000.com/tags/vim/">vim</a>
+    
+    <a href="https://skywind3000.com/tags/win32/">win32</a>
+    
+    <a href="https://skywind3000.com/tags/%E4%BC%98%E5%8C%96/">优化</a>
+    
+    <a href="https://skywind3000.com/tags/%E5%90%8C%E6%AD%A5/">同步</a>
+    
+    <a href="https://skywind3000.com/tags/%E5%9B%BE%E5%BD%A2/">图形</a>
+    
+    <a href="https://skywind3000.com/tags/%E5%B0%8F%E6%B8%B8%E6%88%8F/">小游戏</a>
+    
+    <a href="https://skywind3000.com/tags/%E6%8A%97%E9%94%AF%E9%BD%BF/">抗锯齿</a>
+    
+    <a href="https://skywind3000.com/tags/%E6%B1%87%E7%BC%96/">汇编</a>
+    
+    <a href="https://skywind3000.com/tags/%E6%BC%94%E7%A4%BA/">演示</a>
+    
+    <a href="https://skywind3000.com/tags/%E7%9F%A2%E9%87%8F%E4%BD%9C%E5%9B%BE/">矢量作图</a>
+    
+    <a href="https://skywind3000.com/tags/%E7%9F%A5%E4%B9%8E/">知乎</a>
+    
+    <a href="https://skywind3000.com/tags/%E7%AD%96%E5%88%92/">策划</a>
+    
+    <a href="https://skywind3000.com/tags/%E7%AE%97%E6%B3%95/">算法</a>
+    
+    <a href="https://skywind3000.com/tags/%E7%B3%BB%E7%BB%9F%E5%BC%80%E5%8F%91/">系统开发</a>
+    
+    <a href="https://skywind3000.com/tags/%E7%BD%91%E7%BB%9C/">网络</a>
+    
+    <a href="https://skywind3000.com/tags/%E7%BF%BB%E8%AF%91/">翻译</a>
+    
+    <a href="https://skywind3000.com/tags/%E8%99%9A%E6%8B%9F%E6%9C%BA/">虚拟机</a>
+    
+    <a href="https://skywind3000.com/tags/%E8%A7%86%E9%A2%91/">视频</a>
+    
+    <a href="https://skywind3000.com/tags/%E8%AE%B2%E4%B9%89/">讲义</a>
+    
+    <a href="https://skywind3000.com/tags/%E8%AF%8D%E6%B3%95%E5%88%86%E6%9E%90/">词法分析</a>
+    
+    <a href="https://skywind3000.com/tags/%E8%AF%AD%E6%B3%95%E5%88%86%E6%9E%90/">语法分析</a>
+    
+    <a href="https://skywind3000.com/tags/%E8%B6%B3%E8%BF%B9/">足迹</a>
+    
+    <a href="https://skywind3000.com/tags/%E9%97%B2%E8%81%8A/">闲聊</a>
+    
+    <a href="https://skywind3000.com/tags/%E9%9A%8F%E7%AC%94/">随笔</a>
     
 </div>
     </section>

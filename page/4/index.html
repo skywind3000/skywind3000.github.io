@@ -1,0 +1,726 @@
+<!doctype html>
+<html lang="zh-cn">
+<head>
+
+    <meta charset="utf-8">
+    <meta name="generator" content="Hugo 0.54.0" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <title>Skywind Inside | 写自己的代码，让别人猜去吧！</title>
+    <meta property="og:title" content="Skywind Inside | 写自己的代码，让别人猜去吧！">
+    <meta property="og:type" content="website">
+    <meta name="Keywords" content="golang,go语言,go语言笔记,飞雪无情,java,android,博客,项目管理,python,软件架构,公众号,小程序">
+    <meta name="description" content="Putty 本无树，MinGW 亦非台">
+    <meta property="og:url" content="https://skywind3000.com/">
+    <link rel="shortcut icon" href="/favicon.ico" type="image/x-icon">
+
+    <link rel="stylesheet" href="/css/normalize.css">
+    
+    <link rel="stylesheet" href="/css/style.css">
+    <link rel="alternate" type="application/rss+xml+xml" href="https://skywind3000.com/index.xml" title="Skywind Inside" />
+    <script type="text/javascript" src="//cdn.bootcss.com/jquery/3.2.1/jquery.min.js"></script>
+
+    
+
+
+    
+    
+</head>
+
+
+<body>
+<header id="header" class="clearfix">
+    <div class="container">
+        <div class="col-group">
+            <div class="site-name ">
+                
+                    <h1>
+                        <a id="logo" href="https://skywind3000.com/">
+                            Skywind Inside
+                        </a>
+                    </h1>
+                
+                <p class="description">写自己的代码，让别人猜去吧！</p>
+            </div>
+            <div>
+                <nav id="nav-menu" class="clearfix">
+                    <a class="current" href="https://skywind3000.com/">首页</a>
+                    
+                    <a  href="https://skywind3000.com/categories/" title="文章分类">文章分类</a>
+                    
+                    <a  href="https://skywind3000.com/tags/" title="标签">标签</a>
+                    
+                    <a  href="https://skywind3000.com/archives/" title="归档">归档</a>
+                    
+                    <a  href="https://skywind3000.com/about/" title="关于">关于</a>
+                    
+                </nav>
+            </div>
+        </div>
+    </div>
+</header>
+
+
+<div id="body">
+    <div class="container">
+        <div class="col-group">
+
+            <div class="col-8" id="main">
+                <div class="res-cons">
+                    
+                        <article class="post">
+                            <header>
+                                <h1 class="post-title">
+                                    <a href="https://skywind3000.com/blog/archives/1738/" title="钉钉真好用" >钉钉真好用</a>
+                                </h1>
+                            </header>
+                            <date class="post-meta meta-date">
+                                2016年5月9日
+                            </date>
+                            
+                            <div class="post-meta">
+                                <span>|</span>
+                                
+                                <span class="meta-category"><a href="https://skywind3000.com/categories/%E9%9A%8F%E7%AC%94">随笔</a></span>
+                                
+                            </div>
+                            
+                            <div class="post-content">
+                                自从用了钉钉，腰也不酸了，腿也不疼了： * 设置组织架构和通讯录，新同事根据部门自动入企业群。 * 除了部门企业群外，跟微信一样随意建立临时会话，员工离职退出所有群。 * 每个企业群配套“云盘”，可以把部门相关文档传到群的云空间里，供群成员查看。 * 详细查看未读消息，长时间未读的人可以短信提醒。 * 企业内部员工免费电话。 * 全平台：windows，mac，iphone，android * 配套企业应用：请假，公章申请，报销申请，打卡，工资信息查询
+试过：泡泡，RTX，QQ企业，米聊，飞秋 以后最终发现还是钉钉最好用……
+                            </div>
+                            <p class="readmore"><a href="https://skywind3000.com/blog/archives/1738/">阅读全文</a></p>
+                        </article>
+                    
+                        <article class="post">
+                            <header>
+                                <h1 class="post-title">
+                                    <a href="https://skywind3000.com/blog/archives/1731/" title="Vim异步编译工程" >Vim异步编译工程</a>
+                                </h1>
+                            </header>
+                            <date class="post-meta meta-date">
+                                2016年5月9日
+                            </date>
+                            
+                            <div class="post-meta">
+                                <span>|</span>
+                                
+                                <span class="meta-category"><a href="https://skywind3000.com/categories/%E9%9A%8F%E7%AC%94">随笔</a></span>
+                                
+                            </div>
+                            
+                            <div class="post-content">
+                                针对 Vim的最新版本，7.4.1769+ 写了个脚本：build.vim 来实现异步编译。
+主要实现原理是利用 Python 开线程并在后台线程调用脚本（具体执行编译工作的bat/sh文件），实时把stdout/stderr输出的内容投递到队列，而前台UI线程则是使用了Vim最新版本中提供的 timer_start 功能启动一个100ms运行一次的时钟，每次运行时检测队列里面的东西并把他们取出来输出到Vim的 Quickfix窗口。
+几处细节处理是避免后台任务瞬间输出上千行的内容，批量塞入Quickfix的时候把vim 给卡死掉，此处增加了一个限制，即每次时钟发生时最大只塞入Quickfix中50条信息。
+如此，整个世界清静了，以前Vim一编译代码就完全无法编辑的情况可以得到很好的解决了。你可以绑定-到外部命令：job-1 job-4 这四个不同的脚本（windows下是 job-1.cmd - job-4.cmd），用来执行外部命令，每次执行前，把当前编辑的文件名等信息写入环境变量，这样后台job-n.cmd的批处理就可以根据环境变量决定需要编译的文件或者工程信息了：
+let $VIM_FILEPATH = expand(&quot;%:p&quot;) let $VIM_FILENAME = expand(&quot;%:t&quot;) let $VIM_FILEDIR = expand(&quot;%:p:h&quot;) let $VIM_FILENOEXT = expand(&quot;%:t:r&quot;) let $VIM_FILEEXT = &quot;.&quot; . expand(&quot;%:e&quot;) let $VIM_CWD = expand(&quot;%:p:h:h&quot;) let $VIM_RELDIR = expand(&quot;%:h&quot;) let $VIM_RELNAME = expand(&quot;%:p:.&quot;) let $VIM_CWORD = expand(&quot;&lt;cword&gt;&quot;) let $VIM_VERSION = ''.v:version let $VIM_MODE = ''. a:mode let $VIM_GUI = '0' let $VIM_SCRIPT = g:vimmake_path let $VIM_SVRNAME = v:servername if has(&quot;gui_running&quot;) let $VIM_GUI = '1' endif  上面这些环境变量初始化工作可以在每次调用后台脚本之前设置，这几个应该已经足够大家使用了。
+每次编译完还可以调用一下外部程序，播放一个音效（比如windows的感叹号音效），让你知道编译工作成功完成，方便你打开 Quickfix查看编译效果。……
+                            </div>
+                            <p class="readmore"><a href="https://skywind3000.com/blog/archives/1731/">阅读全文</a></p>
+                        </article>
+                    
+                        <article class="post">
+                            <header>
+                                <h1 class="post-title">
+                                    <a href="https://skywind3000.com/blog/archives/1708/" title="GVim 中更好的运行程序" >GVim 中更好的运行程序</a>
+                                </h1>
+                            </header>
+                            <date class="post-meta meta-date">
+                                2016年5月9日
+                            </date>
+                            
+                            <div class="post-meta">
+                                <span>|</span>
+                                
+                                <span class="meta-category"><a href="https://skywind3000.com/categories/%E9%9A%8F%E7%AC%94">随笔</a></span>
+                                
+                            </div>
+                            
+                            <div class="post-content">
+                                GVim（Windows）下面使用!运行程序是非常恶心的事情，比如调用python运行当前脚本：
+:!python %  你会发现，整个VIM界面被冻结了，然后弹出cmd窗口，退出cmd后，还要返回GVim中按任意键才能编辑状态。
+比如你正在调试一个程序，这个程序运行起来不是一分钟能出结果的时候，你想边对照输出结果，边在 GVim 里面查看和修改你的代码，你就会发现傻逼了。正确的做法是：
+:!start python %  这样就不会卡住 Vim了，但是这个做法有个问题，程序结束的时候窗口马上关闭，因此还需要再进化一下：
+:silent !start cmd /c python % &amp; pause  这时你会发现优雅的调用了 python 来跑当前程序，并且GVIM不会被挂起，照样可以编辑，当程序结束的时候，CMD窗口还会pause等待你按任意键一下，这就比较清爽了，你可以把这条命令map到你常用的快捷键上，和 EditPlus里面一样一键运行之。
+然而还是有几处需要完善的地方，首先直接使用 % 展开当前文件名不妥当，如果文件名包含空格就会错误，需要用 shellescape 来进行处理，同时我们有时候还希望运行前跳转到文件所在的目录，运行完又跳转回来，又或者需要运行前保存一下没有保存的文件。
+我写了个函数来做这个事情，放到你 .vimrc里即可使用，同时支持 GVim和终端 Vim：
+&quot; run current file by detecting file extname. if cwd is non-zero, &quot; it will change the current directory to the file location. &quot; Unsaved files will be saved if needsave is non-zero function! VimExecute(cwd, needsave) let savecwd = getcwd() let cd = haslocaldir()? 'lcd ' : 'cd ' let ext = tolower(expand(&quot;%:e&quot;)) if bufname('%') == '' return endif if a:needsave != 0 silent! update endif if a:cwd != 0 let dest = expand('%:p:h') silent! exec cd . fnameescape(dest) endif if has('gui_running') &amp;&amp; (has('win32') || has('win64') || has('win95')) let fname = shellescape(expand(&quot;%&quot;)) if index(['c', 'cpp'], &amp;filetype) &gt;= 0 exec '!start cmd /C '. shellescape(expand(&quot;%&lt;&quot;)) . ' &amp; pause' elseif index(['py', 'pyw', 'pyc', 'pyo'], ext) &gt;= 0 silent exec '!start cmd /C python ' . fname . ' &amp; pause' elseif ext == &quot;js&quot; silent exec '!start cmd /C node ' . fname . ' &amp; pause' elseif ext == 'sh' silent exec '!start cmd /C sh ' . fname . ' &amp; pause' elseif ext == 'lua' silent exec '!……
+                            </div>
+                            <p class="readmore"><a href="https://skywind3000.com/blog/archives/1708/">阅读全文</a></p>
+                        </article>
+                    
+                        <article class="post">
+                            <header>
+                                <h1 class="post-title">
+                                    <a href="https://skywind3000.com/blog/archives/1690/" title="更好的使用 Vim 标签（Tab）以及 Alt键映射" >更好的使用 Vim 标签（Tab）以及 Alt键映射</a>
+                                </h1>
+                            </header>
+                            <date class="post-meta meta-date">
+                                2016年5月2日
+                            </date>
+                            
+                            <div class="post-meta">
+                                <span>|</span>
+                                
+                                <span class="meta-category"><a href="https://skywind3000.com/categories/%E9%9A%8F%E7%AC%94">随笔</a></span>
+                                
+                            </div>
+                            
+                            <div class="post-content">
+                                更好的使用 Vim7.0以后推出的标签（TAB）功能，同现代编辑器一样用标签（TAB）来管理多文件，代替传统 Buffer List： 让Minibufexplor/tabbar这些上个世纪的插件都退场吧，直接使用标准的标签功能会更加舒服。 快捷键切换 TAB 第一件事情就是要搞定标签快速切换问题，不管是:tabn X还是 Xgt都十分低效，我们需要更快速的在各个文件之间切换。最简单的是设置 0-9 来快速切换tab（默认leader是反斜杠，即先按下\键，再按数字键），不管终端还是GVIM都兼容：
+noremap &lt;silent&gt;&lt;tab&gt;m :tabnew&lt;cr&gt; noremap &lt;silent&gt;&lt;tab&gt;e :tabclose&lt;cr&gt; noremap &lt;silent&gt;&lt;tab&gt;n :tabn&lt;cr&gt; noremap &lt;silent&gt;&lt;tab&gt;p :tabp&lt;cr&gt; noremap &lt;silent&gt;&lt;leader&gt;t :tabnew&lt;cr&gt; noremap &lt;silent&gt;&lt;leader&gt;g :tabclose&lt;cr&gt; noremap &lt;silent&gt;&lt;leader&gt;1 :tabn 1&lt;cr&gt; noremap &lt;silent&gt;&lt;leader&gt;2 :tabn 2&lt;cr&gt; noremap &lt;silent&gt;&lt;leader&gt;3 :tabn 3&lt;cr&gt; noremap &lt;silent&gt;&lt;leader&gt;4 :tabn 4&lt;cr&gt; noremap &lt;silent&gt;&lt;leader&gt;5 :tabn 5&lt;cr&gt; noremap &lt;silent&gt;&lt;leader&gt;6 :tabn 6&lt;cr&gt; noremap &lt;silent&gt;&lt;leader&gt;7 :tabn 7&lt;cr&gt; noremap &lt;silent&gt;&lt;leader&gt;8 :tabn 8&lt;cr&gt; noremap &lt;silent&gt;&lt;leader&gt;9 :tabn 9&lt;cr&gt; noremap &lt;silent&gt;&lt;leader&gt;0 :tabn 10&lt;cr&gt; noremap &lt;silent&gt;&lt;s-tab&gt; :tabnext&lt;CR&gt; inoremap &lt;silent&gt;&lt;s-tab&gt; &lt;ESC&gt;:tabnext&lt;CR&gt;  其次，GVIM/MacVim 下设置 ALT-0-9 来切换TAB：
+&quot; keymap to switch table in gui if has('gui_running') set winaltkeys=no set macmeta noremap &lt;silent&gt;&lt;c-tab&gt; :tabprev&lt;CR&gt; inoremap &lt;silent&gt;&lt;c-tab&gt; &lt;ESC&gt;:tabprev&lt;CR&gt; noremap &lt;silent&gt;&lt;m-1&gt; :tabn 1&lt;cr&gt; noremap &lt;silent&gt;&lt;m-2&gt; :tabn 2&lt;cr&gt; noremap &lt;silent&gt;&lt;m-3&gt; :tabn 3&lt;cr&gt; noremap &lt;silent&gt;&lt;m-4&gt; :tabn 4&lt;cr&gt; noremap &lt;silent&gt;&lt;m-5&gt; :tabn 5&lt;cr&gt; noremap &lt;silent&gt;&lt;m-6&gt; :tabn 6&lt;cr&gt; noremap &lt;silent&gt;&lt;m-7&gt; :tabn 7&lt;cr&gt; noremap &lt;silent&gt;&lt;m-8&gt; :tabn 8&lt;cr&gt; noremap &lt;silent&gt;&lt;m-9&gt; :tabn 9&lt;cr&gt; noremap &lt;silent&gt;&lt;m-0&gt; :tabn 10&lt;cr&gt; inoremap &lt;silent&gt;&lt;m-1&gt; &lt;ESC&gt;:tabn 1&lt;cr&gt; inoremap &lt;silent&gt;&lt;m-2&gt; &lt;ESC&gt;:tabn 2&lt;cr&gt; inoremap &lt;silent&gt;&lt;m-3&gt; &lt;ESC&gt;:tabn 3&lt;cr&gt; inoremap &lt;silent&gt;&lt;m-4&gt; &lt;ESC&gt;:tabn 4&lt;cr&gt; inoremap &lt;silent&gt;&lt;m-5&gt; &lt;ESC&gt;:tabn 5&lt;cr&gt; inoremap &lt;silent&gt;&lt;m-6&gt; &lt;ESC&gt;:tabn 6&lt;cr&gt; inoremap &lt;silent&gt;&lt;m-7&gt; &lt;ESC&gt;:tabn 7&lt;cr&gt; inoremap &lt;silent&gt;&lt;m-8&gt; &lt;ESC&gt;:tabn 8&lt;cr&gt; inoremap &lt;silent&gt;&lt;m-9&gt; &lt;ESC&gt;:tabn 9&lt;cr&gt; inoremap &lt;silent&gt;&lt;m-0&gt; &lt;ESC&gt;:tabn 10&lt;cr&gt; endif  或者在 MacVim 下还可以用 CMD_0-9 快速切换，按着更舒服：
+if has(&quot;gui_macvim&quot;) set macmeta noremap &lt;silent&gt;&lt;c-tab&gt; :tabprev&lt;CR&gt; inoremap &lt;silent&gt;&lt;c-tab&gt; &lt;ESC&gt;:tabprev&lt;CR&gt; noremap &lt;silent&gt;&lt;d-1&gt; :tabn 1&lt;cr&gt; noremap &lt;silent&gt;&lt;d-2&gt; :tabn 2&lt;cr&gt; noremap &lt;silent&gt;&lt;d-3&gt; :tabn 3&lt;cr&gt; noremap &lt;silent&gt;&lt;d-4&gt; :tabn 4&lt;cr&gt; noremap &lt;silent&gt;&lt;d-5&gt; :tabn 5&lt;cr&gt; noremap &lt;silent&gt;&lt;d-6&gt; :tabn 6&lt;cr&gt; noremap &lt;silent&gt;&lt;d-7&gt; :tabn 7&lt;cr&gt; noremap &lt;silent&gt;&lt;d-8&gt; :tabn 8&lt;cr&gt; noremap &lt;silent&gt;&lt;d-9&gt; :tabn 9&lt;cr&gt; noremap &lt;silent&gt;&lt;d-0&gt; :tabn 10&lt;cr&gt; inoremap &lt;silent&gt;&lt;d-1&gt; &lt;ESC&gt;:tabn 1&lt;cr&gt; inoremap &lt;silent&gt;&lt;d-2&gt; &lt;ESC&gt;:tabn 2&lt;cr&gt; inoremap &lt;silent&gt;&lt;d-3&gt; &lt;ESC&gt;:tabn 3&lt;cr&gt; inoremap &lt;silent&gt;&lt;d-4&gt; &lt;ESC&gt;:tabn 4&lt;cr&gt; inoremap &lt;silent&gt;&lt;d-5&gt; &lt;ESC&gt;:tabn 5&lt;cr&gt; inoremap &lt;silent&gt;&lt;d-6&gt; &lt;ESC&gt;:tabn 6&lt;cr&gt; inoremap &lt;silent&gt;&lt;d-7&gt; &lt;ESC&gt;:tabn 7&lt;cr&gt; inoremap &lt;silent&gt;&lt;d-8&gt; &lt;ESC&gt;:tabn 8&lt;cr&gt; inoremap &lt;silent&gt;&lt;d-9&gt; &lt;ESC&gt;:tabn 9&lt;cr&gt; inoremap &lt;silent&gt;&lt;d-0&gt; &lt;ESC&gt;:tabn 10&lt;cr&gt; noremap &lt;silent&gt;&lt;d-o&gt; :browse tabnew&lt;cr&gt; inoremap &lt;silent&gt;&lt;d-o&gt; &lt;ESC&gt;:browse tabnew&lt;cr&gt; endif  这下很舒服了，和大部分主流编辑器一样切换tab十分轻松。那终端下 alt没法很好的映射怎么办呢？ 终端下映射 ALT-0-9 快速切换标签 不推荐把中断里的ALT键设置成ESC+，大部分终端（XShell, SecureCRT, iTerm, gnome-terminal）都提供ALT键改为ESC+的模式，即按下ALT-A，终端会连续发送ESC(27)和 A(65)两个字节，这样在emacs下挺好用，但是在vim下就糟糕了，比如你映射了A来代替 ALT-A，那么当你用ESC退出insert模式时，一秒钟内马上按下A来在行末追加内容，Vim会去触发你之前设置的ALT-A的功能，这就对 Vim 原有的功能造成了扰乱，那终端下如何正确设置 ALT功能键呢？ 我们使用终端自定义按键序列，大部分终端都支持自定义按键发送特定字符串（XShell,SecureCRT,iTerm,gnome-terminal），比如我们可以把ALT-1设置成发送 &lt;ESC&gt;]{0}1~ 这个字符串，而 ALT-2设置成发送 &lt;ESC&gt;]{0}2~ 这个字符串，于是我们可以在Vim里面建立快捷映射：……
+                            </div>
+                            <p class="readmore"><a href="https://skywind3000.com/blog/archives/1690/">阅读全文</a></p>
+                        </article>
+                    
+                        <article class="post">
+                            <header>
+                                <h1 class="post-title">
+                                    <a href="https://skywind3000.com/blog/archives/1683/" title="超越 SDL/DirectDraw/GDI 性能的位图库" >超越 SDL/DirectDraw/GDI 性能的位图库</a>
+                                </h1>
+                            </header>
+                            <date class="post-meta meta-date">
+                                2016年4月28日
+                            </date>
+                            
+                            <div class="post-meta">
+                                <span>|</span>
+                                
+                                <span class="meta-category"><a href="https://skywind3000.com/categories/%E5%9B%BE%E5%BD%A2%E7%BC%96%E7%A8%8B">图形编程</a></span>
+                                
+                            </div>
+                            
+                            <div class="post-content">
+                                开源一个高性能位图库，之前对我的二维图形库 pixellib 进行了精简和重写，最终形成一个只包含两个文件（BasicBitmap.h, BasicBitmap.cpp）的图形基础库。 在今天 GPU 绘制横行天下的时候，任然有很多时候需要使用到纯 CPU实现的图形库，比如图像处理，视频预处理与合成，界面，以及GPU无法使用的情况（比如某个应用把gpu占满了，或者无法通过gpu做一些十分灵活的事情时），纹理处理，简单图片加载保存等。 支持 SSE2/AVX 优化，比 DirectDraw 快 40%（全系统内存绘制），比 SDL 快 10%，比GDI快 38%。如果你需要一个方便的高性能位图库，足够高性能的同时保证足够紧凑。 如果你有上述需求，那么你和我一样需要用到 BasicBitmap，只需要把 BasicBitmap.h/.cpp 两个文件拷贝到你的代码中即可。我正是为了这个目的编写了这两个文件。
+特性介绍  高度优化的 C++ 代码，可以在任意平台编译并运行 多重像素格式，从8位到32位：A8R8G8B8, R8G8B8, A4R4G4B4, R5G6B5, A8, 等. Blit (Bit Blt) ，包含透明和非透明的模式。 像素格式快速转换 使用不同的 Compositor 进行 Blending 使用不同的过滤器进行缩放（nearest, linear, bilinear） 高质量位图重采样（Bicubic/Box） 支持从内存或者文件直接读取 BMP/TGA 文件 支持从内存或者文件直接读取 PNG/JPEG 文件（Windows下） 保存图片为 BMP/PPM 文件 核心绘制函数可以被外部实现通过设置函数指针重载（比如 SSE2实现） 比 DirectDraw 快 40% 的性能进行绘制（打开 AVX/SSE2支持） 比 GDI 的 AlphaBlend 函数快34%的性能进行混色 Self-contained, 不依赖任何其他第三方库 高度紧凑，只需要拷贝 BasicBitmap.h/.cpp 两个文件到你项目即可  项目地址  https://github.com/skywind3000/BasicBitmap  Blit 性能比较 Full window (800x600) blitting (both opacity and transparent), compare to GDI/SDL/DirectDraw:
+32 Bits Blit Opacity Transparent
+BasicBitmap C++
+fps=2325
+fps=1368
+BasicBitmap AVX/SSE2
+fps=2904
+fps=2531
+GDI
+fps=2333
+fps=1167
+SDL
+fps=2671
+fps=1015
+DirectDraw
+fps=2695
+fps=2090
+Note: use BltFast with DirectDrawSurface7 in System Memory to perform Opacity &amp; Transparent blit. BitBlt and TransparentBlt(msimg32.dll) are used in the GDI testing case.
+16 Bits Blit Opacity Transparent
+BasicBitmap C++
+fps=4494
+fps=1253
+BasicBitmap AVX/SSE2
+fps=9852
+fps=2909
+DirectDraw BltFast
+fps=5889
+fps=861
+Blitting performance in SDL &amp; GDI are slower than DirectDraw, just compare to ddraw as well.
+8 Bits Blit Opacity Transparent
+BasicBitmap C++
+fps=11142
+fps=1503
+BasicBitmap AVX/SSE2
+fps=18181
+fps=5449
+DirectDraw BltFast
+fps=14705
+fps=4832
+DirectDrawSurface in Video Memory takes the benefit of hardware acceleration which is definitely faster than BasicBitmap.……
+                            </div>
+                            <p class="readmore"><a href="https://skywind3000.com/blog/archives/1683/">阅读全文</a></p>
+                        </article>
+                    
+                        <article class="post">
+                            <header>
+                                <h1 class="post-title">
+                                    <a href="https://skywind3000.com/blog/archives/1681/" title="后端工程师招聘启示" >后端工程师招聘启示</a>
+                                </h1>
+                            </header>
+                            <date class="post-meta meta-date">
+                                2016年4月18日
+                            </date>
+                            
+                            <div class="post-meta">
+                                <span>|</span>
+                                
+                                <span class="meta-category"><a href="https://skywind3000.com/categories/%E9%9A%8F%E7%AC%94">随笔</a></span>
+                                
+                            </div>
+                            
+                            <div class="post-content">
+                                创业一年多，走过不少弯路，公司最近终于开始有了点收入，说起来有点老泪纵横。虽然没有完全覆盖成本，但证明产品方向没有大问题，运营开展后，后端团队急需进一步扩大，方向是两个： 第一是游戏社交，陪玩竞技的APP，提供游戏用户专有的沟通工具。 第二是为云技术，为游戏或者其他应用开发商提供更好的即时通讯云技术，这点我在知乎里面阐述过：https://www.zhihu.com/question/32228281/answer/55844291 公司坐落在广州市科韵路，现在团队规模35人左右，后端主要技术是java/python/c，熟悉任意即可，有需要用别的语言学就是。 公司是有很强技术基因的公司，后端团队我会亲自带，创造和分享是我们一直以来秉持的理念。希望同更多有识之士共同进步和成长。 具体需求如下：
+ 后端开发1-3年经验，基础扎实。 熟悉：Python / Java / C （任意一种语言） 互联网或者游戏开发背景不限。 如果有兴趣，请加我QQ：贰三五六柒五贰。  ……
+                            </div>
+                            <p class="readmore"><a href="https://skywind3000.com/blog/archives/1681/">阅读全文</a></p>
+                        </article>
+                    
+                        <article class="post">
+                            <header>
+                                <h1 class="post-title">
+                                    <a href="https://skywind3000.com/blog/archives/1675/" title="使用 Markdown 写 Wordpress" >使用 Markdown 写 Wordpress</a>
+                                </h1>
+                            </header>
+                            <date class="post-meta meta-date">
+                                2016年4月2日
+                            </date>
+                            
+                            <div class="post-meta">
+                                <span>|</span>
+                                
+                                <span class="meta-category"><a href="https://skywind3000.com/categories/%E9%9A%8F%E7%AC%94">随笔</a></span>
+                                
+                            </div>
+                            
+                            <div class="post-content">
+                                使用 Markdown 来再命令行写 WordPress 的感觉很不错，我整合了两个 Python 库，一个叫 blogpost， 另外一个叫做 markdown2，前者可以用来命令行发送 WordPress 文章，但是只支持 .html 或者 asciidoc 格式来写 WordPress，因此又引入了 python 的 markdown2，合成项目： https://github.com/skywind3000/markpress 但是标准 Markdown转换出来的 html 再 wordpress中高亮不正确，因此费了点时间修改了一版 markdown2 为 markdown3 ，调整了相关的样式，可以很好的在 wordpress 中显示，同时使用了 metadata，再文章中 可以指定标题和类别，使用很简单，首先克隆项目：
+ $ git clone https://github.com/skywind3000/markpress.git  然后创建你的工程目录 myblog（用来保存文章和相关中间数据，推荐提交到版本管理系统上来），目录为：
+myblog +- wordpress.ini # 站点配置文件，url，用户名，密码 +- doc # 存放 markdown 文章源文件的目录 +- data # 自动生成的 postid/html等，丢失会导致重新发文 +- images # 保存图片的目录，文章中图片都用 &quot;../images/*&quot; 引用  再 wordpress.ini 里面的 url 为 wordpress 的 xmlrpc.php 的路径：
+[default] url=http://example.com/wordpress/xmlrpc.php username=???? password=????  然后就可以再 doc 下写一篇名为：doc/post.1.md 的文章了（必须用 utf-8编码）：
+--- title: 文章的标题 categories: 文章类别 --- 文章内容  最后使用 markpress.py 发布该文章：
+$ cd myblog $ python /path-to-markpress/markpress.py post.1.md  注意：在myblog目录下运行 markpress.py，需要再当前目录寻找 wordpress.ini ，同时指定文章 名字的时候使用 &ldquo;post.1.md&rdquo; 而不是 &ldquo;doc/post.1.md&rdquo; ，markpress会自动到doc目录下去寻找 并且再 data 目录下面生成 html 和中间数据。 如果你将 myblog 目录放入 svn/git的话，可以很好的保存你的文章源文件，注意将 doc, data, images 都放入版本管理系统（data下面每次自动生成的 html, blogpost文件也需要一起放入版本管理），而 站点配置文件：wordpress.ini 到是不一定要放入版本管理。 所有 images下面的图片在 markdown 中需要用：&rdquo;../images/abc.jpg&rdquo; 来引用，这样转换到 data 下面的 html 也可以保持正确引用，同时上传的时候会自动判断图片是否有改动来判断是否需要上传新图片。 最后，WordPress 的 more 标志在markdown中新一行里写上 `` 就行。 如此，你可以自由的用你喜爱 markdown 编辑器来离线写 WordPress 了，并且配置上快捷键一键发布， 本篇博文即使用 MarkPress 写成十分方便。……
+                            </div>
+                            <p class="readmore"><a href="https://skywind3000.com/blog/archives/1675/">阅读全文</a></p>
+                        </article>
+                    
+                        <article class="post">
+                            <header>
+                                <h1 class="post-title">
+                                    <a href="https://skywind3000.com/blog/archives/1652/" title="ATOM 同 Vim/Emacs/Sublime 的深度比较" >ATOM 同 Vim/Emacs/Sublime 的深度比较</a>
+                                </h1>
+                            </header>
+                            <date class="post-meta meta-date">
+                                2016年3月16日
+                            </date>
+                            
+                            <div class="post-meta">
+                                <span>|</span>
+                                
+                                <span class="meta-category"><a href="https://skywind3000.com/categories/%E9%9A%8F%E7%AC%94">随笔</a></span>
+                                
+                            </div>
+                            
+                            <div class="post-content">
+                                用过不少编辑器：UltraEdit / EditPlus / (G) Vim / GEdit / NotePad++ / TextMate / ProgrammerPad / Sublime 。确实是工作上用他们写过代码的。而 VSC / Emacs 只是体验了一下基本使用方法，算不上真用。用下来的结论是：Atom 比 Vim 更 Vim，比 Emacs 更 Emacs，同样，比 Sublime 更 Sublime。
+Atom 唯一的槽点就是“卡”，不过那是去年的情况了，1.0后性能数次大提升，比起sublime/vsc之类虽不算流畅，但同时编辑20个数千行的文件没有压力。如今让人感觉慢的地方主要是启动loading（也大大短于eclipse, idea），使用时并没察觉它比其他编辑器慢再哪。而文本编辑器的快慢，更重要的是“让你工作更快更有效率”。下面说说为何 Atom比其他更有效率：
+兼容VIM模式 这无疑团结了一大班 Vim过来的用户，Sublime虽然也有VIM模式，但是Sublime在 mac下面的vim模式有bug，我习惯用 hjkl来移动光标，sublime再mac下hjkl移动有问题，且我习惯CTRL_[来返回NORMAL，手指不离开主键盘区，而sublime的vim模式只支持ESC返回，加上其作者经常神秘消失，最稳定的2.x版本已三年没有更新，这些问题一直得不到修正。
+由于Atom的定制程度直追 Vim/Emacs，它的vim模式能够使用插件来实现，而不像sublime必须builtin，Atom的VIM模式除了官方实现外还有很多用户实现，各有所长，你不喜欢可以换，Sublime就傻逼了，觉得builtin的不行，你就没办法了，而且作者不更新你也没办法。
+Atom里的Vim模式并不是强制的，你可以用也可以不用，这样入门用户也不会觉得困难，但是如果你用惯Vim的话，使用Vim模式可以取得更好的效率，我觉得Vim / Atom-VimMode能够提升效率的地方有以下三方面：
+1. 手指不离开主键盘区：
+所有功能皆能在主键盘区完成，不用去按方向键，不用把手挪去按Home / End，更不用动鼠标。就像咏春中强调中线理论，认为一切动作围绕中轴线开展，守护自己中轴线的同时攻击别人的中轴线。Vim / Atom-VimMode中，双手不但从不离开主键盘，并且八根手指随时守护再HOME位（ASDF, JKL;）有动作就移动，然后马上归位。
+2. 细粒度微操作：
+星际、dota玩的好，微操是基本功，微操作更精确，效率更高，Vim/Atom-VimMode一样，比如：
+ if (xxxx) {
+}
+ 很多人编写代码的时候都会习惯“成对编码”，写了申请资源的代码，先把释放资源写了，写了左括号，先把右括号给补充完，当你写完第二行代码时，需要用到“再1-2行中间插入一行”，此时你的光标停留在第二行，传统编辑器你需要：按上箭头移动光标到第一行 -&gt; 按END键去到第一行末尾 -&gt; 按回车插入一行，mac下的END键还需要用CMD+右来组合出来，而Vim/Atom- VimMode中，你只需要shift+o即可，手指完全不离开主键盘区，不用像传统编辑器那样，右手先移动到箭头区又移动到HOME的小键盘区，再移动回主键盘区这么麻烦，类似还有：
+使用o直接再下一行插入，避免 END/回车
+使用I再行首插入，避免移动半天光标。
+向前/后移动一个单词到单词头、尾。
+快速更改当前单词，用/来快速搜索移动光标。
+dd+p来快速移动代码块，取代shift+方向键半天。
+shift-j 来两行合并成一行，代替 HOME, back 若干次。
+。。。
+你再编辑代码的时候，90%的情况可以直接一步完成，这就叫细粒度微操，而且整个过程手都不需要离开主键盘，不像传统编辑器那样，若干笨重的操作组合再一起，操作不够细步骤多的同时手还要再：主键盘区，方向键区，扩展键区 来回移动，效率奇低。而Vim/Atom-VimMode下，手指随时守护在home区（ASDF JKL；），所有微操都是围绕HOME区进行，不会移动到任何主键盘以外的区域，更别说用鼠标、触摸板。
+3. 批量操作：
+比如要给下面代码每行后面加一个分号：
+ var x = 1
+var y = 2
+var z = 3
+console.log(&lsquo;result is &rsquo; + (x + y + z).toString())
+ 一般做法是：移动光标到行末-&gt;END-&gt;分号-&gt;移动光标到下一行，Vim里面不需要移动光标到行末，只需要循环敲入：“A;j” 即可，本来操作就少很多，但是这还不是最少操作，更少操作是利用Vim里面的句号“.”功能重复上一次操作，即第一行“A;”补充了一个分号后，第二行只需要按一下&rdquo;.&ldquo;即可重复，于是最后操作变为：
+第一行：A;
+后面所有行：J.
+超级爽快的操作，这样的操作还很多，你还可以单条命令对一万行代码重复上述步骤，或者把c代码拷贝到go里面先一句话把所有分号给删除了。Vim下面的名言：绝不重复。
+总之如果你熟悉 VIM模式，用 Atom能感到完全自由的方式，随心所欲的书写代码，而不是被书写这件事情费脑筋，解放大脑完全用于思考而不用于打字。但是同时对不习惯VIM的人照样友好，或者对想使用VIM的便利却又痛恨VIM这个软件的简陋的人带来了福音。
+脊柱记忆 “同样动作重复300次，肌肉就会有记忆，而一个动作重复600次，脊椎就会有记忆”
+-- 李小龙
+编辑器就是关于脊柱记忆的东西，所以多投入一些时间去了解你使用的编辑器，掌握他们的各种快捷操作和高级功能是一个能让你事半功倍的好主意。
+格斗游戏玩的好的人有很多，下等高手靠熟练，中等高手靠反应，上等高手靠意识。更熟练的掌握你的编辑器，让更多日常工作固化成记忆记录再你的脊椎上，使用的时候，脊椎这枚协处理器就能完成代码编写，一个操作，刚一想到，脊椎就自动执行出来了，小脑腾出空间来组织判断，大脑腾出空间来思考更重要的东西，就像你走路，你不用思考迈腿那么自然，别人一拳过来，你潜意识一动，一连串动作就出去了，一只飞蛾飞过来，你潜意识的闭上眼 睛保护眼部，这就是脊椎记忆，如果还要经过大脑绕一圈，反应慢不说，大脑这颗cpu都用在这些琐事上了，思考的时间自然少了不少。
+所以从内到外的了解你的编辑器，并且熟练掌握他们，是对你提高工作效率的最佳投资，Atom的全平台支持，开放源代码，深度可定制等三个特点，比起其他闭源的，平台支持不全的，扩展少的编辑器来说能让你有不同层面的了解机会，同时为你提供足够的空间。
+深度可定制系统 im/Emacs的精髓在于：“可以调教”，本来不顺手的东西，只要容易调教，假以时日，都会慢慢变得越来越顺手，越来越“懂你”，越来越“贴心”，以至于后面大家都离不开它了。而 Atom 也同样是一款容易被你调教的编辑器。先前给vim写过插件，给sublime写过插件，如今给Atom写过插件，横向对比下来，几个结论：
+插件能做事情多少：Atom &gt; Vim &gt;&gt; sublime
+插件开发学习门槛：Vim &gt; Atom &gt; sublime
+插件开发文档丰富：Atom &gt; sublime &gt;&gt; Vim
+Atom 的定制化程度远远高过sublime之类（不用实际看法，看看双方开发文档即可），直追 Vim / Emacs，sublime的大部分定制无外乎改改json，插件能做的事情相当有限。
+Atom 的定制化系统主要有三方面：
+1. 细致：
+设计之初就考虑的事情，方方面面都能定制，见官方文档，以及插件：vim-mode，minimap （稍微了解下这两个类似的功能再 Atom 和 sublime的实现就能知道 sublime被甩了多少条街了）。可以细粒度的控制编辑器内所有行为，小到移动一下光标，删除当前一个字符，大到打开一个面板，比如 “core:more-up” 可以向上移动一行光标，“window:focus-pane-on- left” 可以把焦点设置到左边的面板，atom内核和大量第一方第三方packages 都是以命令的方式把基础功能提供出来，你可以随意互相调用或者设置热键。
+除去命令外，API层面，几乎每个部件每个像素点都可控，比如这样的插件你永远无法再 Vim / Emacs / Sublime 下面见得到：activate-power-mode。
+2. 直观：
+由于使用 javascript/coffee进行开发，但 javascript/coffee是属于即便你没写过他们，读都能读得懂，VimScript就不一样了，虽然也能做相同的事情，但实话实说，晦涩难写，比如我要取得当前文件的路径和文件名，在 VimScript里面需要这么写：
+ let l:path = expand(&lsquo;%:p:h&rsquo;)
+let l:name = expand(&lsquo;%:t:r&rsquo;)
+或者
+let l:name = expand(&lsquo;%&lt;&lsquo;)
+ 而在 Atom 里我们用atom自己的功能直接取出路径来，然后进行切割：
+ var fullpath =atom.workspace.getActiveTextEditor().getPath();……
+                            </div>
+                            <p class="readmore"><a href="https://skywind3000.com/blog/archives/1652/">阅读全文</a></p>
+                        </article>
+                    
+                        <article class="post">
+                            <header>
+                                <h1 class="post-title">
+                                    <a href="https://skywind3000.com/blog/archives/1638/" title="Atom 编辑器的插件开发" >Atom 编辑器的插件开发</a>
+                                </h1>
+                            </header>
+                            <date class="post-meta meta-date">
+                                2016年3月14日
+                            </date>
+                            
+                            <div class="post-meta">
+                                <span>|</span>
+                                
+                                <span class="meta-category"><a href="https://skywind3000.com/categories/%E9%9A%8F%E7%AC%94">随笔</a></span>
+                                
+                            </div>
+                            
+                            <div class="post-content">
+                                老王卖瓜，自卖自夸，Atom 比较方便的地方是可以用 javascript/coffee 给 Atom写插件，并且写起来很简单，我刚按说明给 Atom 写了一个插件： atom-shell-commands 用户自定义 Shell 命令，类似 NotePad++ 中的 &ldquo;Run Commands”，EditPlus/UltraEdit里面的&rdquo;User Tool&rdquo;，以及 GEdit 中的 &ldquo;External Tool&rdquo; 和 TextMate 里的 “Shell Command”。 1. 用户可以自定义工具，并且配置到 Atom 中，比如一键调用编译器，一键运行， 2. 输出结果会显示再底部的 bottom panel 中 3. 点击错误输出可以跳转到对应有错误的文件上去 4. 自定义正则表达式匹配错误输出中包含的文件名和行号。 5. 全平台支持，再 Mac/Ubuntu/Windows 下充分的测试过。 初始化时，再你的用户配置中（Atom File-&gt;Open Your Config或者 ~/.atom/config.cson），写入类似：
+ &quot;atom-shell-commands&quot;: commands: [ { name: &quot;compile&quot; command: &quot;d:/dev/mingw/bin/gcc&quot; arguments: [ &quot;{FileName}&quot; &quot;-o&quot; &quot;{FileNameNoExt}.exe&quot; ] options: cwd: &quot;{FileDir}&quot; keymap: 'ctrl-2' } ]  的配置，就会创建一条名为 &ldquo;atom-shell-commands:compile&rdquo; 的命令，你可以通过 command palette来运行它或者使用快捷键 ctrl-2来直接运行。同时再 Atom 的 packages 目录下面的&rdquo;Atom Shell Commands&rdquo; 目录项下面也会多出一个名为“compile” 的命令。 注意，cson格式靠缩进来判断层次，同时 list 需要将 [ 和 key 写在同一行（commands，arguments），否则会被判断成字典。 靠，上面的代码缩进帖过来以后被弄没了，具体可以看：https://atom.io/packages/atom-shell-commands 上面的格式，CSON是靠缩进来判断层次的，同时注意：commands: [ 后面的中括号要和 commands写在一行，后面的 arguments也一样，cson的 list 需要把 [ 和 key 写在一行，否则会被判断为字典。 每条命令可以通过如下字段来表示：
+ name: 名字（必填） command: 可执行路径（必填） arguments: 参数（选填） options: 扩展参数用来配置当前工作路径，文件是否保存，快捷键，环境变量等 （选填）
+ 所有配置支持如下宏：
+ {FileName} 当前正在编辑的文件名（不包括路径） {FilePath} 包含全路径的文件名 {FileNameNoExt} 没有路径和扩展名的文件名 {FileExt} 文件扩展名 {FileDir} 文件路径 {ProjectDir} 工程路径（如果有工程的话） {ProjectRel} 文件相对于工程的路径（如果有工程的话） {CurRow} 当前行 {CurCol} 当前列 {CurLineText} 当前行的文本 {CurSelected} 当前选中文本
+ 有了这些宏，你几乎可以做任何事情，比如到工程目录下调用make或者cmake，或者仅仅编译单个文件不必理会负责的工程，或者调用 ant去跑 build.xml，或者调用 java来运行编译出来的.class，调用python来运行当前脚本，或者当前目录下执行下 grep 关键字并且把grep的结果显示再下面的 bottom panel，打开帮助文档跳转到你选中的API上，或者对当前文件调用 svn diff，把结果输出到 bottom panel。 比如：调用 gcc / cl 一键调用编译功能 比如：一键运行 比如：一键运行（打开独立窗口运行） 具体见项目主页： atom-shell- commands……
+                            </div>
+                            <p class="readmore"><a href="https://skywind3000.com/blog/archives/1638/">阅读全文</a></p>
+                        </article>
+                    
+                        <article class="post">
+                            <header>
+                                <h1 class="post-title">
+                                    <a href="https://skywind3000.com/blog/archives/1628/" title="KCP同 UDT/ENET的性能比较" >KCP同 UDT/ENET的性能比较</a>
+                                </h1>
+                            </header>
+                            <date class="post-meta meta-date">
+                                2016年2月18日
+                            </date>
+                            
+                            <div class="post-meta">
+                                <span>|</span>
+                                
+                                <span class="meta-category"><a href="https://skywind3000.com/categories/%E7%BD%91%E7%BB%9C%E7%BC%96%E7%A8%8B">网络编程</a></span>
+                                
+                            </div>
+                            
+                            <div class="post-content">
+                                如果不丢包那么 KCP（https://github.com/skywind3000/kcp）和 TCP性能差不多，KCP不会有任何优势，但是网络会卡，造成卡的原因就是丢包和抖动，有同学在内网这样好的环境下没有用任何丢包模拟直接跑，跑出来的数据是差不多的，但是放到公网上，放到3G/4G网络情况下，差距就很明显了，公网在高峰期有平均接近10%的丢包，wifi/3g/4g下更糟糕，这正是造成各种网络卡顿的元凶。
+感谢 asio-kcp 的作者 zhangyuan 对 KCP 与 enet, udt做过的一次横向评测，结论如下：
+ ASIO-KCP has good performace in wifi and phone network(3G, 4G). Extra using 20% ~ 50% network flow for speed improvement. The kcp is the first choice for realtime pvp game. The lag is less than 1 second when network lag happen. 3 times better than enet when lag happen. The enet is a good choice if your game allow 2 second lag. UDT is a bad idea. It always sink into badly situation of more than serval seconds lag. And the recovery is not expected. enet has the problem of lack of doc. And it has lots of functions that you may intrest. kcp&rsquo;s doc is chinese. Good thing is the function detail which is writen in code is english. And you can use asio_kcp which is a good wrap. The kcp is a simple thing. You will write more code if you want more feature. UDT has a perfect doc. UDT may has more bug than others as I feeling.  具体见：横向比较 和 这里。截取一段在网络糟糕时，asio-kcp/enet的延迟数据：
+ worst network lag happen:
+asio: 10:51.21
+291 295 269 268 231 195 249 230 225 204
+enet: 10:51.21
+1563 1520 1470 1482 1438 1454 1412 1637 1588 1540……
+                            </div>
+                            <p class="readmore"><a href="https://skywind3000.com/blog/archives/1628/">阅读全文</a></p>
+                        </article>
+                    
+
+                    
+
+
+<ol class="page-navigator">
+    
+    <li class="prev">
+        <a href="https://skywind3000.com/page/3/">上一页</a>
+    </li>
+    
+
+    
+    <li >
+        <a href="https://skywind3000.com/">1</a>
+    </li>
+    
+    <li >
+        <a href="https://skywind3000.com/page/2/">2</a>
+    </li>
+    
+    <li >
+        <a href="https://skywind3000.com/page/3/">3</a>
+    </li>
+    
+    <li  class="current">
+        <a href="https://skywind3000.com/page/4/">4</a>
+    </li>
+    
+    <li >
+        <a href="https://skywind3000.com/page/5/">5</a>
+    </li>
+    
+    <li >
+        <a href="https://skywind3000.com/page/6/">6</a>
+    </li>
+    
+    <li >
+        <a href="https://skywind3000.com/page/7/">7</a>
+    </li>
+    
+    <li >
+        <a href="https://skywind3000.com/page/8/">8</a>
+    </li>
+    
+    <li >
+        <a href="https://skywind3000.com/page/9/">9</a>
+    </li>
+    
+    <li >
+        <a href="https://skywind3000.com/page/10/">10</a>
+    </li>
+    
+    <li >
+        <a href="https://skywind3000.com/page/11/">11</a>
+    </li>
+    
+    <li >
+        <a href="https://skywind3000.com/page/12/">12</a>
+    </li>
+    
+    <li >
+        <a href="https://skywind3000.com/page/13/">13</a>
+    </li>
+    
+    <li >
+        <a href="https://skywind3000.com/page/14/">14</a>
+    </li>
+    
+
+    
+    <li class="next">
+        <a href="https://skywind3000.com/page/5/">下一页</a>
+    </li>
+    
+</ol>
+
+
+
+                </div>
+            </div>
+
+            <div id="secondary">
+    <section class="widget">
+        <form id="search" action="//www.google.com/search" method="get" accept-charset="utf-8" target="_blank" _lpchecked="1">
+      
+      <input type="text" name="q" maxlength="20" placeholder="Search">
+      <input type="hidden" name="sitesearch" value="https://skywind3000.com/">
+      <button type="submit" class="submit icon-search"></button>
+</form>
+    </section>
+    
+    <section class="widget">
+        <h3 class="widget-title">最近文章</h3>
+<ul class="widget-list">
+    
+    <li>
+        <a href="https://skywind3000.com/posts/2019/shell_init_sh/" title="提高效率从编写 init.sh 开始">提高效率从编写 init.sh 开始</a>
+    </li>
+    
+    <li>
+        <a href="https://skywind3000.com/posts/intro/" title="个人主页搬迁到新系统">个人主页搬迁到新系统</a>
+    </li>
+    
+    <li>
+        <a href="https://skywind3000.com/blog/archives/2250/" title="如何实现和优化 SVM（支持向量机）？">如何实现和优化 SVM（支持向量机）？</a>
+    </li>
+    
+    <li>
+        <a href="https://skywind3000.com/blog/archives/2229/" title="别让 cd 浪费你的时间">别让 cd 浪费你的时间</a>
+    </li>
+    
+    <li>
+        <a href="https://skywind3000.com/blog/archives/2193/" title="VimScript 五分钟入门（翻译）">VimScript 五分钟入门（翻译）</a>
+    </li>
+    
+    <li>
+        <a href="https://skywind3000.com/blog/archives/2173/" title="Windows 10 - 1803 更新又给我出幺蛾子">Windows 10 - 1803 更新又给我出幺蛾子</a>
+    </li>
+    
+    <li>
+        <a href="https://skywind3000.com/blog/archives/2084/" title="Vim 8 下 C/C&#43;&#43; 开发环境搭建">Vim 8 下 C/C&#43;&#43; 开发环境搭建</a>
+    </li>
+    
+    <li>
+        <a href="https://skywind3000.com/blog/archives/2071/" title="Bash 中文速查表/Cheatsheet （全网最全）">Bash 中文速查表/Cheatsheet （全网最全）</a>
+    </li>
+    
+    <li>
+        <a href="https://skywind3000.com/blog/archives/2060/" title="为什么说 zsh 是 shell 中的极品？">为什么说 zsh 是 shell 中的极品？</a>
+    </li>
+    
+    <li>
+        <a href="https://skywind3000.com/blog/archives/2051/" title="Vim 中文速查表/Cheatsheet（全网最完善）">Vim 中文速查表/Cheatsheet（全网最完善）</a>
+    </li>
+    
+</ul>
+    </section>
+
+    
+
+    <section class="widget">
+        <h3 class="widget-title">分类</h3>
+<ul class="widget-list">
+    
+    <li>
+        <a href="https://skywind3000.com/categories/%E4%BA%BA%E5%B7%A5%E6%99%BA%E8%83%BD/">人工智能(8)</a>
+    </li>
+    
+    <li>
+        <a href="https://skywind3000.com/categories/%E5%9B%BE%E5%BD%A2%E7%BC%96%E7%A8%8B/">图形编程(20)</a>
+    </li>
+    
+    <li>
+        <a href="https://skywind3000.com/categories/%E5%A4%A7%E6%B5%AA%E6%B7%98%E6%B2%99/">大浪淘沙(12)</a>
+    </li>
+    
+    <li>
+        <a href="https://skywind3000.com/categories/%E5%BC%80%E6%BA%90%E9%A1%B9%E7%9B%AE/">开源项目(8)</a>
+    </li>
+    
+    <li>
+        <a href="https://skywind3000.com/categories/%E6%9C%AA%E5%88%86%E7%B1%BB/">未分类(6)</a>
+    </li>
+    
+    <li>
+        <a href="https://skywind3000.com/categories/%E6%B8%B8%E6%88%8F%E5%BC%80%E5%8F%91/">游戏开发(27)</a>
+    </li>
+    
+    <li>
+        <a href="https://skywind3000.com/categories/%E7%BC%96%E7%A8%8B%E6%8A%80%E6%9C%AF/">编程技术(45)</a>
+    </li>
+    
+    <li>
+        <a href="https://skywind3000.com/categories/%E7%BC%96%E8%AF%91%E6%8A%80%E6%9C%AF/">编译技术(6)</a>
+    </li>
+    
+    <li>
+        <a href="https://skywind3000.com/categories/%E7%BD%91%E7%BB%9C%E7%BC%96%E7%A8%8B/">网络编程(14)</a>
+    </li>
+    
+    <li>
+        <a href="https://skywind3000.com/categories/%E9%9A%8F%E7%AC%94/">随笔(57)</a>
+    </li>
+    
+</ul>
+    </section>
+
+    <section class="widget">
+        <h3 class="widget-title">标签</h3>
+<div class="tagcloud">
+    
+    <a href="https://skywind3000.com/tags/ai/">ai</a>
+    
+    <a href="https://skywind3000.com/tags/android/">android</a>
+    
+    <a href="https://skywind3000.com/tags/as3/">as3</a>
+    
+    <a href="https://skywind3000.com/tags/c&#43;&#43;/">c&#43;&#43;</a>
+    
+    <a href="https://skywind3000.com/tags/cygwin/">cygwin</a>
+    
+    <a href="https://skywind3000.com/tags/dos/">dos</a>
+    
+    <a href="https://skywind3000.com/tags/kcp/">kcp</a>
+    
+    <a href="https://skywind3000.com/tags/linux/">linux</a>
+    
+    <a href="https://skywind3000.com/tags/p2p/">p2p</a>
+    
+    <a href="https://skywind3000.com/tags/python/">python</a>
+    
+    <a href="https://skywind3000.com/tags/shell/">shell</a>
+    
+    <a href="https://skywind3000.com/tags/vim/">vim</a>
+    
+    <a href="https://skywind3000.com/tags/win32/">win32</a>
+    
+    <a href="https://skywind3000.com/tags/%E4%BC%98%E5%8C%96/">优化</a>
+    
+    <a href="https://skywind3000.com/tags/%E5%90%8C%E6%AD%A5/">同步</a>
+    
+    <a href="https://skywind3000.com/tags/%E5%9B%BE%E5%BD%A2/">图形</a>
+    
+    <a href="https://skywind3000.com/tags/%E5%B0%8F%E6%B8%B8%E6%88%8F/">小游戏</a>
+    
+    <a href="https://skywind3000.com/tags/%E6%8A%97%E9%94%AF%E9%BD%BF/">抗锯齿</a>
+    
+    <a href="https://skywind3000.com/tags/%E6%B1%87%E7%BC%96/">汇编</a>
+    
+    <a href="https://skywind3000.com/tags/%E6%BC%94%E7%A4%BA/">演示</a>
+    
+    <a href="https://skywind3000.com/tags/%E7%9F%A2%E9%87%8F%E4%BD%9C%E5%9B%BE/">矢量作图</a>
+    
+    <a href="https://skywind3000.com/tags/%E7%9F%A5%E4%B9%8E/">知乎</a>
+    
+    <a href="https://skywind3000.com/tags/%E7%AD%96%E5%88%92/">策划</a>
+    
+    <a href="https://skywind3000.com/tags/%E7%AE%97%E6%B3%95/">算法</a>
+    
+    <a href="https://skywind3000.com/tags/%E7%B3%BB%E7%BB%9F%E5%BC%80%E5%8F%91/">系统开发</a>
+    
+    <a href="https://skywind3000.com/tags/%E7%BD%91%E7%BB%9C/">网络</a>
+    
+    <a href="https://skywind3000.com/tags/%E7%BF%BB%E8%AF%91/">翻译</a>
+    
+    <a href="https://skywind3000.com/tags/%E8%99%9A%E6%8B%9F%E6%9C%BA/">虚拟机</a>
+    
+    <a href="https://skywind3000.com/tags/%E8%A7%86%E9%A2%91/">视频</a>
+    
+    <a href="https://skywind3000.com/tags/%E8%AE%B2%E4%B9%89/">讲义</a>
+    
+    <a href="https://skywind3000.com/tags/%E8%AF%8D%E6%B3%95%E5%88%86%E6%9E%90/">词法分析</a>
+    
+    <a href="https://skywind3000.com/tags/%E8%AF%AD%E6%B3%95%E5%88%86%E6%9E%90/">语法分析</a>
+    
+    <a href="https://skywind3000.com/tags/%E8%B6%B3%E8%BF%B9/">足迹</a>
+    
+    <a href="https://skywind3000.com/tags/%E9%97%B2%E8%81%8A/">闲聊</a>
+    
+    <a href="https://skywind3000.com/tags/%E9%9A%8F%E7%AC%94/">随笔</a>
+    
+</div>
+    </section>
+
+    
+
+    <section class="widget">
+        <h3 class="widget-title">其它</h3>
+        <ul class="widget-list">
+            <li><a href="https://skywind3000.com/index.xml">文章 RSS</a></li>
+        </ul>
+    </section>
+</div>
+        </div>
+    </div>
+</div>
+<footer id="footer">
+    <div class="container">
+        &copy; 2019 <a href="https://skywind3000.com/">Skywind Inside By skywind</a>.
+        Powered by <a rel="nofollow noreferer noopener" href="https://gohugo.io" target="_blank">Hugo</a>.
+        <a href="https://www.flysnow.org/" target="_blank">Theme</a> based on <a href="https://github.com/rujews/maupassant-hugo" target="_blank">maupassant</a>.
+        
+    </div>
+</footer>
+
+
+<a id="rocket" href="#top"></a>
+<script type="text/javascript" src="/js/totop.js?v=0.0.0" async=""></script>
+
+
+
+<script type="text/javascript" src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js" async></script>
+
+
+
+
+
+</body>
+</html>

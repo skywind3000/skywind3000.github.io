@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes" ?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>矢量作图 on Skywind Inside</title>
+    <link>https://skywind3000.com/tags/%E7%9F%A2%E9%87%8F%E4%BD%9C%E5%9B%BE/</link>
+    <description>Recent content in 矢量作图 on Skywind Inside</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>zh-cn</language>
+    <lastBuildDate>Sat, 09 Jan 2010 19:24:07 +0000</lastBuildDate>
+    
+	<atom:link href="https://skywind3000.com/tags/%E7%9F%A2%E9%87%8F%E4%BD%9C%E5%9B%BE/index.xml" rel="self" type="application/rss+xml" />
+    
+    
+    <item>
+      <title>[自制开源] 轻量级图形库 PixelLib</title>
+      <link>https://skywind3000.com/blog/archives/137/</link>
+      <pubDate>Sat, 09 Jan 2010 19:24:07 +0000</pubDate>
+      
+      <guid>https://skywind3000.com/blog/archives/137/</guid>
+      <description>图像：64种不同的像素格式，色彩空间变换，多种图形图像变换。 质量：支持3种级别抗锯齿效果，高质量几何图形绘制。 实现：轻量级纯软件实现，100% C代码（仅700KB代码）。 优化：SSE2/MMX优化 地址：https://github.com/skywind3000/pixellib 1. 图像变换： 支持仿射变换和透视变换，提供大量图像变换操作接口。 2. 抗锯齿： 所有图形绘制支持3级不同程度的抗锯齿效果。 3. 图像绘制： 图像任意拉伸，旋转，3D旋转，并且同时进行色彩空间变换。全部采用浮点数坐标，图像移动更为平滑。 4. 几何作图： 全面的抗锯齿几何作图效果。 5. 图像扭曲： 在源图像上布置若干关键点，然后改变这些关键点在屏幕上的对于位置即可实现图像扭曲。 **使用 Pixellib 来渲染 iOS 风格的图标 ** </description>
+    </item>
+    
+  </channel>
+</rss>

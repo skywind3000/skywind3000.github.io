@@ -1,0 +1,704 @@
+<!doctype html>
+<html lang="zh-cn">
+<head>
+
+    <meta charset="utf-8">
+    <meta name="generator" content="Hugo 0.54.0" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <title>Skywind Inside | 写自己的代码，让别人猜去吧！</title>
+    <meta property="og:title" content="Skywind Inside | 写自己的代码，让别人猜去吧！">
+    <meta property="og:type" content="website">
+    <meta name="Keywords" content="golang,go语言,go语言笔记,飞雪无情,java,android,博客,项目管理,python,软件架构,公众号,小程序">
+    <meta name="description" content="Putty 本无树，MinGW 亦非台">
+    <meta property="og:url" content="https://skywind3000.com/">
+    <link rel="shortcut icon" href="/favicon.ico" type="image/x-icon">
+
+    <link rel="stylesheet" href="/css/normalize.css">
+    
+    <link rel="stylesheet" href="/css/style.css">
+    <link rel="alternate" type="application/rss+xml+xml" href="https://skywind3000.com/index.xml" title="Skywind Inside" />
+    <script type="text/javascript" src="//cdn.bootcss.com/jquery/3.2.1/jquery.min.js"></script>
+
+    
+
+
+    
+    
+</head>
+
+
+<body>
+<header id="header" class="clearfix">
+    <div class="container">
+        <div class="col-group">
+            <div class="site-name ">
+                
+                    <h1>
+                        <a id="logo" href="https://skywind3000.com/">
+                            Skywind Inside
+                        </a>
+                    </h1>
+                
+                <p class="description">写自己的代码，让别人猜去吧！</p>
+            </div>
+            <div>
+                <nav id="nav-menu" class="clearfix">
+                    <a class="current" href="https://skywind3000.com/">首页</a>
+                    
+                    <a  href="https://skywind3000.com/categories/" title="文章分类">文章分类</a>
+                    
+                    <a  href="https://skywind3000.com/tags/" title="标签">标签</a>
+                    
+                    <a  href="https://skywind3000.com/archives/" title="归档">归档</a>
+                    
+                    <a  href="https://skywind3000.com/about/" title="关于">关于</a>
+                    
+                </nav>
+            </div>
+        </div>
+    </div>
+</header>
+
+
+<div id="body">
+    <div class="container">
+        <div class="col-group">
+
+            <div class="col-8" id="main">
+                <div class="res-cons">
+                    
+                        <article class="post">
+                            <header>
+                                <h1 class="post-title">
+                                    <a href="https://skywind3000.com/blog/archives/1893/" title="Linux 线上系统调优备忘" >Linux 线上系统调优备忘</a>
+                                </h1>
+                            </header>
+                            <date class="post-meta meta-date">
+                                2016年12月7日
+                            </date>
+                            
+                            <div class="post-meta">
+                                <span>|</span>
+                                
+                                <span class="meta-category"><a href="https://skywind3000.com/categories/%E9%9A%8F%E7%AC%94">随笔</a></span>
+                                
+                            </div>
+                            
+                            <div class="post-content">
+                                大公司呆久了，都会对 SA的依赖十分强烈，很多事情 SA都帮我们搞定了。如今控制成本，没有招聘 SA，又没有购买 VPS，从买物理机开始到 IDC部署，服务器调优，虚拟机管理，全部都是自己来，才发现，安装一台 Linux机器自己玩很简单，但是要达到线上服务器的标准，还有若干调优工作需要做，有 SA的日志是多幸福的事情啊。
+物理机设备驱动
+Dell服务器默认安装系统后会报找不到驱动:
+W: Possible missing firmware /lib/firmware/tigon/tg3_tso5.bin  因为 Debian/Ubuntu 的包都是开源的，默认开源驱动性能不行，于是需要添加 non-free源：
+deb http://ftp.de.debian.org/debian main contrib non-free deb-src http://ftp.de.debian.org/debian main contrib non-free  然后：
+apt-get update apt-get install firmware-linux-free firmware-linux-nonfree  解决 Dell驱动报错问题。
+配置限制
+查看 /etc/security/limits.conf 没有就新建，加入 core 和 nofile 的相关配置，比如：
+* soft nofile 65536 * hard nofile 65536 * soft core unlimited * hard core unlimited # End of file  之类的，不用到 ~/.bashrc 里面调用 ulimit。
+网卡多队列
+打开内核网卡多队列支持，避免网卡中断都集中在 cpu0 上处理，多队列打开后，可以让网卡中断均摊到各个 cpu上，对提高并发十分有用：
+wget http://skywind3000.github.io/install/set_irq_affinity.sh  放到 /etc/config 目录下面（没有就新建），然后在 /etc/rc.local 里面加一行，每次重启就跑 set_irq_affinity.sh 且必须用 bash跑，参数传入需要开启多队列的网卡，以下是 /etc/rc.local 的内容：
+/bin/bash /etc/set_irq_affinity.sh eth0 eth1 eth2 exit 0  下面是 set_irq_affinity.sh 的代码：
+# setting up irq affinity according to /proc/interrupts # 2008-11-25 Robert Olsson # 2009-02-19 updated by Jesse Brandeburg # # &gt; Dave Miller: # (To get consistent naming in /proc/interrups) # I would suggest that people use something like: # char buf[IFNAMSIZ+6]; # # sprintf(buf, &quot;%s-%s-%d&quot;, # netdev-&gt;name, # (RX_INTERRUPT ? &quot;rx&quot; : &quot;tx&quot;), # queue-&gt;index); # # Assuming a device with two RX and TX queues. # This script will assign: # # eth0-rx-0 CPU0 # eth0-rx-1 CPU1 # eth0-tx-0 CPU0 # eth0-tx-1 CPU1 # set_affinity() { MASK=$((1&lt;&lt;$VEC)) printf &quot;%s mask=%X for /proc/irq/%d/smp_affinity\n&quot; $DEV $MASK $IRQ printf &quot;%X&quot; $MASK &gt; /proc/irq/$IRQ/smp_affinity #echo $DEV mask=$MASK for /proc/irq/$IRQ/smp_affinity #echo $MASK &gt; /proc/irq/$IRQ/smp_affinity } if [ &quot;$1&quot; = &quot;&quot; ] ; then echo &quot;Description:&quot; echo &quot; This script attempts to bind each queue of a multi-queue NIC&quot; echo &quot; to the same numbered core, ie tx0|rx0 --&gt; cpu0, tx1|rx1 --&gt; cpu1&quot; echo &quot;usage:&quot; echo &quot; $0 eth0 [eth1 eth2 eth3]&quot; fi # check for irqbalance running IRQBALANCE_ON=`ps ax | grep -v grep | grep -q irqbalance; echo $?……
+                            </div>
+                            <p class="readmore"><a href="https://skywind3000.com/blog/archives/1893/">阅读全文</a></p>
+                        </article>
+                    
+                        <article class="post">
+                            <header>
+                                <h1 class="post-title">
+                                    <a href="https://skywind3000.com/blog/archives/1880/" title="Linux 下配置 Iptables 端口转发" >Linux 下配置 Iptables 端口转发</a>
+                                </h1>
+                            </header>
+                            <date class="post-meta meta-date">
+                                2016年12月7日
+                            </date>
+                            
+                            <div class="post-meta">
+                                <span>|</span>
+                                
+                                <span class="meta-category"><a href="https://skywind3000.com/categories/%E9%9A%8F%E7%AC%94">随笔</a></span>
+                                
+                            </div>
+                            
+                            <div class="post-content">
+                                经常需要对服务端的端口进行转发映射，让链接A服务器（202.181.55.93：8080）端口的所有tcp数据，forward到B服务器（106.185.43.22:80）端口，比如国内联通出国访问比较快，而电信比较坑爹，如果你家是电信网络，你却想畅快的访问境外的 vps，那么可以在你联通网络的境内服务器上进行这样一个端口映射，你链接境内服务器（201.181.55.93:8080）端口相当于链接境外服务器的（106.185.43.22:80）端口。
+Linux内核的 Iptables很强大，它维护一组内核变量，使用 /sbin/iptables命令进行直接规则设置，且通过配置新规则，可以直接支持端口转发，简单在 A服务器上使用下面这个 shell脚本即可：
+#! /bin/sh # create forward rule by source interface # http://serverfault.com/questions/532569/how-to-do-port-forwarding-redirecting-on-debian PortForward1() { local IN_IF=$1 local IN_PORT=$2 local OUT_IP=$3 local OUT_PORT=$4 local IPTBL=&quot;/sbin/iptables&quot; echo &quot;1&quot; &gt; /proc/sys/net/ipv4/ip_forward $IPTBL -A PREROUTING -t nat -i $IN_IF -p tcp --dport $IN_PORT -j DNAT --to-destination ${OUT_IP}:${OUT_PORT} $IPTBL -A FORWARD -p tcp -d $OUT_IP --dport $OUT_PORT -j ACCEPT $IPTBL -A POSTROUTING -t nat -j MASQUERADE } # create forward rule by source ip # http://blog.csdn.net/zzhongcy/article/details/42738285 ForwardPort2() { local IN_IP=$1 local IN_PORT=$2 local OUT_IP=$3 local OUT_PORT=$4 local IPTBL=&quot;/sbin/iptables&quot; echo &quot;1&quot; &gt; /proc/sys/net/ipv4/ip_forward $IPTBL -t nat -A PREROUTING --dst $IN_IP -p tcp --dport $IN_PORT -j DNAT --to-destination ${OUT_IP}:${OUT_PORT} $IPTBL -t nat -A POSTROUTING --dst $OUT_IP -p tcp --dport $OUT_PORT -j SNAT --to-source $IN_IP } PortForward1 eth3 8080 106.185.43.22 80 # put this file on /etc/network/if-up.d  上面两个函数，一个是针对网卡，一个是针对本地IP设置转发，记得把这个脚本放到 /etc/network/if-up.d 下面并设置可执行权限（Debian/Ubuntu），每次开机重启时保证可以运行，即可。……
+                            </div>
+                            <p class="readmore"><a href="https://skywind3000.com/blog/archives/1880/">阅读全文</a></p>
+                        </article>
+                    
+                        <article class="post">
+                            <header>
+                                <h1 class="post-title">
+                                    <a href="https://skywind3000.com/blog/archives/1857/" title="Vim 里如何映射 CTRL-h 为 left ?" >Vim 里如何映射 CTRL-h 为 left ?</a>
+                                </h1>
+                            </header>
+                            <date class="post-meta meta-date">
+                                2016年11月27日
+                            </date>
+                            
+                            <div class="post-meta">
+                                <span>|</span>
+                                
+                                <span class="meta-category"><a href="https://skywind3000.com/categories/%E9%9A%8F%E7%AC%94">随笔</a></span>
+                                
+                            </div>
+                            
+                            <div class="post-content">
+                                很多人习惯在配置文件中映射 CTRL+HJKL 为光标移动，却碰到了一些问题：
+inoremap &lt;c-h&gt; &lt;left&gt; inoremap &lt;c-j&gt; &lt;down&gt; inoremap &lt;c-k&gt; &lt;up&gt; inoremap &lt;c-l&gt; &lt;right&gt;  映射后无效或者映射以后按 &lt;BS&gt;键不能删除，这是什么原因呢？
+很简单，因为你的终端软件（Xshell, SecureCRT）有些老，默认配置是按下&lt;BS&gt;键以后 发送的是：^H (ASCII 码 0x08），而 ^H在你的 Vim 里被你 inoremap 成 了，所以你按了&lt;BS&gt;会被认为按下了左键。
+早在 VT100终端时代，^H（ASCII码 0x08）表示&lt;BS&gt; 而 ^? （ASCII码 0x7f）表示&lt;DEL&gt;。过去 0x7f是留给 DELETE键使用的。而到了 VT220时代，DELETE已经变为 ^[[3~ （ASCII 码 0x1b, 0x5b, 0x33, 0x7e 共4个字节），而 ^? 的 0x7f 换给了我们的&lt;BS&gt;，有些老点版本的终端软件，默认 &lt;BS&gt;还是使用 VT100的 ^H，比如 Xshell 4 Build 0142以前的版本，默认&lt;BS&gt;是发送^H。SecureCRT直到6.x版本还在默认发送 VT100的 ^H。
+你需要做的就是改一下终端默认配置而已，大部分不那么陈旧的终端软件，如今都是默认VT220的标准，比如 Xshell4 Build 0142及以后的 Xshell5，Putty，Mac下面的 Terminal.app, iTerm2，Ubuntu下面的 gnome-terminal，他们都是把 &lt;BS&gt; 发送成 ^?
+你可以在你服务端下面查看下默认的键位设置：
+$ stty -a  现在所有 Linux服务器的 erase （bs）基本都是 ^? 了（如果链接到非 Linux老操作系统 erase不是这个的话，需要改一下，可以在系统层改，也可以vim里面 set t_kb=&hellip;），Vim里面也是认可 ^?的，可老旧的终端软件却默认发送 ^H，不过好在他们都支持修改：
+Xshell 老版本的修改方法
+Properties -&gt; Terminal -&gt; Keyboard 里，把&lt;BS&gt;设置成 127，而 &lt;DEL&gt;设置成 VT220 Del
+SecureCRT 6 的设置方法
+Session Options -&gt; Terminal -&gt; Emulation -&gt; Mapped Keys, 勾选 Backspace sends delete
+Putty 设置方法
+好像默认是 ^? 的不过需要到：Configuration -&gt; Terminal -&gt; Keyboard 下面下确认下 The Backspace key 是 Control-? (127)
+Terminal.app
+Mac 下面的 Terminal.app 默认是发送 ^? 的，你也可以到 Profiles Advanced 下面确认下 “Delete sends Control-H” 没有勾选。
+iTerm2
+iTerm2 下面默认也是发送 ^? 的，可以到 Profiles -&gt; Keys下面确认一下 “Delete key sends ^H” 没有被勾选。
+Gnome-Terminal
+至于 Gnome-Terminal 和 MinTTY之流的默认是 ^? 要修改可以看具体文本配置文件。
+好了，默认 Vim 同时识别 ^H（ASCII 码 0x08）和 ^?（ASCII码 0x7f） 都把这两个当成&lt;BS&gt;，现在我们统一把终端软件的 &lt;BS&gt;改为 0x7f以后，^H 的 0x08就空出来给我们 noremap了：
+noremap &lt;C-h&gt; &lt;left&gt; noremap &lt;C-j&gt; &lt;down&gt; noremap &lt;C-k&gt; &lt;up&gt; noremap &lt;C-l&gt; &lt;right&gt; inoremap &lt;C-h&gt; &lt;left&gt; inoremap &lt;C-j&gt; &lt;down&gt; inoremap &lt;C-k&gt; &lt;up&gt; inoremap &lt;C-l&gt; &lt;right&gt; cnoremap &lt;c-h&gt; &lt;left&gt; cnoremap &lt;c-j&gt; &lt;down&gt; cnoremap &lt;c-k&gt; &lt;up&gt; cnoremap &lt;c-l&gt; &lt;right&gt;  其实这样映射是有好处的，有时候就想在插入模式下移动一小下，真没必要 跳出。 命令模式下，这样移动也是有好处的，因为进场敲 Ex命令时都是按上，把上一条弄出来，移动下光标修改下，然后回车，这下 Ex命令模式下 直接 把上一条显示出来，然后 和左右移动修改。当然你也可以map成 emacs格式，为了保持一致性，Command/Normal/Insert/Visual我都做了这个设置。……
+                            </div>
+                            <p class="readmore"><a href="https://skywind3000.com/blog/archives/1857/">阅读全文</a></p>
+                        </article>
+                    
+                        <article class="post">
+                            <header>
+                                <h1 class="post-title">
+                                    <a href="https://skywind3000.com/blog/archives/1846/" title="Vim 中正确使用 Alt映射" >Vim 中正确使用 Alt映射</a>
+                                </h1>
+                            </header>
+                            <date class="post-meta meta-date">
+                                2016年11月19日
+                            </date>
+                            
+                            <div class="post-meta">
+                                <span>|</span>
+                                
+                                <span class="meta-category"><a href="https://skywind3000.com/categories/%E9%9A%8F%E7%AC%94">随笔</a></span>
+                                
+                            </div>
+                            
+                            <div class="post-content">
+                                最简单的做法是：首先将终端软件的 “使用 Alt键作为 Meta键” 的功能打开，其次将 Alt的模式改为 ESC+字母，意思是如果你在终端下按下 ALT+X，那么终端软件将会发送 &lt;ESC&gt;x 两个字节过去，字节码为：0x27, 0x78。如果你使用过 NeoVim 或者 Emacs的话，这一步应该早就做过了。
+XShell4 终端设置：
+SecureCRT：终端设置
+其他终端软件里：
+ Putty/MinTTY 默认ALT+X 就是发送 &lt;ESC&gt;x过去 Mac下面的 iTerm2/Terminal.app 需要跟 XShell / SecureCRT一样设置一下 Ubuntu 下面的 GnomeTerminal 默认也是发送 &lt;ESC&gt;x过去的 任意平台下面的 xterm 可以配置 ~/.Xdefaults 来设置这个行为。  这样的话，不管是 NeoVim 还是 Emacs都识别了，Vim 的话，你可以简单这样：
+noremap &lt;ESC&gt;x :echo &quot;ALT-X pressed&quot;&lt;cr&gt;  注意 ESC后面是小写 x，如果你是大写 X就变成 ALT+SHIFT+X了。于是你在 Vim 中，ALT+X就能看到后面输出的那句话了。看到这里你也许要问：这和我快速按下 ESC再马上按下 x键有什么区别？答案是没有区别，在终端里面这两个操作是一模一样的键盘码传送过去。
+就像你不设置 ttimeout 和 ttimeoutlen，然后快速在 VIM 里面按下 &lt;ESC&gt;OP，Vim 会以为你按下了 &lt;F1&gt;一样。因为 F1 的终端下字符串序列就是 &lt;ESC&gt;OP ，而你在 Insert 模式下面马上 &lt;ESC&gt; 退出并按下大写 O ，向上插入一行，Vim 将会等待一秒钟（默认 timeout ），确认后面没有一个 P，才会进一步确认不是F1，而是向上插行。
+所以更好的做法是直接按照 &lt;M-x&gt; 进行映射，并且告诉 vim，&lt;M-x&gt;的键盘序列码是多少，然后再加上 ttimeoutlen超时：
+noremap &lt;M-x&gt; :echo &quot;ALT-X pressed&quot;&lt;cr&gt; exec &quot;set &lt;M-x&gt;=\ex&quot; set ttimeout ttimeoutlen=100  这样做的好处是告诉 Vim, ESC+x是一个完整的按键码，并且需要在 100ms以内进行判断，即，如果收到 ESC，并且100ms以后没有后续的x，则是认为是一个单独的ESC键，退出 INSERT模式，否则认为是按下了 ALT+X，这和 Vim处理方向键，处理 F1, F2等功能键的原则是相同的，具体见 :h set-termcap:
+ *:set-termcap* *E522* For {option} the form &quot;t_xx&quot; may be used to set a terminal option. This will override the value from the termcap. You can then use it in a mapping. If the &quot;xx&quot; part contains special characters, use the &lt;t_xx&gt; form: &gt; :set &lt;t_#4&gt;=^[Ot This can also be used to translate a special code for a normal key. For example, if Alt-b produces &lt;Esc&gt;b, use this: &gt; :set &lt;M-b&gt;=^[b (the ^[ is a real &lt;Esc&gt; here, use CTRL-V &lt;Esc&gt; to enter it) The advantage over a mapping is that it works in all situations.……
+                            </div>
+                            <p class="readmore"><a href="https://skywind3000.com/blog/archives/1846/">阅读全文</a></p>
+                        </article>
+                    
+                        <article class="post">
+                            <header>
+                                <h1 class="post-title">
+                                    <a href="https://skywind3000.com/blog/archives/1835/" title="Vim 异步运行 Shell 指令的插件 - AsyncRun" >Vim 异步运行 Shell 指令的插件 - AsyncRun</a>
+                                </h1>
+                            </header>
+                            <date class="post-meta meta-date">
+                                2016年8月24日
+                            </date>
+                            
+                            <div class="post-meta">
+                                <span>|</span>
+                                
+                                <span class="meta-category"><a href="https://skywind3000.com/categories/%E9%9A%8F%E7%AC%94">随笔</a></span>
+                                
+                            </div>
+                            
+                            <div class="post-content">
+                                自制另一个新的 Vim 8.0 专用异步插件：asyncrun.vim，它可以让你在 Vim 里面异步运行各种 Shell 指令并且把结果实时输出到 Quickfix，需要 Vim 7.4.1829 以上版本。
+安装方法
+到插件首页 https://github.com/skywind3000/asyncrun.vim 下载项目，并拷贝 asyncrun.vim 到你的 ~/.vim/plugin。或者使用 Vundle 指向 skywind3000/asyncrun.vim 来自动更新。
+基本教程
+使用 gcc 异步编译当前文件：
+:AsyncRun gcc % -o %&lt; :AsyncRun g++ -O3 % -o %&lt; -lpthread  该命令会在后台运行 gcc 并且把输出实时显示在 Quickfix 窗口，宏 % 代表当前文件名，%&lt; 代表没有扩展名的文件名。
+异步运行 make：
+:AsyncRun make :AsyncRun make -f makefile  异步调用 grep:
+:AsyncRun! grep -R word . :AsyncRun! grep -R &lt;cword&gt; .  默认 :AsyncRun 运行命令后，输出添加到 Quickfix时 Quickfix 会自动滚动到最下面那一行，使用感叹号修饰符以后，可以避免 Quickfix 自动滚动。同时 &lt;cword&gt; 代表当前光标下面的单词。
+编译 go项目：
+:AsyncRun go build %:p:h  宏 %:p:h 代表当前文件的目录
+查询 man page，异步 git push ，以及把设置 F7异步编译当前文件：
+:AsyncRun! man -S 3:2:1 &lt;cword&gt; :AsyncRun git push origin master :noremap &lt;F7&gt; :AsyncRun gcc % -o %&lt; &lt;cr&gt;  使用手册
+AsyncRun - Run shell command：
+:AsyncRun{!} [cmd] ...  后台运行命令并且实时输出到 quickfix 窗口，如果有感叹号修饰符，quickfix 窗口的自动滚动将会禁止。
+命令参数以空格分割，接受下面这些以 &lsquo;%&rsquo;, &lsquo;#&rsquo; or &lsquo;&lt;&rsquo; 开头的替换宏:
+%:p - File name of current buffer with full path %:t - File name of current buffer without path %:p:h - File path of current buffer without file name %:e - File extension of current buffer %:t:r - File name of current buffer without path and extension % - File name relativize to current directory %:h:. - File path relativize to current directory &lt;cwd&gt; - Current working directory &lt;cword&gt; - Current word under cursor &lt;cfile&gt; - Current file name under cursor  运行一个命令前，环境变量也会做如下设置:……
+                            </div>
+                            <p class="readmore"><a href="https://skywind3000.com/blog/archives/1835/">阅读全文</a></p>
+                        </article>
+                    
+                        <article class="post">
+                            <header>
+                                <h1 class="post-title">
+                                    <a href="https://skywind3000.com/blog/archives/1828/" title="3D 图形光栅化的透视校正问题" >3D 图形光栅化的透视校正问题</a>
+                                </h1>
+                            </header>
+                            <date class="post-meta meta-date">
+                                2016年8月18日
+                            </date>
+                            
+                            <div class="post-meta">
+                                <span>|</span>
+                                
+                                <span class="meta-category"><a href="https://skywind3000.com/categories/%E5%9B%BE%E5%BD%A2%E7%BC%96%E7%A8%8B">图形编程</a></span>
+                                
+                            </div>
+                            
+                            <div class="post-content">
+                                写了文章《如何写一个软件渲染器》以后，不少网友希望进一步解释背后的数学公式，询问以及自己加一个 phong 光照该如何加，本文将对透视纹理映射的插值原理做一个简单的解释，希望能帮助到大家：
+透视纹理绘制发生在最后阶段，坐标已经完成projection，剔除，裁剪了，然后顶点/w，开始批量绘制扫描线之前，这时候开始计算纹理的位置。
+使用w还是用z，关系不大，早年的3d引擎，直接/z的，只是后面标准化了以后，发现w更好用，可以同时表示透视投影和正交投影。同时顶点经过标准的mvp矩阵运算后，w和z是承线性关系的，方便对z/w做 [0,1] 的cvv裁剪。你可以理解成w就是另外一个z。以前屏幕坐标：
+x' = x / z * d + A y' = y / z * d + A  现在是
+x' = x / w * d + A y' = y / w * d + A  然后绘制纹理前，你需要先证明屏幕上两个点之间，1/w 承线性关系，即屏幕上两个点X1&rsquo;, X2&rsquo;之间任意取一点X3&rsquo;，他们的(1/w)值的变化比例相同，即在 t 取任意值有：
+x3' = x1' + (x2' - x1') * t (1 / w3) = (1 / w1) + ((1 / w2) - (1 / w1)) * t  再根据他们在同一个平面上，证明屏幕上两个点之间，u/w, v/w 承线性关系，即 t 取任意值有：
+x3' = x1' + (x2' - x1') * t (u3 / w3) = (u1 / w1) + ((u2 / w2) - (u1 / w1)) * t (v3 / w3) = (v1 / w1) + ((v2 / w2) - (v1 / w1)) * t  具体到代码里面的做法就是三角形的三个顶点/w以后，u和v也同时/w，然后把w换成自己的倒数：w = 1 / w，及把顶点数据：
+(x, y, z, w) + (u, v)  变换成：
+(x / w, y / w, z / w, 1 / w) + (u / w, v / w)  然后用 1/w, u/w, v/w进行屏幕空间插值，具体绘制某个点的时候，先从1/w求倒得到w，然后乘以 u/w, v/w得到 u, v，就可以了。
+更进一步，可以证明，所有在三维空间里同x,y,z成线性关系的变量，不管是纹理坐标，顶点色或者法向还是其他，他们在屏幕空间里的插值规则都可以通过：插值前先/w，插值后要用时再 * w得到具体值，然后我们把这类三维空间里同x,y,z成线性关系的变量统进行统一的批量处理，和OpenGL的 attribute，varying处理方法相同。
+相关阅读： 如何写一个软件渲染器 还原被摄像机透视的纹理……
+                            </div>
+                            <p class="readmore"><a href="https://skywind3000.com/blog/archives/1828/">阅读全文</a></p>
+                        </article>
+                    
+                        <article class="post">
+                            <header>
+                                <h1 class="post-title">
+                                    <a href="https://skywind3000.com/blog/archives/1813/" title="Vim 异步编译插件 vimmake" >Vim 异步编译插件 vimmake</a>
+                                </h1>
+                            </header>
+                            <date class="post-meta meta-date">
+                                2016年7月16日
+                            </date>
+                            
+                            <div class="post-meta">
+                                <span>|</span>
+                                
+                                <span class="meta-category"><a href="https://skywind3000.com/categories/%E9%9A%8F%E7%AC%94">随笔</a></span>
+                                
+                            </div>
+                            
+                            <div class="post-content">
+                                推荐下自己写的用了好几年的编程插件：vimmake ？完美支持 vim的异步模式： GitHub - skywind3000/vimmake: Customize shell commands in vim
+让用户自定义各种不同的编译或运行任务，并且在 Vim 中执行他们。类似 NotePad++的自定义 Commands 和 EditPlus/UltraEdit 的 &lsquo;User Tool&rsquo; 或者 GEdit中的 External Tool 以及 TextMate 中的 Shell Command。完美支持 vim 7.4.1829 后已经稳定成熟的异步任务机制，不需要写任何 Vim Script 也可以很容易的体验到 vim 的异步任务机制，并且使用它来执行各种艰巨的编译任务，让你一边编辑代码，一边跑编译任务。
+安装：拷贝 vimmake.vim 到你的 ~/.vim/plugin 或用 vundle 指向 skywind3000/vimmake .
+简单使用：异步编译 &amp; 运行 C/C++ 代码
+首先每个 “用户自定义工具” 使用一个独立的 shell脚本来描述（Windows下是.cmd的批处理文件），我们将首先编写 vimmake可以使用的 gcc编译工具脚本， &ldquo;~/.vim/vimmake.gcc&rdquo;:
+#! /bin/sh gcc &quot;$VIM_FILEPATH&quot; -o &quot;$VIM_FILEDIR/$VIM_FILENOEXT&quot;  就这么短短的两行，当你把它设置成 0755的权限时，就可以在 Vim中通过下面语句运行了：
+:VimTool gcc  命令 :VimTool {name} 命令会在 Vim里面直接调用 ~/.vim/ 目录下，名为 &ldquo;vimmake.{name}&rdquo; 的脚本来完成各种类似编译或者执行的任务，所以用:VimTool gcc 就可以运行前面定义的名为 vimmake.gcc 的工具脚本来编译当前的源代码了。
+现在编辑 &ldquo;~/.vim/&rdquo; 下面名为 &ldquo;vimmake.run&rdquo; 的脚本，以便用 :VimTool run 来运行当前代码：
+#! /bin/sh &quot;$VIM_FILEDIR/$VIM_FILENOEXT&quot;  记得将 vimmake.run 的模式设置成 0755，如今有了两个可以直接在 Vim里通过 VimTool命令启动的工具（gcc 和 run），接下来我们需要设置 run 这个工具的模式为默认运行模式，而 gcc 为 quickfix模式（输出会被捕获并重定向到 quickfix窗口），现在打开 .vimrc 添加一行：
+let g:vimmake_mode = { 'gcc':'quickfix', 'run':'normal' }  而如果我们能够使用到较新版本的 vim（7.4.1829或者更高），我们就可以使用异步方式在后台启动 gcc，并且将后台进程的输出实时重定向到界面下端的 quickfix 窗口：
+let g:vimmake_mode = { 'gcc':'async', 'run':'normal' }  在这之后，将 &lsquo;gcc&rsquo;的运行模式设置成 &lsquo;async&rsquo; 后，:VimTool gcc 就可以以异步的方式运行名为 vimmake.gcc 的脚本然后在后台执行编译任务了，就像传统 IDE编译任务一样。
+以往使用 Vim 的 :make 之类的命令编译项目时，往往无法异步，编译任务一运行，你就无法编辑了，只有等到编译结束，才能返回编辑状态，大项目时，不得不另外开一个终端来进行编译，这是很痛苦的事情，有了异步任务以后，你能在同一个屏幕下编辑并且实时在 quickfix窗口查看编译的进度。
+vimmake 可以让你在不需要掌握晦涩的 VimScript 和繁琐的异步编程接口的情况下，直接方便的使用vim 异步功能来完成各种长时间编译任务。同时为了加快你的：编译-编辑-编译 工作流的流畅度，我们需要配置一两个热键来调用 :VimTool 命令：
+noremap &lt;F7&gt; :VimTool gcc&lt;cr&gt; noremap &lt;F5&gt; :VimTool run&lt;cr&gt; inoremap &lt;F7&gt; &lt;ESC&gt;:VimTool gcc&lt;cr&gt; inoremap &lt;F5&gt; &lt;ESC&gt;:VimTool run&lt;cr&gt;  在 .vimrc里面加入上面的几行代码，你就可以方便的按 F7编译当前文件，F5运行之了。和GEdit 类似，VimTool命令在运行具体工具脚本前会设置若干环境变量来记录当前编辑的文件名，路径，当前vim工作目录等一系列信息，然后在工具脚本里面可以直接取出这些值来调用需要的外部工具链： 如上图，后台运行工具脚本进行编译，并且编译器的输出会被实时显示到下面的 quickfix窗口，选中错误的那行输出，会直接跳转：
+命令解释：VimTool - 执行用户自定义工具
+下面这条命令会运行名为 &ldquo;~/.vim/vimmake.{name}&rdquo; 的脚本：
+:VimTool {name}  在 Windows下的话，会运行名为： &ldquo;C:\Users\yourname.vim\vimmake.{name}.cmd&rdquo; 的批处理。
+{name} 后面还可以跟随一个名为 {target} 的参数：
+:VimTool {name} {target}  {target} 的内容会作为环境变量：$VIM_TARGET 传入到 vimmake.……
+                            </div>
+                            <p class="readmore"><a href="https://skywind3000.com/blog/archives/1813/">阅读全文</a></p>
+                        </article>
+                    
+                        <article class="post">
+                            <header>
+                                <h1 class="post-title">
+                                    <a href="https://skywind3000.com/blog/archives/1799/" title="如何禁止 Win7 强制更新到 Windows 10 ?" >如何禁止 Win7 强制更新到 Windows 10 ?</a>
+                                </h1>
+                            </header>
+                            <date class="post-meta meta-date">
+                                2016年7月4日
+                            </date>
+                            
+                            <div class="post-meta">
+                                <span>|</span>
+                                
+                                <span class="meta-category"><a href="https://skywind3000.com/categories/%E9%9A%8F%E7%AC%94">随笔</a></span>
+                                
+                            </div>
+                            
+                            <div class="post-content">
+                                岳父岳母，爹妈的 Windows 7 纷纷被自动升级成 Windows 10 各种问题（一台画面变成非全屏，解析度被莫名奇妙降低，占不满显示器、运行卡，另一台台式机无线网卡不能用，还有一台某炒股软件跑不起来，按win键弹出菜单时会顿一下）。
+花费了我两个整天的时间帮他们降级，找了很多方法，网上大部分都不能对新版 Gwx起作用
+终于，找到了并且永久性锁定自动升级的最直接方式了：
+regedit： HKEY_LOCAL_MACHINE 下面 SOFTWARE\Policies\Microsoft\Windows 下面新建项目（目录）Gwx 然后在 SOFTWARE\Policies\Microsoft\Windows\Gwx 下面新建 DWORD 值： DisableGwx=1  好了，Windows 结扎手术完成，不用当心一不留神弄出个 Windows 10 来给大伙惹麻烦了。
+补充：本来上次回家时间就短，好些事情没办，好些朋友没见，好了，微软一个强制升级，就把你锁家里了。
+自己的事情也算小事了，爹妈平常和岳父母平日和我们聚少离多，也就爱炒个股看个基金寻找下乐趣，你把人家弄的用不了了，不好用了，老人家自己不会弄，又舍不得花钱请人修，只能眼巴巴花好几个月的时间等着你回去帮他们解决。这样的感受是很不好的，就像公园里两个大爷正高兴的下着棋，过来个顽皮小孩一把把老人的棋盘掀湖里去了，周围的人都会觉得小孩有些缺乏教养，没有公德心一般。
+很多喜欢宠物的人为了不给大家添麻烦都倡导给自己的狗或猫做节育手术，真爱宠物就要对它负责，所以我们也本着对windows负责的态度对它做个结扎，防止它趁你不留神在外面闯祸，避免给大家添麻烦，对，公德心嘛。……
+                            </div>
+                            <p class="readmore"><a href="https://skywind3000.com/blog/archives/1799/">阅读全文</a></p>
+                        </article>
+                    
+                        <article class="post">
+                            <header>
+                                <h1 class="post-title">
+                                    <a href="https://skywind3000.com/blog/archives/1774/" title="计算机底层是如何访问显卡的？" >计算机底层是如何访问显卡的？</a>
+                                </h1>
+                            </header>
+                            <date class="post-meta meta-date">
+                                2016年6月17日
+                            </date>
+                            
+                            <div class="post-meta">
+                                <span>|</span>
+                                
+                                <span class="meta-category"><a href="https://skywind3000.com/categories/%E5%9B%BE%E5%BD%A2%E7%BC%96%E7%A8%8B">图形编程</a></span>
+                                
+                            </div>
+                            
+                            <div class="post-content">
+                                以前 DOS下做游戏，操作系统除了磁盘和文件管理外基本不管事情，所有游戏都是直接操作显卡和声卡的，用不了什么驱动。
+虽然没有驱动，但是硬件标准还是放在那里，VGA, SVGA, VESA, VESA2.0 之类的硬件标准，最起码，你只做320x200x256c的游戏，或者 ModeX 下 320x240x256c 的游戏的话，需要用到VGA和部分 SVGA标准，而要做真彩高彩，更高分辨率的游戏的话，就必须掌握 VESA的各项规范了。
+翻几段以前写的代码演示下：
+例子1： 初始化 VGA/VESA 显示模式
+基本是参考 VGA的编程手册来做：
+INT 10,0 - Set Video Mode AH = 00 AL = 00 40x25 B/W text (CGA,EGA,MCGA,VGA) = 01 40x25 16 color text (CGA,EGA,MCGA,VGA) = 02 80x25 16 shades of gray text (CGA,EGA,MCGA,VGA) = 03 80x25 16 color text (CGA,EGA,MCGA,VGA) = 04 320x200 4 color graphics (CGA,EGA,MCGA,VGA) = 05 320x200 4 color graphics (CGA,EGA,MCGA,VGA) = 06 640x200 B/W graphics (CGA,EGA,MCGA,VGA) = 07 80x25 Monochrome text (MDA,HERC,EGA,VGA) = 08 160x200 16 color graphics (PCjr) = 09 320x200 16 color graphics (PCjr) = 0A 640x200 4 color graphics (PCjr) = 0B Reserved (EGA BIOS function 11) = 0C Reserved (EGA BIOS function 11) = 0D 320x200 16 color graphics (EGA,VGA) = 0E 640x200 16 color graphics (EGA,VGA) = 0F 640x350 Monochrome graphics (EGA,VGA) = 10 640x350 16 color graphics (EGA or VGA with 128K) 640x350 4 color graphics (64K EGA) = 11 640x480 B/W graphics (MCGA,VGA) = 12 640x480 16 color graphics (VGA) = 13 320x200 256 color graphics (MCGA,VGA) = 8x EGA, MCGA or VGA ignore bit 7, see below = 9x EGA, MCGA or VGA ignore bit 7, see below - if AL bit 7=1, prevents EGA,MCGA &amp; VGA from clearing display - function updates byte at 40:49; bit 7 of byte 40:87 (EGA/VGA Display Data Area) is set to the value of AL bit 7  转换成代码的话，类似这样：……
+                            </div>
+                            <p class="readmore"><a href="https://skywind3000.com/blog/archives/1774/">阅读全文</a></p>
+                        </article>
+                    
+                        <article class="post">
+                            <header>
+                                <h1 class="post-title">
+                                    <a href="https://skywind3000.com/blog/archives/1745/" title="如何在不同平台下打开新窗口运行程序？" >如何在不同平台下打开新窗口运行程序？</a>
+                                </h1>
+                            </header>
+                            <date class="post-meta meta-date">
+                                2016年5月12日
+                            </date>
+                            
+                            <div class="post-meta">
+                                <span>|</span>
+                                
+                                <span class="meta-category"><a href="https://skywind3000.com/categories/%E9%9A%8F%E7%AC%94">随笔</a></span>
+                                
+                            </div>
+                            
+                            <div class="post-content">
+                                如果可以让自己的工作效率提升一点点，那么即便花费几天来开发一些工具也是值得的。在不同操作系统下自动打开终端窗口来运行指定的命令就是这样一件能提高工作效率的事情。
+就像 Visual Studio 调试命令行程序的人都对打开一个新窗口运行命令行程序的模式情有独钟。EditPlus 也提供新窗口运行程序（可惜只限windows）。
+而如果你在使用 Sublime/Atom/GEdit/GVim 之类的工具，你就会发现调试程序的时候程序基本上是在下面的面板中运行的，所有输出也是输出到下面的面板中。这时如果程序长时间运行是非常不方便的，又或者程序有交互（需要输入数据），基于GUI面板的运行方式也会显得十分笨重，而Vim/GVim之流更过分，一执行程序整个GUI就定住了，没法一边看代码一边查看一些长时间运行的程序状态，虽然Windows下的GVim可以用!start来解决（见Gim !start），但十分遗憾，Linux桌面或者Mac下面的Vim都没有这个 !start功能。
+同时，哪天你切换到Mac/Ubuntu下开发了，你会发现这个问题十分恶心，这时候你往往需要写一些脚本来做这件事情。而在不同的平台下正确的escape并传递参数，正确的生成中间脚本（bash，applescript，batch）并且通过管道传递又是一项比较浪费时间的事情。
+所以这两天写了: https://github.com/skywind3000/terminal 这个脚本来做这些，满足了我如下需求：
+ 在 Windows 下打开 cmd窗口执行若干命令 在 Linux 下打开 xterm/gnome-terminal 来执行若干命令 在 Mac OS X 下面打开 Terminal/iTerm 窗口来执行若干命令 不同的操作系统下提供统一的调用接口 可以方便设置：工作目录、窗口标题、窗口配置（Terminal/gnome-terminal/iterm） 新窗口内执行完程序以后可以会等待按任意键才关闭窗口 Windows 打开 Cygwin 的 Mintty窗口并执行 Cygwin命令（Windows下编辑，Cygwin下运行） Cygwin 下直接打开 Windows的 CMD窗口执行 Win32程序（Cygwin下编辑，Windows下运行） Cygwin 下直接打开 Mintty窗口并运行cygwin命令（Cygwin下编辑，cygwin下运行）  如此，不管你运行在哪个操作系统下，使用何种编辑器，都可以提供完全一致的调试体验。一边编辑代码的同时，一边查看另一个窗口的程序实时输出。……
+                            </div>
+                            <p class="readmore"><a href="https://skywind3000.com/blog/archives/1745/">阅读全文</a></p>
+                        </article>
+                    
+
+                    
+
+
+<ol class="page-navigator">
+    
+    <li class="prev">
+        <a href="https://skywind3000.com/page/2/">上一页</a>
+    </li>
+    
+
+    
+    <li >
+        <a href="https://skywind3000.com/">1</a>
+    </li>
+    
+    <li >
+        <a href="https://skywind3000.com/page/2/">2</a>
+    </li>
+    
+    <li  class="current">
+        <a href="https://skywind3000.com/page/3/">3</a>
+    </li>
+    
+    <li >
+        <a href="https://skywind3000.com/page/4/">4</a>
+    </li>
+    
+    <li >
+        <a href="https://skywind3000.com/page/5/">5</a>
+    </li>
+    
+    <li >
+        <a href="https://skywind3000.com/page/6/">6</a>
+    </li>
+    
+    <li >
+        <a href="https://skywind3000.com/page/7/">7</a>
+    </li>
+    
+    <li >
+        <a href="https://skywind3000.com/page/8/">8</a>
+    </li>
+    
+    <li >
+        <a href="https://skywind3000.com/page/9/">9</a>
+    </li>
+    
+    <li >
+        <a href="https://skywind3000.com/page/10/">10</a>
+    </li>
+    
+    <li >
+        <a href="https://skywind3000.com/page/11/">11</a>
+    </li>
+    
+    <li >
+        <a href="https://skywind3000.com/page/12/">12</a>
+    </li>
+    
+    <li >
+        <a href="https://skywind3000.com/page/13/">13</a>
+    </li>
+    
+    <li >
+        <a href="https://skywind3000.com/page/14/">14</a>
+    </li>
+    
+
+    
+    <li class="next">
+        <a href="https://skywind3000.com/page/4/">下一页</a>
+    </li>
+    
+</ol>
+
+
+
+                </div>
+            </div>
+
+            <div id="secondary">
+    <section class="widget">
+        <form id="search" action="//www.google.com/search" method="get" accept-charset="utf-8" target="_blank" _lpchecked="1">
+      
+      <input type="text" name="q" maxlength="20" placeholder="Search">
+      <input type="hidden" name="sitesearch" value="https://skywind3000.com/">
+      <button type="submit" class="submit icon-search"></button>
+</form>
+    </section>
+    
+    <section class="widget">
+        <h3 class="widget-title">最近文章</h3>
+<ul class="widget-list">
+    
+    <li>
+        <a href="https://skywind3000.com/posts/2019/shell_init_sh/" title="提高效率从编写 init.sh 开始">提高效率从编写 init.sh 开始</a>
+    </li>
+    
+    <li>
+        <a href="https://skywind3000.com/posts/intro/" title="个人主页搬迁到新系统">个人主页搬迁到新系统</a>
+    </li>
+    
+    <li>
+        <a href="https://skywind3000.com/blog/archives/2250/" title="如何实现和优化 SVM（支持向量机）？">如何实现和优化 SVM（支持向量机）？</a>
+    </li>
+    
+    <li>
+        <a href="https://skywind3000.com/blog/archives/2229/" title="别让 cd 浪费你的时间">别让 cd 浪费你的时间</a>
+    </li>
+    
+    <li>
+        <a href="https://skywind3000.com/blog/archives/2193/" title="VimScript 五分钟入门（翻译）">VimScript 五分钟入门（翻译）</a>
+    </li>
+    
+    <li>
+        <a href="https://skywind3000.com/blog/archives/2173/" title="Windows 10 - 1803 更新又给我出幺蛾子">Windows 10 - 1803 更新又给我出幺蛾子</a>
+    </li>
+    
+    <li>
+        <a href="https://skywind3000.com/blog/archives/2084/" title="Vim 8 下 C/C&#43;&#43; 开发环境搭建">Vim 8 下 C/C&#43;&#43; 开发环境搭建</a>
+    </li>
+    
+    <li>
+        <a href="https://skywind3000.com/blog/archives/2071/" title="Bash 中文速查表/Cheatsheet （全网最全）">Bash 中文速查表/Cheatsheet （全网最全）</a>
+    </li>
+    
+    <li>
+        <a href="https://skywind3000.com/blog/archives/2060/" title="为什么说 zsh 是 shell 中的极品？">为什么说 zsh 是 shell 中的极品？</a>
+    </li>
+    
+    <li>
+        <a href="https://skywind3000.com/blog/archives/2051/" title="Vim 中文速查表/Cheatsheet（全网最完善）">Vim 中文速查表/Cheatsheet（全网最完善）</a>
+    </li>
+    
+</ul>
+    </section>
+
+    
+
+    <section class="widget">
+        <h3 class="widget-title">分类</h3>
+<ul class="widget-list">
+    
+    <li>
+        <a href="https://skywind3000.com/categories/%E4%BA%BA%E5%B7%A5%E6%99%BA%E8%83%BD/">人工智能(8)</a>
+    </li>
+    
+    <li>
+        <a href="https://skywind3000.com/categories/%E5%9B%BE%E5%BD%A2%E7%BC%96%E7%A8%8B/">图形编程(20)</a>
+    </li>
+    
+    <li>
+        <a href="https://skywind3000.com/categories/%E5%A4%A7%E6%B5%AA%E6%B7%98%E6%B2%99/">大浪淘沙(12)</a>
+    </li>
+    
+    <li>
+        <a href="https://skywind3000.com/categories/%E5%BC%80%E6%BA%90%E9%A1%B9%E7%9B%AE/">开源项目(8)</a>
+    </li>
+    
+    <li>
+        <a href="https://skywind3000.com/categories/%E6%9C%AA%E5%88%86%E7%B1%BB/">未分类(6)</a>
+    </li>
+    
+    <li>
+        <a href="https://skywind3000.com/categories/%E6%B8%B8%E6%88%8F%E5%BC%80%E5%8F%91/">游戏开发(27)</a>
+    </li>
+    
+    <li>
+        <a href="https://skywind3000.com/categories/%E7%BC%96%E7%A8%8B%E6%8A%80%E6%9C%AF/">编程技术(45)</a>
+    </li>
+    
+    <li>
+        <a href="https://skywind3000.com/categories/%E7%BC%96%E8%AF%91%E6%8A%80%E6%9C%AF/">编译技术(6)</a>
+    </li>
+    
+    <li>
+        <a href="https://skywind3000.com/categories/%E7%BD%91%E7%BB%9C%E7%BC%96%E7%A8%8B/">网络编程(14)</a>
+    </li>
+    
+    <li>
+        <a href="https://skywind3000.com/categories/%E9%9A%8F%E7%AC%94/">随笔(57)</a>
+    </li>
+    
+</ul>
+    </section>
+
+    <section class="widget">
+        <h3 class="widget-title">标签</h3>
+<div class="tagcloud">
+    
+    <a href="https://skywind3000.com/tags/ai/">ai</a>
+    
+    <a href="https://skywind3000.com/tags/android/">android</a>
+    
+    <a href="https://skywind3000.com/tags/as3/">as3</a>
+    
+    <a href="https://skywind3000.com/tags/c&#43;&#43;/">c&#43;&#43;</a>
+    
+    <a href="https://skywind3000.com/tags/cygwin/">cygwin</a>
+    
+    <a href="https://skywind3000.com/tags/dos/">dos</a>
+    
+    <a href="https://skywind3000.com/tags/kcp/">kcp</a>
+    
+    <a href="https://skywind3000.com/tags/linux/">linux</a>
+    
+    <a href="https://skywind3000.com/tags/p2p/">p2p</a>
+    
+    <a href="https://skywind3000.com/tags/python/">python</a>
+    
+    <a href="https://skywind3000.com/tags/shell/">shell</a>
+    
+    <a href="https://skywind3000.com/tags/vim/">vim</a>
+    
+    <a href="https://skywind3000.com/tags/win32/">win32</a>
+    
+    <a href="https://skywind3000.com/tags/%E4%BC%98%E5%8C%96/">优化</a>
+    
+    <a href="https://skywind3000.com/tags/%E5%90%8C%E6%AD%A5/">同步</a>
+    
+    <a href="https://skywind3000.com/tags/%E5%9B%BE%E5%BD%A2/">图形</a>
+    
+    <a href="https://skywind3000.com/tags/%E5%B0%8F%E6%B8%B8%E6%88%8F/">小游戏</a>
+    
+    <a href="https://skywind3000.com/tags/%E6%8A%97%E9%94%AF%E9%BD%BF/">抗锯齿</a>
+    
+    <a href="https://skywind3000.com/tags/%E6%B1%87%E7%BC%96/">汇编</a>
+    
+    <a href="https://skywind3000.com/tags/%E6%BC%94%E7%A4%BA/">演示</a>
+    
+    <a href="https://skywind3000.com/tags/%E7%9F%A2%E9%87%8F%E4%BD%9C%E5%9B%BE/">矢量作图</a>
+    
+    <a href="https://skywind3000.com/tags/%E7%9F%A5%E4%B9%8E/">知乎</a>
+    
+    <a href="https://skywind3000.com/tags/%E7%AD%96%E5%88%92/">策划</a>
+    
+    <a href="https://skywind3000.com/tags/%E7%AE%97%E6%B3%95/">算法</a>
+    
+    <a href="https://skywind3000.com/tags/%E7%B3%BB%E7%BB%9F%E5%BC%80%E5%8F%91/">系统开发</a>
+    
+    <a href="https://skywind3000.com/tags/%E7%BD%91%E7%BB%9C/">网络</a>
+    
+    <a href="https://skywind3000.com/tags/%E7%BF%BB%E8%AF%91/">翻译</a>
+    
+    <a href="https://skywind3000.com/tags/%E8%99%9A%E6%8B%9F%E6%9C%BA/">虚拟机</a>
+    
+    <a href="https://skywind3000.com/tags/%E8%A7%86%E9%A2%91/">视频</a>
+    
+    <a href="https://skywind3000.com/tags/%E8%AE%B2%E4%B9%89/">讲义</a>
+    
+    <a href="https://skywind3000.com/tags/%E8%AF%8D%E6%B3%95%E5%88%86%E6%9E%90/">词法分析</a>
+    
+    <a href="https://skywind3000.com/tags/%E8%AF%AD%E6%B3%95%E5%88%86%E6%9E%90/">语法分析</a>
+    
+    <a href="https://skywind3000.com/tags/%E8%B6%B3%E8%BF%B9/">足迹</a>
+    
+    <a href="https://skywind3000.com/tags/%E9%97%B2%E8%81%8A/">闲聊</a>
+    
+    <a href="https://skywind3000.com/tags/%E9%9A%8F%E7%AC%94/">随笔</a>
+    
+</div>
+    </section>
+
+    
+
+    <section class="widget">
+        <h3 class="widget-title">其它</h3>
+        <ul class="widget-list">
+            <li><a href="https://skywind3000.com/index.xml">文章 RSS</a></li>
+        </ul>
+    </section>
+</div>
+        </div>
+    </div>
+</div>
+<footer id="footer">
+    <div class="container">
+        &copy; 2019 <a href="https://skywind3000.com/">Skywind Inside By skywind</a>.
+        Powered by <a rel="nofollow noreferer noopener" href="https://gohugo.io" target="_blank">Hugo</a>.
+        <a href="https://www.flysnow.org/" target="_blank">Theme</a> based on <a href="https://github.com/rujews/maupassant-hugo" target="_blank">maupassant</a>.
+        
+    </div>
+</footer>
+
+
+<a id="rocket" href="#top"></a>
+<script type="text/javascript" src="/js/totop.js?v=0.0.0" async=""></script>
+
+
+
+<script type="text/javascript" src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js" async></script>
+
+
+
+
+
+</body>
+</html>

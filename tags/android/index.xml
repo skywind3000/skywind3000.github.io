@@ -1,0 +1,83 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes" ?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>Android on Skywind Inside</title>
+    <link>https://skywind3000.com/tags/android/</link>
+    <description>Recent content in Android on Skywind Inside</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>zh-cn</language>
+    <lastBuildDate>Tue, 25 Aug 2015 10:54:21 +0000</lastBuildDate>
+    
+	<atom:link href="https://skywind3000.com/tags/android/index.xml" rel="self" type="application/rss+xml" />
+    
+    
+    <item>
+      <title>Android Arm 编译优化选项评测</title>
+      <link>https://skywind3000.com/blog/archives/1550/</link>
+      <pubDate>Tue, 25 Aug 2015 10:54:21 +0000</pubDate>
+      
+      <guid>https://skywind3000.com/blog/archives/1550/</guid>
+      <description>用不同测试用例具体测试 softfp, armv7-a, cortax 等优化选项，看选项不同性能差别多大。首先设计下面几个测试用例，包含字符串处理、复杂逻辑、整数运算、浮点运算几个方面：
+ compress：进行 LZO/LZW 大规模压缩，测试搜索，字符串匹配，复杂分支等性能 resample：进行一系列整数 DSP 运算，包括 resample 和 fir low pass int add：一亿次整数加法 int mul：一亿次整数乘法 int div：一亿次整数除法 float add：一亿次浮点加法 float mul：一亿次浮点乘法 float div：一亿次浮点除法 const div：一亿次整数除以常数255 matrix：若干次矩阵乘法运算，同时考察浮点数乘法加法 normalize：若干次矢量归一化运算，同时考察浮点数乘法，除法，加法，sqrt  其次对安卓的几个 gcc 的编译选项进行分别测试：
+ -mfloat-abi=softfp，如果有硬件浮点处理器将会使用硬件，如果没有会转移到软件模拟 -march=armv7-a，生成适合 armv7a 架构的代码 -mtune=cortex-9，代码生成按照 cortex-9 进行调优 –mfpu=neon，使用 neon 进行硬件浮点运算，决定 softfp 的硬件方式到底用这个 -mfpu=vfp，使用 vfp 进行硬件浮点运算，决定 softfp 的硬件方式用这个 测试硬件：
+ 桌面电脑：Intel® Core™ i5-2520M CPU @ 2.50GHz
+ 安卓手机：三星，双核 CPU 1.73GHz armv7-a cortex-9
+  结果如下：
+ Desktop PC -O2:
+compress : 120 ms
+resample : 290 ms
+int add : 78 ms
+int mul : 86 ms
+int div : 459 ms
+float add: 76 ms
+float mul: 69 ms
+float div: 797 ms
+const div: 190 ms
+matrix : 166 ms
+normalize: 177 ms
+samsung -O2:
+compress : 577 ms
+resample : 576 ms
+int add : 291 ms
+int mul : 332 ms
+int div : 2267 ms
+float add: 3080 ms
+float mul: 1792 ms
+float div: 7103 ms
+const div: 779 ms
+matrix : 9280 ms
+normalize: 5721 ms
+samsung -O2, -mfloat-abi=softfp:
+compress : 540 ms
+resample : 558 ms
+int add : 291 ms
+int mul : 333 ms
+int div : 2268 ms
+float add: 266 ms</description>
+    </item>
+    
+    <item>
+      <title>Android 命令行调试 C/C&#43;&#43;  程序</title>
+      <link>https://skywind3000.com/blog/archives/1545/</link>
+      <pubDate>Tue, 25 Aug 2015 06:24:36 +0000</pubDate>
+      
+      <guid>https://skywind3000.com/blog/archives/1545/</guid>
+      <description>传统方式调试 NDK 开发的程序比较麻烦，先要编译成 JNI，又要导出 java接口，还要再写一个 java 工程，改一个地方又要连续改几处，这样效率是很低的。最频繁使用的关键工作路径（编译/调试环节）如果能极致简化，那么可以带来开发效率的成倍提升。其实安卓官方是提供了命令行调试方法的，将你需要调试的 C代码用 NDK直接编译成可执行，然后到设备上执行：
+使用 NDK 导出独立工具链，方便以后使用，在 cygwin 下面，将 $NDK 环境变量代表的路径设置好，然后：
+ cd $NDK
+chmod -R 755 *
+build/tools/make-standalone-toolchain.sh &amp;ndash;ndk-dir=$NDK &amp;ndash;platform=android-9 &amp;ndash;arch=arm &amp;ndash;install-dir=/&amp;hellip;../path-to-android-9
+ 这样就导出了一套针对 API9 的独立工具链（包含 gcc, ld, ndk必要文件），以后方便使用，比如导出到 d:\android-9下面，那么以后可以跳过 cygwin，直接编译我们的 Hello World：
+ d:\android-9\bin\arm-linux-androideabi-gcc.exe hello.c –o hello
+ 于是你可以在命令行下直接开发 Android 的非 GUI 应用程序了。
+调试也很简单，用 adb push 上传到 /data/local/tmp 下面，并且设置可执行模式为 755：
+ adb push hello /data/local/tmp/hello
+adb shell chmod 755 /data/local/tmp/hello
+ 运行就是直接：
+ adb shell /data/local/tmp/hello
+ 不要传到其他目录，比如 /sdcard，这些目录 mount时有 NOEXEC 权限，不能给文件增加可执行权限，而 /data/local/tmp 就是留给大家调试命令行用的，并且不需要 root 权限。
+可以编写一些脚本，每次编译好自动上传，配置到你的 Editplus/Vim/Npp 中，一键编译上传，一键运行。比起以前调试下 C代码还需要写一大堆 jni 和 java 的方式，效率高极了。</description>
+    </item>
+    
+  </channel>
+</rss>

@@ -1,0 +1,691 @@
+<!doctype html>
+<html lang="zh-cn">
+<head>
+
+    <meta charset="utf-8">
+    <meta name="generator" content="Hugo 0.54.0" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <title>Skywind Inside | 写自己的代码，让别人猜去吧！</title>
+    <meta property="og:title" content="Skywind Inside | 写自己的代码，让别人猜去吧！">
+    <meta property="og:type" content="website">
+    <meta name="Keywords" content="golang,go语言,go语言笔记,飞雪无情,java,android,博客,项目管理,python,软件架构,公众号,小程序">
+    <meta name="description" content="Putty 本无树，MinGW 亦非台">
+    <meta property="og:url" content="https://skywind3000.com/">
+    <link rel="shortcut icon" href="/favicon.ico" type="image/x-icon">
+
+    <link rel="stylesheet" href="/css/normalize.css">
+    
+    <link rel="stylesheet" href="/css/style.css">
+    <link rel="alternate" type="application/rss+xml+xml" href="https://skywind3000.com/index.xml" title="Skywind Inside" />
+    <script type="text/javascript" src="//cdn.bootcss.com/jquery/3.2.1/jquery.min.js"></script>
+
+    
+
+
+    
+    
+</head>
+
+
+<body>
+<header id="header" class="clearfix">
+    <div class="container">
+        <div class="col-group">
+            <div class="site-name ">
+                
+                    <h1>
+                        <a id="logo" href="https://skywind3000.com/">
+                            Skywind Inside
+                        </a>
+                    </h1>
+                
+                <p class="description">写自己的代码，让别人猜去吧！</p>
+            </div>
+            <div>
+                <nav id="nav-menu" class="clearfix">
+                    <a class="current" href="https://skywind3000.com/">首页</a>
+                    
+                    <a  href="https://skywind3000.com/categories/" title="文章分类">文章分类</a>
+                    
+                    <a  href="https://skywind3000.com/tags/" title="标签">标签</a>
+                    
+                    <a  href="https://skywind3000.com/archives/" title="归档">归档</a>
+                    
+                    <a  href="https://skywind3000.com/about/" title="关于">关于</a>
+                    
+                </nav>
+            </div>
+        </div>
+    </div>
+</header>
+
+
+<div id="body">
+    <div class="container">
+        <div class="col-group">
+
+            <div class="col-8" id="main">
+                <div class="res-cons">
+                    
+                        <article class="post">
+                            <header>
+                                <h1 class="post-title">
+                                    <a href="https://skywind3000.com/blog/archives/971/" title="生成类苹果图标" >生成类苹果图标</a>
+                                </h1>
+                            </header>
+                            <date class="post-meta meta-date">
+                                2011年6月25日
+                            </date>
+                            
+                            <div class="post-meta">
+                                <span>|</span>
+                                
+                                <span class="meta-category"><a href="https://skywind3000.com/categories/%E5%9B%BE%E5%BD%A2%E7%BC%96%E7%A8%8B">图形编程</a></span>
+                                
+                            </div>
+                            
+                            <div class="post-content">
+                                修改了半年多的业余作品pixellib，基本稳定了。下面是用它生成的一些类似苹果系统的图标：……
+                            </div>
+                            <p class="readmore"><a href="https://skywind3000.com/blog/archives/971/">阅读全文</a></p>
+                        </article>
+                    
+                        <article class="post">
+                            <header>
+                                <h1 class="post-title">
+                                    <a href="https://skywind3000.com/blog/archives/962/" title="参考ZeroMQ改进服务器" >参考ZeroMQ改进服务器</a>
+                                </h1>
+                            </header>
+                            <date class="post-meta meta-date">
+                                2011年6月25日
+                            </date>
+                            
+                            <div class="post-meta">
+                                <span>|</span>
+                                
+                                <span class="meta-category"><a href="https://skywind3000.com/categories/%E7%BD%91%E7%BB%9C%E7%BC%96%E7%A8%8B">网络编程</a></span>
+                                
+                            </div>
+                            
+                            <div class="post-content">
+                                今天参考 ZeroMQ的观点为我们的网络模块增加了一个“订阅模式”，及客户端包头用四字节表示，低24位为长度，高八位为“消息分类”。后端连接网络层的若干“频道”可以根据自己的喜好订阅“分类消息”，那么客户端发送该分类消息到网络层的时候，将会被抄送到订阅过该分类的频道。每个频道还可以订阅若干系统消息，比如连接开始、断开、时钟等等。
+我们的服务器自2004年底到现在，一直是网络和逻辑分离在不同的进程（主机）中间，网络模块可以连接多个提供服务的“频道”，只是配合休闲游戏的模型，当前只有一个频道可以和特定玩家进行交互。不过其基于多频道的模型使得这次改进很容易，改了三个小时，又跑了几个小时的测试用例，基本通过。
+以后交易，聊天，逻辑等，都可以分布在不同的频道里面同时为玩家提供服务了。……
+                            </div>
+                            <p class="readmore"><a href="https://skywind3000.com/blog/archives/962/">阅读全文</a></p>
+                        </article>
+                    
+                        <article class="post">
+                            <header>
+                                <h1 class="post-title">
+                                    <a href="https://skywind3000.com/blog/archives/732/" title="[讲稿] ActionScript3 入门讲稿" >[讲稿] ActionScript3 入门讲稿</a>
+                                </h1>
+                            </header>
+                            <date class="post-meta meta-date">
+                                2011年4月22日
+                            </date>
+                            
+                            <div class="post-meta">
+                                <span>|</span>
+                                
+                                <span class="meta-category"><a href="https://skywind3000.com/categories/%E5%9B%BE%E5%BD%A2%E7%BC%96%E7%A8%8B">图形编程</a></span>
+                                
+                                <span class="meta-category"><a href="https://skywind3000.com/categories/%E6%B8%B8%E6%88%8F%E5%BC%80%E5%8F%91">游戏开发</a></span>
+                                
+                            </div>
+                            
+                            <div class="post-content">
+                                若干年前学习 ActionScript的记录，下载地址：
+http://www.skywind.me/mw/images/3/3c/ActionScript3.rar……
+                            </div>
+                            <p class="readmore"><a href="https://skywind3000.com/blog/archives/732/">阅读全文</a></p>
+                        </article>
+                    
+                        <article class="post">
+                            <header>
+                                <h1 class="post-title">
+                                    <a href="https://skywind3000.com/blog/archives/721/" title="[转载] Why I Love Python – Thinking in C&#43;&#43; 作者用Python后的想法" >[转载] Why I Love Python – Thinking in C&#43;&#43; 作者用Python后的想法</a>
+                                </h1>
+                            </header>
+                            <date class="post-meta meta-date">
+                                2011年4月21日
+                            </date>
+                            
+                            <div class="post-meta">
+                                <span>|</span>
+                                
+                                <span class="meta-category"><a href="https://skywind3000.com/categories/%E7%BC%96%E7%A8%8B%E6%8A%80%E6%9C%AF">编程技术</a></span>
+                                
+                            </div>
+                            
+                            <div class="post-content">
+                                他横向对比了: Perl, C++, Java, Python，然后给出了10大使用Python的理由，比较经典。
+下载地址：http://www.skywind.me/mw/images/c/c2/Why_I_Love_Python.rar……
+                            </div>
+                            <p class="readmore"><a href="https://skywind3000.com/blog/archives/721/">阅读全文</a></p>
+                        </article>
+                    
+                        <article class="post">
+                            <header>
+                                <h1 class="post-title">
+                                    <a href="https://skywind3000.com/blog/archives/718/" title="[讲稿] CGDC2009 演讲：游戏峡谷地图自动生成" >[讲稿] CGDC2009 演讲：游戏峡谷地图自动生成</a>
+                                </h1>
+                            </header>
+                            <date class="post-meta meta-date">
+                                2011年4月21日
+                            </date>
+                            
+                            <div class="post-meta">
+                                <span>|</span>
+                                
+                                <span class="meta-category"><a href="https://skywind3000.com/categories/%E5%9B%BE%E5%BD%A2%E7%BC%96%E7%A8%8B">图形编程</a></span>
+                                
+                                <span class="meta-category"><a href="https://skywind3000.com/categories/%E6%B8%B8%E6%88%8F%E5%BC%80%E5%8F%91">游戏开发</a></span>
+                                
+                            </div>
+                            
+                            <div class="post-content">
+                                2009年在上海 CGDC的演讲稿《游戏地图自动生成》，该算法主要用来生成山地峡谷地图。……
+                            </div>
+                            <p class="readmore"><a href="https://skywind3000.com/blog/archives/718/">阅读全文</a></p>
+                        </article>
+                    
+                        <article class="post">
+                            <header>
+                                <h1 class="post-title">
+                                    <a href="https://skywind3000.com/blog/archives/705/" title="[转载] 《论语》魔兽版" >[转载] 《论语》魔兽版</a>
+                                </h1>
+                            </header>
+                            <date class="post-meta meta-date">
+                                2011年4月20日
+                            </date>
+                            
+                            <div class="post-meta">
+                                <span>|</span>
+                                
+                                <span class="meta-category"><a href="https://skywind3000.com/categories/%E9%9A%8F%E7%AC%94">随笔</a></span>
+                                
+                            </div>
+                            
+                            <div class="post-content">
+                                曾子曰：吾日三省吾身。
+曾子墨说：我一天要检查三次装备、药水和道具
+曾子曰：君子思不出其位。
+曾子墨说：牧师专心加血，不要乱跑。
+子曰：父母在，不远游。游必有方。
+孔子说：奶妈奶爸在后面，战士不要跑太远，即使要走也是带着盾牌走。
+子曰：以约失之者，鲜矣。
+孔子说：因为公会活动而下副本跑掉，听着都新鲜。
+子曰：德不孤，必有邻。
+孔子说：德鲁依单干不好，必须有同伴。
+子曰：吾未见刚者。
+孔子说：我连一件甲板都没有。
+子曰：兴于诗，立于礼。成于乐。
+孔子说：联盟的优点在于有爱唱诗的牧师英雄和彬彬有礼的骑士，大功告成自然众人高兴了。
+子曰：吾自卫反鲁，然后乐正。
+孔子说：有个德鲁依在野外偷袭我，我快乐的原因是因为我打跑了他。
+子曰：吾未见好德如好色者也。
+孔子说：我还从来没见过像色狼一样喜欢德鲁伊的人。
+子曰：后生可畏，焉知来者之不如今也？四十、五十而无闻焉，斯亦不足畏也已。
+子曰：新来的玩家似乎很牛b，你怎么知道他不是用钱买的？有的战士四五十级还不会嘲讽，下副本根本不鸟他。
+子曰：不患人之不己知，患其不能也。
+孔子说：我不怕你看我的装备，就怕你近不了身。
+子曰：由！知德者鲜矣。
+孔子说：哟，知道怎么善用德鲁依很少。
+子曰：工欲善其事，必先利其器。
+孔子说：你想要去燃烧，还不快去找把像样的武器。
+子曰：性相近也，习相远也。
+孔子说：职业相同，天赋配点会相差很远。
+子曰：唯上知与下愚不移。
+孔子说：只要超级高手和初级菜鸟，pk的时候才不怎么动。
+子曰：“学而时习之，不亦说乎？有朋自远方来，不亦乐乎？”
+孔子说：玩魔兽要多学习，这还用说么？有部落的朋友来较量武艺，不也是很开心的事么？
+子曰：“吾十有五而志于学，三十而立，四十而不惑，五十而知天命，六十而耳顺，七十而从心所欲不逾矩。”
+孔子说：我15级了还想着继续学习，30级开始出去闯，40级可还是什么都没捞到，50级才学会复活术，60级等了大半年，70级终于可以随心所欲去燃烧了。
+子曰：“攻乎异端，斯害也已。”
+孔子说：副本里面乱引怪，这会害了自己的。
+孔子谓季氏，“八佾舞于庭，是可忍，孰不可忍也！”
+孔子对季氏 “对方八个60级都跑到你们新手区杀人了，这都可以忍受，还有什么不能忍受呢”
+子曰：“苟志于仁矣，无恶也。”
+孔子说：喜欢外形美观的玩家一般喜欢联盟，不喜欢部落
+子曰：“唯仁者能好人，能恶人。”
+孔子说：只有追求游戏技术的高手，才既用联盟，又用部落
+子曰：“朝闻道，夕死可矣。”
+孔子说：“想45分钟dk就要知道路，迟了人质就要死了”
+子曰：“德之不修，学之不讲，闻义不能徙，不善不能改，是吾忧也。”
+孔子说：德鲁依肉搏不强，魔法一般，看到有好的野兵不能做宠物，玩了这么久又不能换职业，我真郁闷啊
+子曰：“回也非助我者也，于吾言无所不说。”
+老师说：被别人逼着无敌加回城，其实我一点也不爽。
+季路问事鬼神。子曰：“未能事人，焉能事鬼？”曰：“敢问死。”曰：“未知生，焉知死？”
+季路来问怎么玩鬼族。老师说：“人族都没玩好玩什么鬼？”季路又问：“怎么打败对方？”老师说：“怎么保命都不知道，学什么打败别人？”
+子曰: 二三子以我为隐乎 吾无隐乎尔
+孔子说: 你们以为我要隐身么，对付你们两三个菜鸟还用隐身？
+子曰：邦有道，危言危行。
+孔子说：下副本有规则，不要刷屏，小心行动
+子在川上，曰：“逝者如斯夫！不舍昼夜。
+孔子边上厕所边说：时间过得好快，排队排了一天一夜还进不去
+子曰：朽木不可雕也。
+孔子说：拿着这个烂盾牌还想做MT？
+老子：道可道，非常道
+老子说：被玩家广泛传颂的攻略，未必是好攻略
+老子：祸兮福之所以，福兮祸之所伏
+老子说：被敌人杀了未必就是坏事，杀了一个敌人未必是好事，说不定有更多的危险在潜伏着
+古谚：匹夫无罪，怀壁其罪
+古代谚语说：怪本来是没有罪过的，就是因为他们掉好装备，才招徕杀身之祸
+左传：欲加之罪，何患无词
+左转说：想要给一个怪加个罪名让玩家推，不会怕找不到罪名
+子曰：“君子和而不同，小人同而不和。”
+孔子说：君子就算不组队也会互相帮助，小人就算组队也不尽心配合
+子曰：“入太庙，每事问。”
+孔子说：进入黑暗神庙这种高级的副本，每一件不懂的事情都要请教团员。
+子曰：逝者如斯夫，不舍昼夜
+孔子说：点卡流失的好快，昼夜不停
+子曰：朝闻道，夕死可以
+孔子说：学会了更高级的法术，哪怕马上被部落杀，也很值
+子曰，三人行，必有我师！
+子曰：三个人组队，必须要有法师，或牧师！……
+                            </div>
+                            <p class="readmore"><a href="https://skywind3000.com/blog/archives/705/">阅读全文</a></p>
+                        </article>
+                    
+                        <article class="post">
+                            <header>
+                                <h1 class="post-title">
+                                    <a href="https://skywind3000.com/blog/archives/427/" title="Tiled Map Editor 使用说明" >Tiled Map Editor 使用说明</a>
+                                </h1>
+                            </header>
+                            <date class="post-meta meta-date">
+                                2011年4月13日
+                            </date>
+                            
+                            <div class="post-meta">
+                                <span>|</span>
+                                
+                                <span class="meta-category"><a href="https://skywind3000.com/categories/%E6%B8%B8%E6%88%8F%E5%BC%80%E5%8F%91">游戏开发</a></span>
+                                
+                            </div>
+                            
+                            <div class="post-content">
+                                1. 首先下载 Tiled Map Editor： 地图编辑器：http://www.skywind.me/mw/images/8/81/TiledMapEditor.7z 资源图片集：http://www.skywind.me/mw/images/0/09/Server_in_12h_images.7z 解压，然后下载资源图片解压，保存在examples目录下面 （点击Read more 阅读全文） 我们最终将编辑下图的地图，并用Python读出来： 2. 图块命名如下：
+tile01.png
+tile02.png
+tile03.png
+3. 运行 tiled.exe，选择：文件-&gt;新文件： 按照这个对话框填写，然后“确定” 4. 打开资源管理器将文件“Tile01.png” 拖入上图右下角“图块”面板： 设置宽度，高度为32，边距，间距为0，然后确定。 这时tile01.png已经被按照刚才的规则切割好了，放在右下角的面板中。点击工具栏上的“图章刷”或者按键盘B就可以进入刷子绘制模式了，然后从右下角选择你需要绘制的图块，就可以在中间区域绘制了。 如法炮制，我们再将tile02.png拖入到右下角的图块面板： 右下角就有两个图块选项卡了，一个代表刚才的tile01.png, 一个是现在的tile02.png。接着选择一个草的图块，并在工具栏上选择“填充”（或者按F），将背景全部刷成草地： 5. 图块一次性可以选择很多块（用鼠标拖着，我们先简单的画一些沙子地形上去，还有池塘： 接着到主菜单“图层”选择“添加块层”，右上角的“图层”面板就多了一个图层2： 我们选中“块层2”以后就可以在这个图层上编辑了，不会影响到刚才的图层，接着在这个图层上添加树木和房屋，拖入tile3.png以后在“图块”面板拖动鼠标整体选择房屋图块： 注意房屋图块在tile03的右下角，需要再“图块”面板的“tile03”这个标签下，将滚动条拖到右下，接着在&rdquo;块层2”上建房顶： 在右上角选择块层1，然后右下角选择对应图块给房子建墙： 然后接着编辑“块层2”，在墙上绘制门窗，然后同样的方法绘制另外一间木屋： 6. 继续绘制地图，添加希望添加的内容： 然后新建一个图块层4，用来表示可以走不可以走的地方，随便选一个颜色明显的图块，在图块层4上表示不能走的区域： 编辑好不可走的区域后，如果不想它影响画面，可以将右上“图块层4”前面的勾去掉，就不显示了。 7. 最终我们要导出成python可以识别的格式：选择主菜单-&gt;编辑-&gt;参数： 将“另存为数据层”选择为“CSV”，然后关闭。 这时候用“文件”-“保存”功能保存成“game1.tmx” 8. 用文本编辑器，打开game1.tmx文件，可以看到如下内容： 呵呵，一看就明白，就是CSV，前面记录了右下角“图块”的资源文件以及切割方式，ColorKey等，后面每个图层都用CSV格式来记录了里面的数据，0代表没有，1代表tile01.png的左上角第一个图块，2代表tile01.png左上角左数第二个图块： tile01被按照32x32的大小切割成了20x28个小图块。按照行优先存储，在tile01左上角的第一个图块编号为1，往右一个图块是2，再往右就是3，第二行左数第一个图块就是编号21。 在game1.tmx的如下部分：
+ &lt;tileset firstgid=&quot;1&quot; name=&quot;Tile01&quot; tilewidth=&quot;32&quot; tileheight=&quot;32&quot;&gt; &lt;image source=&quot;Tile01.PNG&quot; trans=&quot;ff00ff&quot; width=&quot;640&quot; height=&quot;896&quot;/&gt; &lt;/tileset&gt; &lt;tileset firstgid=&quot;561&quot; name=&quot;Tile02&quot; tilewidth=&quot;32&quot; tileheight=&quot;32&quot;&gt; &lt;image source=&quot;Tile02.PNG&quot; trans=&quot;ff00ff&quot; width=&quot;640&quot; height=&quot;960&quot;/&gt; &lt;/tileset&gt; &lt;tileset firstgid=&quot;1161&quot; name=&quot;Tile03&quot; tilewidth=&quot;32&quot; tileheight=&quot;32&quot;&gt; &lt;image source=&quot;Tile03.PNG&quot; trans=&quot;ff00ff&quot; width=&quot;640&quot; height=&quot;480&quot;/&gt; &lt;/tileset&gt;  其中 firstgid代表这个资源文件的左上角第一个图块的开始编号，如Tile02图块，它左上角第一个图块编号就是561.非常清爽明白的定义。 好了，有了这些，就可以在python中方便的解析了。……
+                            </div>
+                            <p class="readmore"><a href="https://skywind3000.com/blog/archives/427/">阅读全文</a></p>
+                        </article>
+                    
+                        <article class="post">
+                            <header>
+                                <h1 class="post-title">
+                                    <a href="https://skywind3000.com/blog/archives/353/" title="Tiled Map Editor" >Tiled Map Editor</a>
+                                </h1>
+                            </header>
+                            <date class="post-meta meta-date">
+                                2011年4月12日
+                            </date>
+                            
+                            <div class="post-meta">
+                                <span>|</span>
+                                
+                                <span class="meta-category"><a href="https://skywind3000.com/categories/%E6%B8%B8%E6%88%8F%E5%BC%80%E5%8F%91">游戏开发</a></span>
+                                
+                            </div>
+                            
+                            <div class="post-content">
+                                开源二维图块地图编辑器： 点击more阅读全文： http://www.skywind.me/mw/images/8/81/TiledMapEditor.7z 主页： Pygame 读取器： http://www.skywind.me/mw/images/4/4f/Tiledtmxloader.7z 主页： http://code.google.com/p/pytmxloader/
+http://www.freewarefiles.com/screenshot.php?programid=64372……
+                            </div>
+                            <p class="readmore"><a href="https://skywind3000.com/blog/archives/353/">阅读全文</a></p>
+                        </article>
+                    
+                        <article class="post">
+                            <header>
+                                <h1 class="post-title">
+                                    <a href="https://skywind3000.com/blog/archives/3/" title="今天要上课" >今天要上课</a>
+                                </h1>
+                            </header>
+                            <date class="post-meta meta-date">
+                                2011年4月9日
+                            </date>
+                            
+                            <div class="post-meta">
+                                <span>|</span>
+                                
+                                <span class="meta-category"><a href="https://skywind3000.com/categories/%E6%9C%AA%E5%88%86%E7%B1%BB">未分类</a></span>
+                                
+                            </div>
+                            
+                            <div class="post-content">
+                                周日周一要参加《绩效管理》培训，周二要给新人讲《服务端开发》，现在新版本的讲义还没有改好，累呀。……
+                            </div>
+                            <p class="readmore"><a href="https://skywind3000.com/blog/archives/3/">阅读全文</a></p>
+                        </article>
+                    
+                        <article class="post">
+                            <header>
+                                <h1 class="post-title">
+                                    <a href="https://skywind3000.com/blog/archives/199/" title="断点-C语言" >断点-C语言</a>
+                                </h1>
+                            </header>
+                            <date class="post-meta meta-date">
+                                2011年4月9日
+                            </date>
+                            
+                            <div class="post-meta">
+                                <span>|</span>
+                                
+                                <span class="meta-category"><a href="https://skywind3000.com/categories/%E5%A4%A7%E6%B5%AA%E6%B7%98%E6%B2%99">大浪淘沙</a></span>
+                                
+                                <span class="meta-category"><a href="https://skywind3000.com/categories/%E9%9A%8F%E7%AC%94">随笔</a></span>
+                                
+                            </div>
+                            
+                            <div class="post-content">
+                                看着那密密麻麻的反汇编，连眼睛红了都没有发现， 听到你说错误很难重现，人数还一点一点再往下减； 我转过我的脸，不和你争辩， 未检测边界肯定，非常的危险； 发誓从今天，不再用 C语言， 我真想改用脚本重构好几遍！ 我点上一根烟，在这个需求善变的年代， 再好的程序员也不能幸免； 打开的源文件，设满很多断点， 只想在睡前让程序能够，撑到明天。……
+                            </div>
+                            <p class="readmore"><a href="https://skywind3000.com/blog/archives/199/">阅读全文</a></p>
+                        </article>
+                    
+
+                    
+
+
+<ol class="page-navigator">
+    
+    <li class="prev">
+        <a href="https://skywind3000.com/page/8/">上一页</a>
+    </li>
+    
+
+    
+    <li >
+        <a href="https://skywind3000.com/">1</a>
+    </li>
+    
+    <li >
+        <a href="https://skywind3000.com/page/2/">2</a>
+    </li>
+    
+    <li >
+        <a href="https://skywind3000.com/page/3/">3</a>
+    </li>
+    
+    <li >
+        <a href="https://skywind3000.com/page/4/">4</a>
+    </li>
+    
+    <li >
+        <a href="https://skywind3000.com/page/5/">5</a>
+    </li>
+    
+    <li >
+        <a href="https://skywind3000.com/page/6/">6</a>
+    </li>
+    
+    <li >
+        <a href="https://skywind3000.com/page/7/">7</a>
+    </li>
+    
+    <li >
+        <a href="https://skywind3000.com/page/8/">8</a>
+    </li>
+    
+    <li  class="current">
+        <a href="https://skywind3000.com/page/9/">9</a>
+    </li>
+    
+    <li >
+        <a href="https://skywind3000.com/page/10/">10</a>
+    </li>
+    
+    <li >
+        <a href="https://skywind3000.com/page/11/">11</a>
+    </li>
+    
+    <li >
+        <a href="https://skywind3000.com/page/12/">12</a>
+    </li>
+    
+    <li >
+        <a href="https://skywind3000.com/page/13/">13</a>
+    </li>
+    
+    <li >
+        <a href="https://skywind3000.com/page/14/">14</a>
+    </li>
+    
+
+    
+    <li class="next">
+        <a href="https://skywind3000.com/page/10/">下一页</a>
+    </li>
+    
+</ol>
+
+
+
+                </div>
+            </div>
+
+            <div id="secondary">
+    <section class="widget">
+        <form id="search" action="//www.google.com/search" method="get" accept-charset="utf-8" target="_blank" _lpchecked="1">
+      
+      <input type="text" name="q" maxlength="20" placeholder="Search">
+      <input type="hidden" name="sitesearch" value="https://skywind3000.com/">
+      <button type="submit" class="submit icon-search"></button>
+</form>
+    </section>
+    
+    <section class="widget">
+        <h3 class="widget-title">最近文章</h3>
+<ul class="widget-list">
+    
+    <li>
+        <a href="https://skywind3000.com/posts/2019/shell_init_sh/" title="提高效率从编写 init.sh 开始">提高效率从编写 init.sh 开始</a>
+    </li>
+    
+    <li>
+        <a href="https://skywind3000.com/posts/intro/" title="个人主页搬迁到新系统">个人主页搬迁到新系统</a>
+    </li>
+    
+    <li>
+        <a href="https://skywind3000.com/blog/archives/2250/" title="如何实现和优化 SVM（支持向量机）？">如何实现和优化 SVM（支持向量机）？</a>
+    </li>
+    
+    <li>
+        <a href="https://skywind3000.com/blog/archives/2229/" title="别让 cd 浪费你的时间">别让 cd 浪费你的时间</a>
+    </li>
+    
+    <li>
+        <a href="https://skywind3000.com/blog/archives/2193/" title="VimScript 五分钟入门（翻译）">VimScript 五分钟入门（翻译）</a>
+    </li>
+    
+    <li>
+        <a href="https://skywind3000.com/blog/archives/2173/" title="Windows 10 - 1803 更新又给我出幺蛾子">Windows 10 - 1803 更新又给我出幺蛾子</a>
+    </li>
+    
+    <li>
+        <a href="https://skywind3000.com/blog/archives/2084/" title="Vim 8 下 C/C&#43;&#43; 开发环境搭建">Vim 8 下 C/C&#43;&#43; 开发环境搭建</a>
+    </li>
+    
+    <li>
+        <a href="https://skywind3000.com/blog/archives/2071/" title="Bash 中文速查表/Cheatsheet （全网最全）">Bash 中文速查表/Cheatsheet （全网最全）</a>
+    </li>
+    
+    <li>
+        <a href="https://skywind3000.com/blog/archives/2060/" title="为什么说 zsh 是 shell 中的极品？">为什么说 zsh 是 shell 中的极品？</a>
+    </li>
+    
+    <li>
+        <a href="https://skywind3000.com/blog/archives/2051/" title="Vim 中文速查表/Cheatsheet（全网最完善）">Vim 中文速查表/Cheatsheet（全网最完善）</a>
+    </li>
+    
+</ul>
+    </section>
+
+    
+
+    <section class="widget">
+        <h3 class="widget-title">分类</h3>
+<ul class="widget-list">
+    
+    <li>
+        <a href="https://skywind3000.com/categories/%E4%BA%BA%E5%B7%A5%E6%99%BA%E8%83%BD/">人工智能(8)</a>
+    </li>
+    
+    <li>
+        <a href="https://skywind3000.com/categories/%E5%9B%BE%E5%BD%A2%E7%BC%96%E7%A8%8B/">图形编程(20)</a>
+    </li>
+    
+    <li>
+        <a href="https://skywind3000.com/categories/%E5%A4%A7%E6%B5%AA%E6%B7%98%E6%B2%99/">大浪淘沙(12)</a>
+    </li>
+    
+    <li>
+        <a href="https://skywind3000.com/categories/%E5%BC%80%E6%BA%90%E9%A1%B9%E7%9B%AE/">开源项目(8)</a>
+    </li>
+    
+    <li>
+        <a href="https://skywind3000.com/categories/%E6%9C%AA%E5%88%86%E7%B1%BB/">未分类(6)</a>
+    </li>
+    
+    <li>
+        <a href="https://skywind3000.com/categories/%E6%B8%B8%E6%88%8F%E5%BC%80%E5%8F%91/">游戏开发(27)</a>
+    </li>
+    
+    <li>
+        <a href="https://skywind3000.com/categories/%E7%BC%96%E7%A8%8B%E6%8A%80%E6%9C%AF/">编程技术(45)</a>
+    </li>
+    
+    <li>
+        <a href="https://skywind3000.com/categories/%E7%BC%96%E8%AF%91%E6%8A%80%E6%9C%AF/">编译技术(6)</a>
+    </li>
+    
+    <li>
+        <a href="https://skywind3000.com/categories/%E7%BD%91%E7%BB%9C%E7%BC%96%E7%A8%8B/">网络编程(14)</a>
+    </li>
+    
+    <li>
+        <a href="https://skywind3000.com/categories/%E9%9A%8F%E7%AC%94/">随笔(57)</a>
+    </li>
+    
+</ul>
+    </section>
+
+    <section class="widget">
+        <h3 class="widget-title">标签</h3>
+<div class="tagcloud">
+    
+    <a href="https://skywind3000.com/tags/ai/">ai</a>
+    
+    <a href="https://skywind3000.com/tags/android/">android</a>
+    
+    <a href="https://skywind3000.com/tags/as3/">as3</a>
+    
+    <a href="https://skywind3000.com/tags/c&#43;&#43;/">c&#43;&#43;</a>
+    
+    <a href="https://skywind3000.com/tags/cygwin/">cygwin</a>
+    
+    <a href="https://skywind3000.com/tags/dos/">dos</a>
+    
+    <a href="https://skywind3000.com/tags/kcp/">kcp</a>
+    
+    <a href="https://skywind3000.com/tags/linux/">linux</a>
+    
+    <a href="https://skywind3000.com/tags/p2p/">p2p</a>
+    
+    <a href="https://skywind3000.com/tags/python/">python</a>
+    
+    <a href="https://skywind3000.com/tags/shell/">shell</a>
+    
+    <a href="https://skywind3000.com/tags/vim/">vim</a>
+    
+    <a href="https://skywind3000.com/tags/win32/">win32</a>
+    
+    <a href="https://skywind3000.com/tags/%E4%BC%98%E5%8C%96/">优化</a>
+    
+    <a href="https://skywind3000.com/tags/%E5%90%8C%E6%AD%A5/">同步</a>
+    
+    <a href="https://skywind3000.com/tags/%E5%9B%BE%E5%BD%A2/">图形</a>
+    
+    <a href="https://skywind3000.com/tags/%E5%B0%8F%E6%B8%B8%E6%88%8F/">小游戏</a>
+    
+    <a href="https://skywind3000.com/tags/%E6%8A%97%E9%94%AF%E9%BD%BF/">抗锯齿</a>
+    
+    <a href="https://skywind3000.com/tags/%E6%B1%87%E7%BC%96/">汇编</a>
+    
+    <a href="https://skywind3000.com/tags/%E6%BC%94%E7%A4%BA/">演示</a>
+    
+    <a href="https://skywind3000.com/tags/%E7%9F%A2%E9%87%8F%E4%BD%9C%E5%9B%BE/">矢量作图</a>
+    
+    <a href="https://skywind3000.com/tags/%E7%9F%A5%E4%B9%8E/">知乎</a>
+    
+    <a href="https://skywind3000.com/tags/%E7%AD%96%E5%88%92/">策划</a>
+    
+    <a href="https://skywind3000.com/tags/%E7%AE%97%E6%B3%95/">算法</a>
+    
+    <a href="https://skywind3000.com/tags/%E7%B3%BB%E7%BB%9F%E5%BC%80%E5%8F%91/">系统开发</a>
+    
+    <a href="https://skywind3000.com/tags/%E7%BD%91%E7%BB%9C/">网络</a>
+    
+    <a href="https://skywind3000.com/tags/%E7%BF%BB%E8%AF%91/">翻译</a>
+    
+    <a href="https://skywind3000.com/tags/%E8%99%9A%E6%8B%9F%E6%9C%BA/">虚拟机</a>
+    
+    <a href="https://skywind3000.com/tags/%E8%A7%86%E9%A2%91/">视频</a>
+    
+    <a href="https://skywind3000.com/tags/%E8%AE%B2%E4%B9%89/">讲义</a>
+    
+    <a href="https://skywind3000.com/tags/%E8%AF%8D%E6%B3%95%E5%88%86%E6%9E%90/">词法分析</a>
+    
+    <a href="https://skywind3000.com/tags/%E8%AF%AD%E6%B3%95%E5%88%86%E6%9E%90/">语法分析</a>
+    
+    <a href="https://skywind3000.com/tags/%E8%B6%B3%E8%BF%B9/">足迹</a>
+    
+    <a href="https://skywind3000.com/tags/%E9%97%B2%E8%81%8A/">闲聊</a>
+    
+    <a href="https://skywind3000.com/tags/%E9%9A%8F%E7%AC%94/">随笔</a>
+    
+</div>
+    </section>
+
+    
+
+    <section class="widget">
+        <h3 class="widget-title">其它</h3>
+        <ul class="widget-list">
+            <li><a href="https://skywind3000.com/index.xml">文章 RSS</a></li>
+        </ul>
+    </section>
+</div>
+        </div>
+    </div>
+</div>
+<footer id="footer">
+    <div class="container">
+        &copy; 2019 <a href="https://skywind3000.com/">Skywind Inside By skywind</a>.
+        Powered by <a rel="nofollow noreferer noopener" href="https://gohugo.io" target="_blank">Hugo</a>.
+        <a href="https://www.flysnow.org/" target="_blank">Theme</a> based on <a href="https://github.com/rujews/maupassant-hugo" target="_blank">maupassant</a>.
+        
+    </div>
+</footer>
+
+
+<a id="rocket" href="#top"></a>
+<script type="text/javascript" src="/js/totop.js?v=0.0.0" async=""></script>
+
+
+
+<script type="text/javascript" src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js" async></script>
+
+
+
+
+
+</body>
+</html>

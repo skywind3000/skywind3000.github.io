@@ -1,0 +1,875 @@
+<!doctype html>
+<html lang="zh-cn">
+<head>
+
+    <meta charset="utf-8">
+    <meta name="generator" content="Hugo 0.54.0" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <title>Skywind Inside | 写自己的代码，让别人猜去吧！</title>
+    <meta property="og:title" content="Skywind Inside | 写自己的代码，让别人猜去吧！">
+    <meta property="og:type" content="website">
+    <meta name="Keywords" content="golang,go语言,go语言笔记,飞雪无情,java,android,博客,项目管理,python,软件架构,公众号,小程序">
+    <meta name="description" content="Putty 本无树，MinGW 亦非台">
+    <meta property="og:url" content="https://skywind3000.com/">
+    <link rel="shortcut icon" href="/favicon.ico" type="image/x-icon">
+
+    <link rel="stylesheet" href="/css/normalize.css">
+    
+    <link rel="stylesheet" href="/css/style.css">
+    <link rel="alternate" type="application/rss+xml+xml" href="https://skywind3000.com/index.xml" title="Skywind Inside" />
+    <script type="text/javascript" src="//cdn.bootcss.com/jquery/3.2.1/jquery.min.js"></script>
+
+    
+
+
+    
+    
+</head>
+
+
+<body>
+<header id="header" class="clearfix">
+    <div class="container">
+        <div class="col-group">
+            <div class="site-name ">
+                
+                    <h1>
+                        <a id="logo" href="https://skywind3000.com/">
+                            Skywind Inside
+                        </a>
+                    </h1>
+                
+                <p class="description">写自己的代码，让别人猜去吧！</p>
+            </div>
+            <div>
+                <nav id="nav-menu" class="clearfix">
+                    <a class="current" href="https://skywind3000.com/">首页</a>
+                    
+                    <a  href="https://skywind3000.com/categories/" title="文章分类">文章分类</a>
+                    
+                    <a  href="https://skywind3000.com/tags/" title="标签">标签</a>
+                    
+                    <a  href="https://skywind3000.com/archives/" title="归档">归档</a>
+                    
+                    <a  href="https://skywind3000.com/about/" title="关于">关于</a>
+                    
+                </nav>
+            </div>
+        </div>
+    </div>
+</header>
+
+
+<div id="body">
+    <div class="container">
+        <div class="col-group">
+
+            <div class="col-8" id="main">
+                <div class="res-cons">
+                    
+                        <article class="post">
+                            <header>
+                                <h1 class="post-title">
+                                    <a href="https://skywind3000.com/blog/archives/1609/" title="如何写一个视频编码器演示篇" >如何写一个视频编码器演示篇</a>
+                                </h1>
+                            </header>
+                            <date class="post-meta meta-date">
+                                2015年12月24日
+                            </date>
+                            
+                            <div class="post-meta">
+                                <span>|</span>
+                                
+                                <span class="meta-category"><a href="https://skywind3000.com/categories/%E7%BC%96%E7%A8%8B%E6%8A%80%E6%9C%AF">编程技术</a></span>
+                                
+                            </div>
+                            
+                            <div class="post-content">
+                                先前写过《视频编码原理简介》，有朋友问光代码和文字不太真切，能否补充几张图片，今天我们演示一下：
+这是第一帧画面：P1（我们的参考帧）
+这是第二帧画面：P2（需要编码的帧）
+从视频中截取的两张间隔1-2秒的画面，和实际情况类似，下面我们参考P1进行几次运动搜索：
+搜索演示1：搜索P2中车辆的车牌在P1中最接近的位置（上图P1，下图P2）
+这是一个演示程序，鼠标选中P2上任意16x16的Block，即可搜索出P1上的 BestMatch 宏块。虽然车辆在运动，从远到近，但是依然找到了最接近的宏块坐标。
+（点击 more 阅读剩下内容）
+搜索演示2：空中电线交叉位置（上图P1，下图P2）
+搜索演示3：报刊停的广告海报
+同样顺利在P1中找到最接近P2里海报的宏块位置。
+图片全搜索：根据P1和运动矢量数据（在P2中搜索到每一个宏块在P1中最相似的位置集合）还原出来的P2&rsquo;，即完全用P1各个位置的宏块拼凑出来最像P2的图片P2&rsquo;，效果如下：
+仔细观察，有些支离破碎对吧？肯定啊，拼凑出来的东西就是这样，现在我们用P2`和P2像素相减，得到差分图 D2 = (P2&rsquo; - P2) / 2 + 0x80：
+嗯，这就是P2`和P2两幅图片的不同处，看到没？基本只有低频了！高频数据少到我们可以忽略，这时用有损压缩方式比较差的效果来保存误差图D2，只要5KB的大小。
+接着我们根据运动矢量还原的P2&rsquo;以及差分图D2来还原新的 P2，NewP2 = P2&rsquo; + （D2 - 0x80）* 2：
+这就是之前支离破碎的 P2` 加上误差 D2后变成了清晰可见的样子，基本还原了原图P2。
+由于D2仅仅占5KB，加上压缩过后的运动矢量不过7KB，所以参考P1我们只需要额外 7KB的数据量就可以完整表示P2了，而如果独立将P2用质量尚可的有损压缩方式独立压缩，则至少要去到50-60KB，这一下节省了差不多8倍的空间，这就是所谓运动编码的基本原理。
+实际在使用中，参考帧并不一定是前面一帧，也不一定是同一个GOP的I帧，因为GOP间隔较长时，后面的图片离I帧变化可能已经很大了，因此常见做法是最近15帧中选择一帧误差最小的作为参考帧，虽然彩色画面有YUV三个分量，但是大量的预测工作和最有选择通常是根据Y分量的灰度帧进行判断的。
+再者误差我们保存的是（P2-P2’）/2 + 0x80，实际使用时我们会用更有效率的方式，比如让[-64,64]之间的色差精度为1，[-255,-64], [64, 255] 之间的色差精度为2-3，这样会更加真实一些。
+同时上文很多地方用的是直接lzma2进行简单存储，实际使用时一般会引入熵编码，对数据进行一定层次的整理然后再压缩，性能会好不少。
+现代视频编码中，除了帧间预测，I帧还使用了大量帧内预测，而不是完全dct量化后编码，前面帧间预测我们使用了参考帧的宏块移动拼凑新帧的方式进行，而所谓帧内预测就是同一幅画面中，未编码部分使用已编码部分拼凑而成。。。。。。。
+这些说来话就长了，不过此时相信各位理解起 MPEG2 来会发现并不是什么太深奥的东西，MPEG2的各项规范熟悉了，H264也就好说了，读资料的同时自己做一下试验参照理论，应该能轻松很多。……
+                            </div>
+                            <p class="readmore"><a href="https://skywind3000.com/blog/archives/1609/">阅读全文</a></p>
+                        </article>
+                    
+                        <article class="post">
+                            <header>
+                                <h1 class="post-title">
+                                    <a href="https://skywind3000.com/blog/archives/1587/" title="内存拷贝优化（3）-深入优化" >内存拷贝优化（3）-深入优化</a>
+                                </h1>
+                            </header>
+                            <date class="post-meta meta-date">
+                                2015年12月20日
+                            </date>
+                            
+                            <div class="post-meta">
+                                <span>|</span>
+                                
+                                <span class="meta-category"><a href="https://skywind3000.com/categories/%E7%BC%96%E7%A8%8B%E6%8A%80%E6%9C%AF">编程技术</a></span>
+                                
+                            </div>
+                            
+                            <div class="post-content">
+                                今天继续在原来内存拷贝代码上优化：
+1. 修改了小内存方案：由原来64字节扩大为128字节，由 int 改为 xmm，小内存性能提升 80%
+2. 修改了中内存方案：从4个xmm寄存器并行拷贝改为8个并行拷贝+prefetch，提升20%左右
+3. 去除目标地址头部对齐的分支判断，用一次xmm拷贝完成目标对齐，性能替升10%。
+4. 增加测试用例：为贴近实际，增加了随机访问，10MB空间内（绝对大于L2尺寸）随机位置和长度的测试
+为避免随机数生成影响结果，提前生成随机数，最终平均性能达到gcc4.9配套标准库的2倍以上：
+https://github.com/skywind3000/FastMemcpy
+最新代码测试结果（可以对比老的表看新版本性能是否有所提升）：
+ benchmark(size=32 bytes, times=16777216):
+result(dst aligned, src aligned): memcpy_fast=78ms memcpy=260 ms
+result(dst aligned, src unalign): memcpy_fast=78ms memcpy=250 ms
+result(dst unalign, src aligned): memcpy_fast=78ms memcpy=266 ms
+result(dst unalign, src unalign): memcpy_fast=78ms memcpy=234 ms
+benchmark(size=64 bytes, times=16777216):
+result(dst aligned, src aligned): memcpy_fast=109ms memcpy=281 ms
+result(dst aligned, src unalign): memcpy_fast=109ms memcpy=328 ms
+result(dst unalign, src aligned): memcpy_fast=109ms memcpy=343 ms
+result(dst unalign, src unalign): memcpy_fast=93ms memcpy=344 ms
+benchmark(size=512 bytes, times=8388608):
+result(dst aligned, src aligned): memcpy_fast=125ms memcpy=218 ms
+result(dst aligned, src unalign): memcpy_fast=156ms memcpy=484 ms
+result(dst unalign, src aligned): memcpy_fast=172ms memcpy=546 ms
+result(dst unalign, src unalign): memcpy_fast=172ms memcpy=515 ms
+benchmark(size=1024 bytes, times=4194304):
+result(dst aligned, src aligned): memcpy_fast=109ms memcpy=172 ms
+result(dst aligned, src unalign): memcpy_fast=187ms memcpy=453 ms
+result(dst unalign, src aligned): memcpy_fast=172ms memcpy=437 ms
+result(dst unalign, src unalign): memcpy_fast=156ms memcpy=452 ms
+benchmark(size=4096 bytes, times=524288):
+result(dst aligned, src aligned): memcpy_fast=62ms memcpy=78 ms
+result(dst aligned, src unalign): memcpy_fast=109ms memcpy=202 ms
+result(dst unalign, src aligned): memcpy_fast=94ms memcpy=203 ms
+result(dst unalign, src unalign): memcpy_fast=110ms memcpy=218 ms
+benchmark(size=8192 bytes, times=262144):
+result(dst aligned, src aligned): memcpy_fast=62ms memcpy=78 ms
+result(dst aligned, src unalign): memcpy_fast=78ms memcpy=202 ms
+result(dst unalign, src aligned): memcpy_fast=78ms memcpy=203 ms
+result(dst unalign, src unalign): memcpy_fast=94ms memcpy=203 ms……
+                            </div>
+                            <p class="readmore"><a href="https://skywind3000.com/blog/archives/1587/">阅读全文</a></p>
+                        </article>
+                    
+                        <article class="post">
+                            <header>
+                                <h1 class="post-title">
+                                    <a href="https://skywind3000.com/blog/archives/1573/" title="内存拷贝优化（2）-全尺寸拷贝优化" >内存拷贝优化（2）-全尺寸拷贝优化</a>
+                                </h1>
+                            </header>
+                            <date class="post-meta meta-date">
+                                2015年12月18日
+                            </date>
+                            
+                            <div class="post-meta">
+                                <span>|</span>
+                                
+                                <span class="meta-category"><a href="https://skywind3000.com/categories/%E7%BC%96%E7%A8%8B%E6%8A%80%E6%9C%AF">编程技术</a></span>
+                                
+                            </div>
+                            
+                            <div class="post-content">
+                                四年前写过一篇小内存拷贝优化：http://www.skywind.me/blog/archives/143 纠结了一下还是把全尺寸拷贝优化代码发布出来吧，没啥好保密的， 如今总结一下全尺寸内存拷贝优化的要点： 1. 策略区别：64字节以内用小内存方案，64K以内用中尺寸方案，大于64K用大内存拷贝方案。 2. 查表跳转：拷贝不同小尺寸内存，直接跳转到相应地址解除循环。 3. 目标对齐：64字节以上拷贝的先用普通方法拷贝几个字节让目标地址对齐，好做后面的事情。 4. 矢量拷贝：并行一次性读入N个矢量到 sse2 寄存器，再并行写出。 5. 缓存预取：使用 prefetchnta ，提前预取数据，等到真的要用时数据已经到位。 6. 内存直写：使用 movntdq 来直写内存，避免缓存污染。 部分理论，见论文：《Using Block Prefetch for Optimized Memory Performance》 但论文考虑问题比较单一，所以实际代码写的比论文复杂不少，目前在各个尺寸上基本平均能够加速 40%，比较GCC 4.9, VS2012的 memcpy，不排除未来的 libc, crt库继续完善以后，能够达到下面代码的速度。但我看libc和crt的 memcpy代码已经很久没人更新了，不知道他们还愿意继续优化下去么？ 行了，具体实现各位读代码吧，需要 SSE2 指令集支持，gcc编译时需要 –msse2 一下，点击（more）展开代码，测试结果附在源文件最后注释部分：
+//===================================================================== // // FastMemcpy.c - skywind3000@163.com, 2012 // // feature: // 40% speed up in avg. vs standard memcpy (tested in vc2012/gcc4.9) // //===================================================================== #include &lt;stdio.h&gt; #include &lt;stdlib.h&gt; #include &lt;string.h&gt; #include &lt;time.h&gt; #include &lt;windows.h&gt; #include &lt;emmintrin.h&gt; void *memcpy_tiny(void *dst, const void *src, size_t len) { if (len &lt;= 64) { register unsigned char *dd = (unsigned char*)dst + len; register const unsigned char *ss = (const unsigned char*)src + len; switch (len) { case 68: *((int*)(dd - 68)) = *((int*)(ss - 68)); case 64: *((int*)(dd - 64)) = *((int*)(ss - 64)); case 60: *((int*)(dd - 60)) = *((int*)(ss - 60)); case 56: *((int*)(dd - 56)) = *((int*)(ss - 56)); case 52: *((int*)(dd - 52)) = *((int*)(ss - 52)); case 48: *((int*)(dd - 48)) = *((int*)(ss - 48)); case 44: *((int*)(dd - 44)) = *((int*)(ss - 44)); case 40: *((int*)(dd - 40)) = *((int*)(ss - 40)); case 36: *((int*)(dd - 36)) = *((int*)(ss - 36)); case 32: *((int*)(dd - 32)) = *((int*)(ss - 32)); case 28: *((int*)(dd - 28)) = *((int*)(ss - 28)); case 24: *((int*)(dd - 24)) = *((int*)(ss - 24)); case 20: *((int*)(dd - 20)) = *((int*)(ss - 20)); case 16: *((int*)(dd - 16)) = *((int*)(ss - 16)); case 12: *((int*)(dd - 12)) = *((int*)(ss - 12)); case 8: *((int*)(dd - 8)) = *((int*)(ss - 8)); case 4: *((int*)(dd - 4)) = *((int*)(ss - 4)); break; case 67: *((int*)(dd - 67)) = *((int*)(ss - 67)); case 63: *((int*)(dd - 63)) = *((int*)(ss - 63)); case 59: *((int*)(dd - 59)) = *((int*)(ss - 59)); case 55: *((int*)(dd - 55)) = *((int*)(ss - 55)); case 51: *((int*)(dd - 51)) = *((int*)(ss - 51)); case 47: *((int*)(dd - 47)) = *((int*)(ss - 47)); case 43: *((int*)(dd - 43)) = *((int*)(ss - 43)); case 39: *((int*)(dd - 39)) = *((int*)(ss - 39)); case 35: *((int*)(dd - 35)) = *((int*)(ss - 35)); case 31: *((int*)(dd - 31)) = *((int*)(ss - 31)); case 27: *((int*)(dd - 27)) = *((int*)(ss - 27)); case 23: *((int*)(dd - 23)) = *((int*)(ss - 23)); case 19: *((int*)(dd - 19)) = *((int*)(ss - 19)); case 15: *((int*)(dd - 15)) = *((int*)(ss - 15)); case 11: *((int*)(dd - 11)) = *((int*)(ss - 11)); case 7: *((int*)(dd - 7)) = *((int*)(ss - 7)); *((int*)(dd - 4)) = *((int*)(ss - 4)); break; case 3: *((short*)(dd - 3)) = *((short*)(ss - 3)); dd[-1] = ss[-1]; break; case 66: *((int*)(dd - 66)) = *((int*)(ss - 66)); case 62: *((int*)(dd - 62)) = *((int*)(ss - 62)); case 58: *((int*)(dd - 58)) = *((int*)(ss - 58)); case 54: *((int*)(dd - 54)) = *((int*)(ss - 54)); case 50: *((int*)(dd - 50)) = *((int*)(ss - 50)); case 46: *((int*)(dd - 46)) = *((int*)(ss - 46)); case 42: *((int*)(dd - 42)) = *((int*)(ss - 42)); case 38: *((int*)(dd - 38)) = *((int*)(ss - 38)); case 34: *((int*)(dd - 34)) = *((int*)(ss - 34)); case 30: *((int*)(dd - 30)) = *((int*)(ss - 30)); case 26: *((int*)(dd - 26)) = *((int*)(ss - 26)); case 22: *((int*)(dd - 22)) = *((int*)(ss - 22)); case 18: *((int*)(dd - 18)) = *((int*)(ss - 18)); case 14: *((int*)(dd - 14)) = *((int*)(ss - 14)); case 10: *((int*)(dd - 10)) = *((int*)(ss - 10)); case 6: *((int*)(dd - 6)) = *((int*)(ss - 6)); case 2: *((short*)(dd - 2)) = *((short*)(ss - 2)); break; case 65: *((int*)(dd - 65)) = *((int*)(ss - 65)); case 61: *((int*)(dd - 61)) = *((int*)(ss - 61)); case 57: *((int*)(dd - 57)) = *((int*)(ss - 57)); case 53: *((int*)(dd - 53)) = *((int*)(ss - 53)); case 49: *((int*)(dd - 49)) = *((int*)(ss - 49)); case 45: *((int*)(dd - 45)) = *((int*)(ss - 45)); case 41: *((int*)(dd - 41)) = *((int*)(ss - 41)); case 37: *((int*)(dd - 37)) = *((int*)(ss - 37)); case 33: *((int*)(dd - 33)) = *((int*)(ss - 33)); case 29: *((int*)(dd - 29)) = *((int*)(ss - 29)); case 25: *((int*)(dd - 25)) = *((int*)(ss - 25)); case 21: *((int*)(dd - 21)) = *((int*)(ss - 21)); case 17: *((int*)(dd - 17)) = *((int*)(ss - 17)); case 13: *((int*)(dd - 13)) = *((int*)(ss - 13)); case 9: *((int*)(dd - 9)) = *((int*)(ss - 9)); case 5: *((int*)(dd - 5)) = *((int*)(ss - 5)); case 1: dd[-1] = ss[-1]; break; case 0: default: break; } return dd; } else { return memcpy(dst, src, len); } } void* memcpy_fast(void *destination, const void *source, size_t size) { unsigned char *dst = (unsigned char*)destination; const unsigned char *src = (const unsigned char*)source; static size_t cachesize = 0x10000; size_t diff; // small memory copy if (size &lt; 64) { return memcpy_tiny(dst, src, size); } // align destination to 16 bytes boundary diff = (((size_t)dst + 15) &amp; (~15)) - ((size_t)dst); if (diff &gt; 0) { memcpy_tiny(dst, src, diff); dst += diff; src += diff; size -= diff; } // medium size copy if (size &lt;= cachesize) { __m128i c1, c2, c3, c4; if ((((size_t)src) &amp; 15) == 0) { // source aligned for (; size &gt;= 64; size -= 64) { c1 = _mm_load_si128(((const __m128i*)src) + 0); c2 = _mm_load_si128(((const __m128i*)src) + 1); c3 = _mm_load_si128(((const __m128i*)src) + 2); c4 = _mm_load_si128(((const __m128i*)src) + 3); src += 64; _mm_store_si128((((__m128i*)dst) + 0), c1); _mm_store_si128((((__m128i*)dst) + 1), c2); _mm_store_si128((((__m128i*)dst) + 2), c3); _mm_store_si128((((__m128i*)dst) + 3), c4); dst += 64; } } else { // source un-aligned for (; size &gt;= 64; size -= 64) { c1 = _mm_loadu_si128(((const __m128i*)src) + 0); c2 = _mm_loadu_si128(((const __m128i*)src) + 1); c3 = _mm_loadu_si128(((const __m128i*)src) + 2); c4 = _mm_loadu_si128(((const __m128i*)src) + 3); src += 64; _mm_store_si128((((__m128i*)dst) + 0), c1); _mm_store_si128((((__m128i*)dst) + 1), c2); _mm_store_si128((((__m128i*)dst) + 2), c3); _mm_store_si128((((__m128i*)dst) + 3), c4); dst += 64; } } } else { // big memory copy __m128i c1, c2, c3, c4; _mm_prefetch((const char*)(src), _MM_HINT_NTA); if ((((size_t)src) &amp; 15) == 0) { // source aligned for (; size &gt;= 64; size -= 64) { _mm_prefetch((const char*)(src + 128), _MM_HINT_NTA); c1 = _mm_load_si128(((const __m128i*)src) + 0); c2 = _mm_load_si128(((const __m128i*)src) + 1); c3 = _mm_load_si128(((const __m128i*)src) + 2); c4 = _mm_load_si128(((const __m128i*)src) + 3); src += 64; _mm_stream_si128((((__m128i*)dst) + 0), c1); _mm_stream_si128((((__m128i*)dst) + 1), c2); _mm_stream_si128((((__m128i*)dst) + 2), c3); _mm_stream_si128((((__m128i*)dst) + 3), c4); dst += 64; } } else { // source unaligned for (; size &gt;= 64; size -= 64) { _mm_prefetch((const char*)(src + 128), _MM_HINT_NTA); c1 = _mm_loadu_si128(((const __m128i*)src) + 0); c2 = _mm_loadu_si128(((const __m128i*)src) + 1); c3 = _mm_loadu_si128(((const __m128i*)src) + 2); c4 = _mm_loadu_si128(((const __m128i*)src) + 3); src += 64; _mm_stream_si128((((__m128i*)dst) + 0), c1); _mm_stream_si128((((__m128i*)dst) + 1), c2); _mm_stream_si128((((__m128i*)dst) + 2), c3); _mm_stream_si128((((__m128i*)dst) + 3), c4); dst += 64; } } _mm_sfence(); } return memcpy_tiny(dst, src, size); } void benchmark(int dstalign, int srcalign, size_t size, int times) { char *DATA1 = (char*)malloc(size + 64); char *DATA2 = (char*)malloc(size + 64); size_t LINEAR1 = ((size_t)DATA1); size_t LINEAR2 = ((size_t)DATA2); char *ALIGN1 = (char*)(((64 - (LINEAR1 &amp; 63)) &amp; 63) + LINEAR1); char *ALIGN2 = (char*)(((64 - (LINEAR2 &amp; 63)) &amp; 63) + LINEAR2); char *dst = (dstalign)?……
+                            </div>
+                            <p class="readmore"><a href="https://skywind3000.com/blog/archives/1573/">阅读全文</a></p>
+                        </article>
+                    
+                        <article class="post">
+                            <header>
+                                <h1 class="post-title">
+                                    <a href="https://skywind3000.com/blog/archives/1566/" title="视频编码原理简介" >视频编码原理简介</a>
+                                </h1>
+                            </header>
+                            <date class="post-meta meta-date">
+                                2015年11月24日
+                            </date>
+                            
+                            <div class="post-meta">
+                                <span>|</span>
+                                
+                                <span class="meta-category"><a href="https://skywind3000.com/categories/%E7%BC%96%E7%A8%8B%E6%8A%80%E6%9C%AF">编程技术</a></span>
+                                
+                            </div>
+                            
+                            <div class="post-content">
+                                要彻底理解视频编码原理，看书都是虚的，需要实际动手，实现一个简单的视频编码器：
+知识准备：基本图像处理知识，信号的时域和频域问题，熟练掌握傅立叶正反变换，一维、二维傅立叶变换，以及其变种，dct变换，快速dct变换。
+来自知乎问题：http://www.zhihu.com/question/22567173/answer/73610451
+第一步：实现有损图像压缩和解压
+参考 JPEG原理，将RGB-&gt;YUV，然后Y/U/V看成三张不同的图片，将其中一张图片分为 8x8的block进行 dct变换（可以直接进行二维dct变换，或者按一定顺序将8x8的二维数组整理成一个64字节的一维数组），还是得到一个8x8的整数频率数据。于是表示图像大轮廓的低频信号（人眼敏感的信号）集中在 8x8的左上角；表示图像细节的高频信号集中在右下角。
+接着将其量化，所谓量化，就是信号采样的步长，8x8的整数频率数据块，每个数据都要除以对应位置的步长，左上角相对重要的低频信号步长是1，也就是说0-255，是多少就是多少。而右下角是不太重要的高频信号，比如步长取10，那么这些位置的数据都要/10，实际解码的时候再将他们*10恢复出来，这样经过编码的时候/10和解码的时候*10，那么步长为10的信号1, 13, 25, 37就会变成规矩的：0, 10, 20, 30, 对小于步长10的部分我们直接丢弃了，因为高频不太重要。
+经过量化以后，8x8的数据块左上角的数据由于步长小，都是比较离散的，而靠近右下角的高频数据，都比较统一，或者是一串0，因此图像大量的细节被我们丢弃了，这时候，我们用无损压缩方式，比如lzma2算法（jpeg是rle + huffman）将这64个byte压缩起来，由于后面高频数据步长大，做了除法以后，这些值都比较小，而且比较靠近，甚至右下部分都是一串0，十分便于压缩。
+JPEG图像有个问题就是低码率时 block边界比较严重，现代图片压缩技术往往要配合一些de-block算法，比如最简单的就是边界部分几个像素点和周围插值模糊一下。
+做到这里我们实现了一个同 jpeg类似的静态图片有损压缩算法。在视频里面用来保存I帧数据。
+第二步：实现宏块误差计算
+视频由连续的若干图像帧组成，分为 I帧，P帧，所谓I帧，就是不依赖就可以独立解码的视频图像帧，而P帧则需要依赖前面已解码的视频帧，配合一定数据才能生成出来。所以视频中I帧往往都比较大，而P帧比较小，如果播放器一开始收到了P帧那么是无法播放的，只有收到下一个I帧才能开始播放。I帧多了视频就变大，I帧少了，数据量是小了，但视频受到丢包或者数据错误的影响却又会更严重。
+那么所谓运动预测编码，其实就是P帧的生成过程：继续将图片分成 16x16的block（为了简单只讨论yuv的y分量压缩）。I帧内部单帧图片压缩我们采用了8x8的block，而这里用16x16的block来提高帧间编码压缩率（当然也会有更多细节损失），我们用 x, y表示像素点坐标，而s,t表示block坐标，那么坐标为（x,y）的像素点所属的block坐标为：
+ s = x / 16 = x &gt;&gt; 4
+t = y / 16 = y &gt;&gt; 4
+ 接着要计算两个block的相似度，即矢量的距离，可以表示为一个256维矢量（16x16）像素点色彩距离的平方，我们先定义两个颜色的误差为：
+PixelDiff(c1, c2) = (c1- c2) ^ 2
+那么256个点的误差可以表示为所有对应点的像素误差和：
+BlockDiff(b1, b2) = sum( PixelDiff(c1, c2) for c1 in b1 for c2 in b2)
+代码化为：
+ int block_diff(const unsigned char b1[16][16], const unsigned char b2[16][16]) {
+int sum = 0;
+for (int i = 0; i &lt; 16; i++) {
+for (int j = 0; j &lt; 16; j++) {
+int c1 = b1[i][j];
+int c2 = b2[i][j];
+sum += (c1 - c2) * (c1 - c2);
+}
+}
+return sum;
+}
+ 有了这个block求差的函数，我们就可以针对特定block，搜索另外若干个block中哪个和它最相似了（误差最小）。
+第三步：实现运动预测编码
+根据上面的宏块比较函数，你已经可以知道两个block到底像不像了，越象的block，block_diff返回值越低。那么我们有两帧相邻的图片，P1，P2，假设 P1已经完成编码了，现在要对 P2进行P帧编码，其实就是轮询 P2里面的每一个 block，为P2中每一个block找出上一帧中相似度最高的block坐标，并记录下来，具体伪代码可以表示为：
+ unsigned char block[16][16];
+for (int t = 0; t &lt;= maxt; t++) {
+for (int s = 0; s &lt;= maxs; s++) {
+picture_get_block(P2, s * 16, t * 16, block); // 取得图片 P2 的 block
+int x, y;
+block_search_nearest(P1, &amp;x, &amp;y, block); // 在P1中搜索最相似的block
+output(x, y); // 将P1中最相似的block的左上角像素坐标 (x, y) 输出
+}
+}
+ 其中在P1中搜索最相似 block的 block_search_nearest 函数原理是比较简单的，我们可以暴力点用两个for循环轮询 P1中每个像素点开始的16x16的block（速度较慢），当然实际中不可能这么暴力搜索，而是围绕P2中该block对应坐标在P1中位置作为中心，慢慢四周扩散，搜索一定步长，并得到一个：按照一定顺序进行搜索，并且在一定范围内最相似的宏块坐标。……
+                            </div>
+                            <p class="readmore"><a href="https://skywind3000.com/blog/archives/1566/">阅读全文</a></p>
+                        </article>
+                    
+                        <article class="post">
+                            <header>
+                                <h1 class="post-title">
+                                    <a href="https://skywind3000.com/blog/archives/1564/" title="多平台下录屏方式" >多平台下录屏方式</a>
+                                </h1>
+                            </header>
+                            <date class="post-meta meta-date">
+                                2015年11月15日
+                            </date>
+                            
+                            <div class="post-meta">
+                                <span>|</span>
+                                
+                                <span class="meta-category"><a href="https://skywind3000.com/categories/%E5%9B%BE%E5%BD%A2%E7%BC%96%E7%A8%8B">图形编程</a></span>
+                                
+                            </div>
+                            
+                            <div class="post-content">
+                                随便记录下，想得起来的多少写多少：
+Windows：
+GDI 全屏：fullscreen desktop BitBlt 速度是 20ms / 帧
+GDI 窗口：Win7+可以录制游戏和非游戏，XP以前只能录制普通界面，截不到游戏窗口
+DirectDraw 全屏：full screen primary surface 异步到 offscreen-surface XP下闪电速度 1ms / 帧
+D3D9: render target -&gt; offscreen surface XP下 16ms Win7 下 10ms
+D3D Hook: Hook Device::Present -&gt; 保存 StateBlock -&gt; 截屏 -&gt; 恢复 StateBlock 极速！
+Linux:
+framebuffer: 打开 /dev/fb0 映射到内存，直接读里面内容，部分显卡驱动启用硬件加速绘图后，framebuffer会被跳过，直接调用 framebuffer 导致读取出来的东西为空。
+Android:
+framebuffer: 需要 root 权限才能访问 framebuffer
+RootView: 取得 root view 然后得到 drawing cache 然后保存，兼容性好，慢。
+OpenGL：直接 glReadPixel 保险，但是会卡到应用。
+OpenGL FBO: 更改渲染的 FBO ，让渲染到纹理，从纹理取下来，还行，速度还好。
+screenshot: SurfaceComposerClient::getBuiltInDisplay Android 4.0 以后，性能不错。
+native buffer： ANativeWindowBuffer -&gt; GraphicBuffer -&gt; 映射读取, 性能不错
+iOS:
+OpenGL: 直接 glReadPixel 同 Android，同样会卡到应用
+OpenGL FBO: 渲染到 FBO，读取下来，还行。
+大部分方法可以用 Hook 的方式注入到目标程序，或者系统 API，在不需要目标程序改一行代码的情况下实现功能。……
+                            </div>
+                            <p class="readmore"><a href="https://skywind3000.com/blog/archives/1564/">阅读全文</a></p>
+                        </article>
+                    
+                        <article class="post">
+                            <header>
+                                <h1 class="post-title">
+                                    <a href="https://skywind3000.com/blog/archives/1550/" title="Android Arm 编译优化选项评测" >Android Arm 编译优化选项评测</a>
+                                </h1>
+                            </header>
+                            <date class="post-meta meta-date">
+                                2015年8月25日
+                            </date>
+                            
+                            <div class="post-meta">
+                                <span>|</span>
+                                
+                                <span class="meta-category"><a href="https://skywind3000.com/categories/%E7%BC%96%E7%A8%8B%E6%8A%80%E6%9C%AF">编程技术</a></span>
+                                
+                            </div>
+                            
+                            <div class="post-content">
+                                用不同测试用例具体测试 softfp, armv7-a, cortax 等优化选项，看选项不同性能差别多大。首先设计下面几个测试用例，包含字符串处理、复杂逻辑、整数运算、浮点运算几个方面：
+ compress：进行 LZO/LZW 大规模压缩，测试搜索，字符串匹配，复杂分支等性能 resample：进行一系列整数 DSP 运算，包括 resample 和 fir low pass int add：一亿次整数加法 int mul：一亿次整数乘法 int div：一亿次整数除法 float add：一亿次浮点加法 float mul：一亿次浮点乘法 float div：一亿次浮点除法 const div：一亿次整数除以常数255 matrix：若干次矩阵乘法运算，同时考察浮点数乘法加法 normalize：若干次矢量归一化运算，同时考察浮点数乘法，除法，加法，sqrt  其次对安卓的几个 gcc 的编译选项进行分别测试：
+ -mfloat-abi=softfp，如果有硬件浮点处理器将会使用硬件，如果没有会转移到软件模拟 -march=armv7-a，生成适合 armv7a 架构的代码 -mtune=cortex-9，代码生成按照 cortex-9 进行调优 –mfpu=neon，使用 neon 进行硬件浮点运算，决定 softfp 的硬件方式到底用这个 -mfpu=vfp，使用 vfp 进行硬件浮点运算，决定 softfp 的硬件方式用这个 测试硬件：
+ 桌面电脑：Intel® Core™ i5-2520M CPU @ 2.50GHz
+ 安卓手机：三星，双核 CPU 1.73GHz armv7-a cortex-9
+  结果如下：
+ Desktop PC -O2:
+compress : 120 ms
+resample : 290 ms
+int add : 78 ms
+int mul : 86 ms
+int div : 459 ms
+float add: 76 ms
+float mul: 69 ms
+float div: 797 ms
+const div: 190 ms
+matrix : 166 ms
+normalize: 177 ms
+samsung -O2:
+compress : 577 ms
+resample : 576 ms
+int add : 291 ms
+int mul : 332 ms
+int div : 2267 ms
+float add: 3080 ms
+float mul: 1792 ms
+float div: 7103 ms
+const div: 779 ms
+matrix : 9280 ms
+normalize: 5721 ms
+samsung -O2, -mfloat-abi=softfp:
+compress : 540 ms
+resample : 558 ms
+int add : 291 ms
+int mul : 333 ms
+int div : 2268 ms
+float add: 266 ms……
+                            </div>
+                            <p class="readmore"><a href="https://skywind3000.com/blog/archives/1550/">阅读全文</a></p>
+                        </article>
+                    
+                        <article class="post">
+                            <header>
+                                <h1 class="post-title">
+                                    <a href="https://skywind3000.com/blog/archives/1545/" title="Android 命令行调试 C/C&#43;&#43;  程序" >Android 命令行调试 C/C&#43;&#43;  程序</a>
+                                </h1>
+                            </header>
+                            <date class="post-meta meta-date">
+                                2015年8月25日
+                            </date>
+                            
+                            <div class="post-meta">
+                                <span>|</span>
+                                
+                                <span class="meta-category"><a href="https://skywind3000.com/categories/%E7%BC%96%E7%A8%8B%E6%8A%80%E6%9C%AF">编程技术</a></span>
+                                
+                            </div>
+                            
+                            <div class="post-content">
+                                传统方式调试 NDK 开发的程序比较麻烦，先要编译成 JNI，又要导出 java接口，还要再写一个 java 工程，改一个地方又要连续改几处，这样效率是很低的。最频繁使用的关键工作路径（编译/调试环节）如果能极致简化，那么可以带来开发效率的成倍提升。其实安卓官方是提供了命令行调试方法的，将你需要调试的 C代码用 NDK直接编译成可执行，然后到设备上执行：
+使用 NDK 导出独立工具链，方便以后使用，在 cygwin 下面，将 $NDK 环境变量代表的路径设置好，然后：
+ cd $NDK
+chmod -R 755 *
+build/tools/make-standalone-toolchain.sh &ndash;ndk-dir=$NDK &ndash;platform=android-9 &ndash;arch=arm &ndash;install-dir=/&hellip;../path-to-android-9
+ 这样就导出了一套针对 API9 的独立工具链（包含 gcc, ld, ndk必要文件），以后方便使用，比如导出到 d:\android-9下面，那么以后可以跳过 cygwin，直接编译我们的 Hello World：
+ d:\android-9\bin\arm-linux-androideabi-gcc.exe hello.c –o hello
+ 于是你可以在命令行下直接开发 Android 的非 GUI 应用程序了。
+调试也很简单，用 adb push 上传到 /data/local/tmp 下面，并且设置可执行模式为 755：
+ adb push hello /data/local/tmp/hello
+adb shell chmod 755 /data/local/tmp/hello
+ 运行就是直接：
+ adb shell /data/local/tmp/hello
+ 不要传到其他目录，比如 /sdcard，这些目录 mount时有 NOEXEC 权限，不能给文件增加可执行权限，而 /data/local/tmp 就是留给大家调试命令行用的，并且不需要 root 权限。
+可以编写一些脚本，每次编译好自动上传，配置到你的 Editplus/Vim/Npp 中，一键编译上传，一键运行。比起以前调试下 C代码还需要写一大堆 jni 和 java 的方式，效率高极了。……
+                            </div>
+                            <p class="readmore"><a href="https://skywind3000.com/blog/archives/1545/">阅读全文</a></p>
+                        </article>
+                    
+                        <article class="post">
+                            <header>
+                                <h1 class="post-title">
+                                    <a href="https://skywind3000.com/blog/archives/1498/" title="如何写一个软件渲染器？" >如何写一个软件渲染器？</a>
+                                </h1>
+                            </header>
+                            <date class="post-meta meta-date">
+                                2015年8月9日
+                            </date>
+                            
+                            <div class="post-meta">
+                                <span>|</span>
+                                
+                                <span class="meta-category"><a href="https://skywind3000.com/categories/%E5%9B%BE%E5%BD%A2%E7%BC%96%E7%A8%8B">图形编程</a></span>
+                                
+                                <span class="meta-category"><a href="https://skywind3000.com/categories/%E7%BC%96%E7%A8%8B%E6%8A%80%E6%9C%AF">编程技术</a></span>
+                                
+                            </div>
+                            
+                            <div class="post-content">
+                                实现个简单的固定渲染管线软渲染器不算复杂，差不多700行代码就可以搞定了。之所以很多人用 D3D用的很熟，写软渲染却坑坑洼洼，主要是现在大部分讲图形的书，讲到透视投影时就是分析一下透视变换矩阵如何生成，顶点如何计算就跳到其他讲模型或者光照的部分了。
+因为今天基本上是直接用 D3D 或者 OGL，真正光栅化的部分不了解也不影响使用，所以大部分教材都直接跳过了一大段，摄像机坐标系如何转换？三角形如何生成？CVV边缘如何检测？四维坐标如何裁剪？边缘及步长如何计算？扫描线该如何绘制？透视纹理映射具体代码该怎么写？framebuffer zbuffer 到底该怎么用？z-test 到底是该 test z 还是 w 还是 1/z 还是 1/w ？这些都没讲。
+早年培训学生时候，我花两天时间写的一个 DEMO，今天拿出来重新调整注释一下，性能和功能当然比不过高大上的软件渲染器。但一般来讲，工程类项目代码不容易阅读，太多边界情况和太多细节优化容易让初学者迷失，这个 mini3d 的项目不做任何优化，主要目的就是为了突出主干：
+源代码：skywind3000/mini3d · GitHub
+可执行：http://www.skywind.me/mw/images/c/c8/Mini3d.7z
+操作方式：左右键旋转，前后键前进后退，空格键切换模式，ESC退出。
+特性介绍：
+ 单个文件：源代码只有一个 mini3d.c，单个文件实现所有内容，阅读容易。 独立编译：没有任何第三方库依赖，没有复杂的工程目录。 模型标准：标准 D3D 坐标模型，左手系 + WORLD/VIEW/PROJECTION 三矩阵 实现裁剪：简单 CVV 裁剪 纹理支持：最大支持 1024 x 1024 的纹理 深度缓存：使用深度缓存判断图像前后 边缘计算：精确的多边形边缘覆盖计算 透视贴图：透视纹理映射以及透视色彩填充 实现精简：渲染部分只有 700行， 模块清晰，主干突出。 详细注释：主要代码详细注释  截图效果
+颜色填充
+透视纹理映射
+线框图
+增加光照和二次线性插值（朋友给 Mini3D加的平行光源）效果还行：
+阅读要求：
+ 看过并了解 D3D / OGL的矩阵变换。 用 D3D / OGL 完成过简单程序。  实现说明：
+ transform：实现坐标变换，和书本手册同 vertex： 如何定义顶点？如何定义边？如何定义扫描线？如何定义渲染主体（trapezoid）？ device： 设备，如何 projection，如何裁剪和归一化，如何切分三角形，如何顶点排序？ trapezoid：如何生成 trape，如何生成边，如何计算步长，如何计算扫描线 scanline：如何绘制扫描线，如何透视纠正，如何使用深度缓存，如何绘制 基础练习：先前给学生的作业 增加背面剔
+增加简单光照
+提供更多渲染模式
+实现二次线性差值的纹理读取  扩展练习：给有余力的学生
+推导并证明程序中用到的所有几何知识
+优化顶点计算性能
+优化 draw_scanline 性能
+从 BMP/TGA 文件加载纹理
+载入 BSP 场景并实现漫游
+其他内容
+当年还用不了 D3D 和 OGL ，开发游戏，做图形实现软件渲染是必备技能，当年机型差，连浮点数都用不了，要用定点数来计算，矩阵稍不注意就越界了。计算透视纠正还是一个比较昂贵的工作，更多游戏使用仿射纹理绘制，只是把离屏幕近的多边形切割成更小的三角形，让人看起来没有那么明显。即便到了 Quake 年代，计算 1/z 的除法也只是四个点才算一次（经过精确计算CPU周期，绘制四个点时下一个点的 1/z刚好算完），Quake 的四个点内也还是仿射纹理绘制……
+那时显卡没普及，光软件渲染器的优化就是一个无底洞，今天有了 OGL/D3D和显卡，人的精力才能充分集中在更高层次的场景组织、层次细节、动态光照等功能上。然而有空的时候，花个一周时间坐下来了解一下这部分的大概原理，推导所用到的数学模型，也能帮助大家更好的理解底层运行机制，写出更加优化的代码来。
+PS：光线跟踪版本的软件渲染，考虑光照的话，简单实现起来差不多 500 行，比这个要简单一些。各位有兴趣也可以尝试一下，就是简单渲染个立方体足够了。……
+                            </div>
+                            <p class="readmore"><a href="https://skywind3000.com/blog/archives/1498/">阅读全文</a></p>
+                        </article>
+                    
+                        <article class="post">
+                            <header>
+                                <h1 class="post-title">
+                                    <a href="https://skywind3000.com/blog/archives/1480/" title="如何设计一个内存分配器？" >如何设计一个内存分配器？</a>
+                                </h1>
+                            </header>
+                            <date class="post-meta meta-date">
+                                2015年7月27日
+                            </date>
+                            
+                            <div class="post-meta">
+                                <span>|</span>
+                                
+                                <span class="meta-category"><a href="https://skywind3000.com/categories/%E7%BC%96%E7%A8%8B%E6%8A%80%E6%9C%AF">编程技术</a></span>
+                                
+                            </div>
+                            
+                            <div class="post-content">
+                                通常工程里不推荐自己写内存分配器，因为你费力写一个出来99%可能性没有内置的好，且内存出bug难调试
+不过看书之余，你也可以动手自己试试，当个玩具写写玩玩：
+1. 实现教科书上的内存分配器：
+做一个链表指向空闲内存，分配就是取出一块来，改写链表，返回，释放就是放回到链表里面，并做好归并。注意做好标记和保护，避免二次释放，还可以花点力气在如何查找最适合大小的内存快的搜索上，减少内存碎片，有空你了还可以把链表换成伙伴算法，写着玩嘛。
+2. 实现固定内存分配器：
+即实现一个 FreeList，每个 FreeList 用于分配固定大小的内存块，比如用于分配 32字节对象的固定内存分配器，之类的。每个固定内存分配器里面有两个链表，OpenList 用于存储未分配的空闲对象，CloseList用于存储已分配的内存对象，那么所谓的分配就是从 OpenList 中取出一个对象放到 CloseList 里并且返回给用户，释放又是从 CloseList 移回到 OpenList。分配时如果不够，那么就需要增长 OpenList：申请一个大一点的内存块，切割成比如 64 个相同大小的对象添加到 OpenList中。这个固定内存分配器回收的时候，统一把先前向系统申请的内存块全部还给系统。
+3. 实现 FreeList 池：
+在你实现了 FreeList的基础上，按照不同对象大小（8字节，16字节，32，64，128，256，512，1K。。。64K），构造十多个固定内存分配器，分配内存时根据内存大小查表，决定到底由哪个分配器负责，分配后要在头部的 header 处（ptr[-sizeof(char*)]处）写上 cookie，表示又哪个分配器分配的，这样释放时候你才能正确归还。如果大于64K，则直接用系统的 malloc作为分配，如此以浪费内存为代价你得到了一个分配时间近似O（1）的内存分配器，差不多实现了一个 memcached 的 slab 内存管理器了，但是先别得意。此 slab 非彼 slab（sunos/solaris/linux kernel 的 slab）。这说白了还是一个弱智的 freelist 无法归还内存给操作系统，某个 FreeList 如果高峰期占用了大量内存即使后面不用，也无法支援到其他内存不够的 FreeList，所以我们做的这个和 memcached 类似的分配器其实是比较残缺的，你还需要往下继续优化。
+4. 实现正统的 slab （非memcached的伪 slab）代替 FreeList：
+这时候你需要阅读一下 http://citeseer.ist.psu.edu/bonwick94slab.html 这篇论文了，现代内存分配技术的基础，如何管理 slab 上的对象，如何进行地址管理，如何管理不同 slab 的生命周期，如何将内存回收给系统。然后开始实现一个类似的东西，文章上传统的 slab 的各种基础概念虽然今天没有改变，但是所用到的数据结构和控制方法其实已经有很多更好的方法了，你可以边实现边思考下，实在不行还可以参考 kernel 源码嘛。但是有很多事情应用程序做不了，有很多实现你是不能照搬的，比如页面提供器，可以提供连续线性地址的页面，再比如说 kernel 本身记录着每个页面对应的 slab，你查找 slab 时，系统其实是根据线性地址移位得到页面编号，然后查表得到的，而你应用程序不可能这么干，你还得做一些额外的体系来解决这些问题，还需要写一些额外的 cookie 来做标记。做好内存收缩工作，内存不够时先收缩所有分配器的 slab，再尝试重新分配。再做好内存回收工作，多余的内存，一段时间不使用可以还给操作系统。
+5. 实现混合分配策略：
+你实现了上面很多常见的算法后，该具体阅读各种内存分配器的代码了，这些都是经过实践检验的，比如 libc 的内存分配器，或者参考有自带内存管理的各种开源项目，比如 python 源码，做点实验对比他们的优劣，然后根据分配对象的大小采用不同的分配策略，区别对待各种情况。试验的差不多了就得引入多线程支持了，将你的锁改小。注意很多系统层的线程安全策略你是没法弄的，比如操作系统可以关中断，短时间内禁止本cpu发生任务切换，这点应用程序就很麻烦了，还得用更小的锁来代替。当锁已经小到不能再小，也可以选择引入 STM 来代替各种链表的锁。
+6. 实现 Per-CPU Cache：
+现代内存分配器，在多核下的一个重要优化就是给多核增加 cache，为了进一步避免多线程锁竞争，需要引入 Per-CPU Cache 了。分配内存先找到对应线程所在的cpu，从该cpu上对应的 cache 里分配，cache 不够了就一次性从你底层的内存分配器里多分配几个对象进来填充 cache，释放时也是先放回 cache，cache里面如果对象太多，就做一次收缩，把内存换个底层分配器，让其他 cpu 的cache有机会利用。这样针对很多短生命周期的频繁的分配、释放，其实都是在 cache 里完成的，没有锁竞争，同时cache分配逻辑简单，速度更快。操作系统里面的代码经常是直接读取当前的cpu是哪个，而应用层实现你可以用 thread local storage 来代替，目前这些东西在 crt的 malloc 里还暂时支持不到位（不排除未来版本会增加），可以更多参考 tc/jemalloc。
+7. 实现地址着色：
+现代内存分配器必须多考虑总线压力，在很多机型上，如果内存访问集中在某条 cache line相同的偏移上，会给总线带来额外的负担和压力。比如你经常要分配一个 FILE 对象，而每个 FILE对象使用时会比较集中的访问 int FILE::flag; 这个成员变量，如果你的页面提供器提供的页面地址是按照 4K对齐的，那么很可能多个 FILE对象的 flag 成员所处的 cache line 偏移地址是相同的，大量访问这些相同的偏移地址会给总线带来很大负担，这时候你需要给每个对象额外增加一些偏移，让他们能够均匀的分布在线性地址对应的cache line 偏移上，消减总线冲突的开销。
+8. 优化缓存竞争：
+多核时代，很多单核时代的代码都需要针对性的优化改写，最基本的一条就是 cache 竞争，这是比前面锁竞争更恶劣的情况：如果两个cpu同时访问相同的 cache-line 或者物理页面，那么 cpu 之间为了保证内存一致性会做很多的通信工作，比如那个cpu0需要用到这段内存，发现cpu1也在用，那么需要通知cpu1，将cpu1 L1-L2缓存里面的数据写回该物理内存，并且释放控制权，这时cpu0取得了控制权才能继续操作，期间cpu0-cpu1之间的通信协议是比较复杂的，代价也是比较大的，cache竞争比锁竞争恶劣不少。为了避免 cache 竞争，需要比先前Per-CPU cache 更彻底的 Per-CPU Page 机制来解决，直接让不同的cpu使用不同的页面进行二次分配，彻底避免 cache 竞争。具体应用层的做法也是利用线性地址来判断所属页面（因为物理页面映射到进程地址也是4k对齐的），同时继续使用 thread local storage 或者用系统提供的 api 读取当前属于哪个 cpu 来实现。为了避免核太多每个核占据大量的页面带来的不必要的浪费，你可以参考下 Linux 最新的 slub 内存分配算法，但是 slub 也有未尽之处，好几个 linux 发行版在实践中发现 slub 还是存在一些问题的（非bug，而是机制），所以大部分发行版默认都是关闭 slub 的，虽然，你还是可以借鉴测试一下。
+9. 调试和折腾：
+继续参考各种现代内存分配器，取长补短，然后给你的分配器添加一些便于调试的机制，方便诊断各种问题。在你借鉴了很多开源项目，自己也做了一些所谓的优化，折腾了那么久以后，你或许以为你的分配器可以同各种开源分配器一战了，测试效果好像也挺好的，先别急，继续观察内存利用率，向操作系统申请/归还内存的频率等一系列容易被人忽视的指标是否相同。同时更换你的测试用例，看看更多的情况下，是否结果还和先前一样？这些都差不 多的时候，你发现没有个一两年的大规模持续使用，你很难发现一些潜在的隐患和bug，可能你觉得没问题的代码，跑了两年后都会继续报bug，这很正常，多点耐心，兴许第三年以后就比较稳定了呢？
+有卯用呢？
+十多年前 libc 还不成熟的情况下，为了程序长时间运行的稳定性，大部分程序员都必须针对自己的应用来实现针对特定情况的内存分配器。当年如果不自己管理内存，很多客户端，如果计算密集频繁分配，才开始可能没什么区别，但跑个几个小时性能立马就下降下来了；服务器进程持续运行个10多天不重启，速度也会越来越慢，碎片多了嘛。如今 libc 的 malloc 也进步了很多，这样的情况比较少了，那你再做一个内存池的意义何在呢？
+在你的玩具比较稳定的情况下，终于可以产生一些价值了，因为一些性能指标你无法兼得，标准的分配器往往提供了一个类似保守和中庸的做法，来针对大部分的情况，你可以做的第一步，就是打破这样的平衡，让你的分配器倾向于某些情况比如：
+1. 现代计算机内存都很大，你是不是可以牺牲内存利用率为代价换取更高的内存归还/重用的效率？同时换取更快的分配速度？或许你会发现，你可以比 libc 的 malloc 平均浪费 30%内存的代价换来两倍以上的性能提升，在一些内存分配成为瓶颈的应用中起到积极的作用。
+2. 比如你可以调整大小内存的比值，libc如果认为 8K以下是小内存，那么你可以不那么认为。
+3. 比如如果你的系统就是一个单线程的东西，那么你是否能提供开关，完全以单线程的模式进行运作，完全绕过各种锁和针对多核进行的各种冗余操作呢？
+4. 比如你的机器内存有限，你应用需要耗费大量的内存，那么你可以引入其他机制，以牺牲少量性能为代价，换取更好的内存回收效果和内存利用率。
+5. 最近分配的内存在线性地址上能否尽量连续？能否在地址上尽量规避缺页中断？
+6. 比如你程序里面某些对象需要被跟踪，你能否直接在分配器上实现对象跟踪机制，跟踪各种泄漏，越界问题？……
+                            </div>
+                            <p class="readmore"><a href="https://skywind3000.com/blog/archives/1480/">阅读全文</a></p>
+                        </article>
+                    
+                        <article class="post">
+                            <header>
+                                <h1 class="post-title">
+                                    <a href="https://skywind3000.com/blog/archives/1469/" title="FlashDevelop 好用" >FlashDevelop 好用</a>
+                                </h1>
+                            </header>
+                            <date class="post-meta meta-date">
+                                2015年7月27日
+                            </date>
+                            
+                            <div class="post-meta">
+                                <span>|</span>
+                                
+                                <span class="meta-category"><a href="https://skywind3000.com/categories/%E9%9A%8F%E7%AC%94">随笔</a></span>
+                                
+                            </div>
+                            
+                            <div class="post-content">
+                                好几年没碰过 Flash 了，最近需要给 ActionScript 导出一些 C 接口，又抽空捡起来。项目大了以后 Flash Builder 卡的要死，经常是一个构建你就可以休息了，按一下 “.“ 它就开始搜索补全提示，你的符号多了以后，有时候 Flash Builder 近乎假死了。实在难以忍受，咨询了一些正在做页游的朋友，是否还在用 Flash Builder 。得到答案是：早就投奔 Flash Develop 了。
+试了一下 FlashDevelop 果然腰也不酸了，腿也不疼了，十分流畅，界面类似 Visual Studio，同时还是免费的，可以彻底和笨重的 Flash Builder 说再见了。再次感叹 AS3 写起来真爽之余，记录一下安装配置过程：
+[安装设置]
+安装下载 FlashDevelop 安装到比如 d:\Program Files\FlashDevelop 下面。
+管理员运行 FDMT.cmd，打开下面两项
+standalone mode (SDK和插件安装于 FlashDevelop/Apps 而不是系统用户目录）
+multi instance mode（可以启动多个 FlashDevelop IDE）
+成功后 FlashDevelop 目录会有 .local 和 .multi 两个文件，.local 以后插件会安装 Apps 目录
+[安装应用]
+FlashDevelop-&gt;Tools-&gt;Install Software 打开软件安装面板，选择必要软件：
+1. Flex SDK + AIR SDK
+2. Adobe AIR
+3. Flash Player (SA)
+[播放器设置]
+1. 下载播放器，位于 FlashDevelop/Apps/flashsa下面，
+2. FlashDevelop-&gt;Tools-&gt;Program Settings, 选择FlashViewer，填写 External Player Path 为播放器文件。
+[SDK]
+FlashDevelop-&gt;Tools-&gt;Program Settings 选择 AS3Context
+在 Installed Flex SDKs 中增加路径 Apps/flexairsdk/4.6.0+18.0.0
+[JAVA]
+如果 SDK 需要依赖 java 1.7 而系统中是 java 1.8 1.9 的话
+修改 Apps/flexairsdk/4.6.0+18.0.0/bin/jvm.config 里面的 java.home 以及 env 两项
+java.home=D:/Program Files/FlashDevelop/runtimes/java/jre-1.7.0_60
+注意路径分割使用 &ldquo;/&ldquo;，而不是 “\”，设置到你的 jre 1.7 对应目录去，我自己是单独下载了一个 jre 直接扔 FlashDevelop 安装目录的 runtimes 下面了，这里你需要改为你对应的 jre 路径。
+视情况如果内存报错，继续设置：
+java.args=-Xmx512m -Dsun.io.useCanonCaches=false -Djava.util.Arrays.useLegacyMergeSort=true
+[SWC]
+flashdevelop没有直接支持生成swc的工程，但flashdevelop生成swc也比较方便，不用任何插件。
+swc库是由 flexsdk的compc.exe生成的，其实我们通过这个命令行也可以直接生成swc。
+但还是直接在flashdevelop里F8一下，编译+生成来得方便。
+我先建立一个AS3 Project，取名为logic吧。
+1. 打开project Properties对话框，output那一页，把输出名字logic.swf改成logic.swc。
+2. 选择build tab页
+在Post-Build Command Line加入生成swc的执行命令，注意是Post-Build，不是Pre-Build。
+&rdquo;$(CompilerPath)\bin\compc.exe&rdquo; -include-sources &ldquo;$(ProjectDir)\role&rdquo; &ldquo;$(ProjectDir)\item&rdquo; -
+compiler.library-path &ldquo;$(ProjectDir)\..\..\lib\protobuf.swc&rdquo; -output &ldquo;$(OutputFile)&rdquo;
+这个命令把role和item目录下的AS代码生成swc的。-compiler.library-path,
+这个是指定引用其他swc的路径。-include-sources 和 -compiler.library-path 后面都可以接多个路径
+3. 关于Document-Class
+经过上面两项设置，F8，会提示须要一个Document-Class，我们要的是swc，不须要程序运行入口。我们争取能不
+用Document-Class也能编译。
+打开第一步的output那一页，把Compilation Target 从Application改成&rdquo;Custom Build&rdquo;。
+设置完后，F8，编译，接着就生成swc了。
+我的flashdevelop版本是：5.0.1.3
+[禁止更新]
+每次 FlashDevelop 更新都会打乱所有配置，不是特别必要，可以禁止更新：
+FlashDevelop-&gt;Tools-&gt;Program Settings，左边选择 FlashDevelop 然后右边查找 State 下面的
+Check for Update 改为 Never
+[插件]
+ColorBox - 不安装，干扰太大，不推荐
+NavigationBar - 安装，查看类结构，类似 VS 好用，关闭 FlashDevelop 双击 NavigationBar_2.……
+                            </div>
+                            <p class="readmore"><a href="https://skywind3000.com/blog/archives/1469/">阅读全文</a></p>
+                        </article>
+                    
+
+                    
+
+
+<ol class="page-navigator">
+    
+    <li class="prev">
+        <a href="https://skywind3000.com/page/4/">上一页</a>
+    </li>
+    
+
+    
+    <li >
+        <a href="https://skywind3000.com/">1</a>
+    </li>
+    
+    <li >
+        <a href="https://skywind3000.com/page/2/">2</a>
+    </li>
+    
+    <li >
+        <a href="https://skywind3000.com/page/3/">3</a>
+    </li>
+    
+    <li >
+        <a href="https://skywind3000.com/page/4/">4</a>
+    </li>
+    
+    <li  class="current">
+        <a href="https://skywind3000.com/page/5/">5</a>
+    </li>
+    
+    <li >
+        <a href="https://skywind3000.com/page/6/">6</a>
+    </li>
+    
+    <li >
+        <a href="https://skywind3000.com/page/7/">7</a>
+    </li>
+    
+    <li >
+        <a href="https://skywind3000.com/page/8/">8</a>
+    </li>
+    
+    <li >
+        <a href="https://skywind3000.com/page/9/">9</a>
+    </li>
+    
+    <li >
+        <a href="https://skywind3000.com/page/10/">10</a>
+    </li>
+    
+    <li >
+        <a href="https://skywind3000.com/page/11/">11</a>
+    </li>
+    
+    <li >
+        <a href="https://skywind3000.com/page/12/">12</a>
+    </li>
+    
+    <li >
+        <a href="https://skywind3000.com/page/13/">13</a>
+    </li>
+    
+    <li >
+        <a href="https://skywind3000.com/page/14/">14</a>
+    </li>
+    
+
+    
+    <li class="next">
+        <a href="https://skywind3000.com/page/6/">下一页</a>
+    </li>
+    
+</ol>
+
+
+
+                </div>
+            </div>
+
+            <div id="secondary">
+    <section class="widget">
+        <form id="search" action="//www.google.com/search" method="get" accept-charset="utf-8" target="_blank" _lpchecked="1">
+      
+      <input type="text" name="q" maxlength="20" placeholder="Search">
+      <input type="hidden" name="sitesearch" value="https://skywind3000.com/">
+      <button type="submit" class="submit icon-search"></button>
+</form>
+    </section>
+    
+    <section class="widget">
+        <h3 class="widget-title">最近文章</h3>
+<ul class="widget-list">
+    
+    <li>
+        <a href="https://skywind3000.com/posts/2019/shell_init_sh/" title="提高效率从编写 init.sh 开始">提高效率从编写 init.sh 开始</a>
+    </li>
+    
+    <li>
+        <a href="https://skywind3000.com/posts/intro/" title="个人主页搬迁到新系统">个人主页搬迁到新系统</a>
+    </li>
+    
+    <li>
+        <a href="https://skywind3000.com/blog/archives/2250/" title="如何实现和优化 SVM（支持向量机）？">如何实现和优化 SVM（支持向量机）？</a>
+    </li>
+    
+    <li>
+        <a href="https://skywind3000.com/blog/archives/2229/" title="别让 cd 浪费你的时间">别让 cd 浪费你的时间</a>
+    </li>
+    
+    <li>
+        <a href="https://skywind3000.com/blog/archives/2193/" title="VimScript 五分钟入门（翻译）">VimScript 五分钟入门（翻译）</a>
+    </li>
+    
+    <li>
+        <a href="https://skywind3000.com/blog/archives/2173/" title="Windows 10 - 1803 更新又给我出幺蛾子">Windows 10 - 1803 更新又给我出幺蛾子</a>
+    </li>
+    
+    <li>
+        <a href="https://skywind3000.com/blog/archives/2084/" title="Vim 8 下 C/C&#43;&#43; 开发环境搭建">Vim 8 下 C/C&#43;&#43; 开发环境搭建</a>
+    </li>
+    
+    <li>
+        <a href="https://skywind3000.com/blog/archives/2071/" title="Bash 中文速查表/Cheatsheet （全网最全）">Bash 中文速查表/Cheatsheet （全网最全）</a>
+    </li>
+    
+    <li>
+        <a href="https://skywind3000.com/blog/archives/2060/" title="为什么说 zsh 是 shell 中的极品？">为什么说 zsh 是 shell 中的极品？</a>
+    </li>
+    
+    <li>
+        <a href="https://skywind3000.com/blog/archives/2051/" title="Vim 中文速查表/Cheatsheet（全网最完善）">Vim 中文速查表/Cheatsheet（全网最完善）</a>
+    </li>
+    
+</ul>
+    </section>
+
+    
+
+    <section class="widget">
+        <h3 class="widget-title">分类</h3>
+<ul class="widget-list">
+    
+    <li>
+        <a href="https://skywind3000.com/categories/%E4%BA%BA%E5%B7%A5%E6%99%BA%E8%83%BD/">人工智能(8)</a>
+    </li>
+    
+    <li>
+        <a href="https://skywind3000.com/categories/%E5%9B%BE%E5%BD%A2%E7%BC%96%E7%A8%8B/">图形编程(20)</a>
+    </li>
+    
+    <li>
+        <a href="https://skywind3000.com/categories/%E5%A4%A7%E6%B5%AA%E6%B7%98%E6%B2%99/">大浪淘沙(12)</a>
+    </li>
+    
+    <li>
+        <a href="https://skywind3000.com/categories/%E5%BC%80%E6%BA%90%E9%A1%B9%E7%9B%AE/">开源项目(8)</a>
+    </li>
+    
+    <li>
+        <a href="https://skywind3000.com/categories/%E6%9C%AA%E5%88%86%E7%B1%BB/">未分类(6)</a>
+    </li>
+    
+    <li>
+        <a href="https://skywind3000.com/categories/%E6%B8%B8%E6%88%8F%E5%BC%80%E5%8F%91/">游戏开发(27)</a>
+    </li>
+    
+    <li>
+        <a href="https://skywind3000.com/categories/%E7%BC%96%E7%A8%8B%E6%8A%80%E6%9C%AF/">编程技术(45)</a>
+    </li>
+    
+    <li>
+        <a href="https://skywind3000.com/categories/%E7%BC%96%E8%AF%91%E6%8A%80%E6%9C%AF/">编译技术(6)</a>
+    </li>
+    
+    <li>
+        <a href="https://skywind3000.com/categories/%E7%BD%91%E7%BB%9C%E7%BC%96%E7%A8%8B/">网络编程(14)</a>
+    </li>
+    
+    <li>
+        <a href="https://skywind3000.com/categories/%E9%9A%8F%E7%AC%94/">随笔(57)</a>
+    </li>
+    
+</ul>
+    </section>
+
+    <section class="widget">
+        <h3 class="widget-title">标签</h3>
+<div class="tagcloud">
+    
+    <a href="https://skywind3000.com/tags/ai/">ai</a>
+    
+    <a href="https://skywind3000.com/tags/android/">android</a>
+    
+    <a href="https://skywind3000.com/tags/as3/">as3</a>
+    
+    <a href="https://skywind3000.com/tags/c&#43;&#43;/">c&#43;&#43;</a>
+    
+    <a href="https://skywind3000.com/tags/cygwin/">cygwin</a>
+    
+    <a href="https://skywind3000.com/tags/dos/">dos</a>
+    
+    <a href="https://skywind3000.com/tags/kcp/">kcp</a>
+    
+    <a href="https://skywind3000.com/tags/linux/">linux</a>
+    
+    <a href="https://skywind3000.com/tags/p2p/">p2p</a>
+    
+    <a href="https://skywind3000.com/tags/python/">python</a>
+    
+    <a href="https://skywind3000.com/tags/shell/">shell</a>
+    
+    <a href="https://skywind3000.com/tags/vim/">vim</a>
+    
+    <a href="https://skywind3000.com/tags/win32/">win32</a>
+    
+    <a href="https://skywind3000.com/tags/%E4%BC%98%E5%8C%96/">优化</a>
+    
+    <a href="https://skywind3000.com/tags/%E5%90%8C%E6%AD%A5/">同步</a>
+    
+    <a href="https://skywind3000.com/tags/%E5%9B%BE%E5%BD%A2/">图形</a>
+    
+    <a href="https://skywind3000.com/tags/%E5%B0%8F%E6%B8%B8%E6%88%8F/">小游戏</a>
+    
+    <a href="https://skywind3000.com/tags/%E6%8A%97%E9%94%AF%E9%BD%BF/">抗锯齿</a>
+    
+    <a href="https://skywind3000.com/tags/%E6%B1%87%E7%BC%96/">汇编</a>
+    
+    <a href="https://skywind3000.com/tags/%E6%BC%94%E7%A4%BA/">演示</a>
+    
+    <a href="https://skywind3000.com/tags/%E7%9F%A2%E9%87%8F%E4%BD%9C%E5%9B%BE/">矢量作图</a>
+    
+    <a href="https://skywind3000.com/tags/%E7%9F%A5%E4%B9%8E/">知乎</a>
+    
+    <a href="https://skywind3000.com/tags/%E7%AD%96%E5%88%92/">策划</a>
+    
+    <a href="https://skywind3000.com/tags/%E7%AE%97%E6%B3%95/">算法</a>
+    
+    <a href="https://skywind3000.com/tags/%E7%B3%BB%E7%BB%9F%E5%BC%80%E5%8F%91/">系统开发</a>
+    
+    <a href="https://skywind3000.com/tags/%E7%BD%91%E7%BB%9C/">网络</a>
+    
+    <a href="https://skywind3000.com/tags/%E7%BF%BB%E8%AF%91/">翻译</a>
+    
+    <a href="https://skywind3000.com/tags/%E8%99%9A%E6%8B%9F%E6%9C%BA/">虚拟机</a>
+    
+    <a href="https://skywind3000.com/tags/%E8%A7%86%E9%A2%91/">视频</a>
+    
+    <a href="https://skywind3000.com/tags/%E8%AE%B2%E4%B9%89/">讲义</a>
+    
+    <a href="https://skywind3000.com/tags/%E8%AF%8D%E6%B3%95%E5%88%86%E6%9E%90/">词法分析</a>
+    
+    <a href="https://skywind3000.com/tags/%E8%AF%AD%E6%B3%95%E5%88%86%E6%9E%90/">语法分析</a>
+    
+    <a href="https://skywind3000.com/tags/%E8%B6%B3%E8%BF%B9/">足迹</a>
+    
+    <a href="https://skywind3000.com/tags/%E9%97%B2%E8%81%8A/">闲聊</a>
+    
+    <a href="https://skywind3000.com/tags/%E9%9A%8F%E7%AC%94/">随笔</a>
+    
+</div>
+    </section>
+
+    
+
+    <section class="widget">
+        <h3 class="widget-title">其它</h3>
+        <ul class="widget-list">
+            <li><a href="https://skywind3000.com/index.xml">文章 RSS</a></li>
+        </ul>
+    </section>
+</div>
+        </div>
+    </div>
+</div>
+<footer id="footer">
+    <div class="container">
+        &copy; 2019 <a href="https://skywind3000.com/">Skywind Inside By skywind</a>.
+        Powered by <a rel="nofollow noreferer noopener" href="https://gohugo.io" target="_blank">Hugo</a>.
+        <a href="https://www.flysnow.org/" target="_blank">Theme</a> based on <a href="https://github.com/rujews/maupassant-hugo" target="_blank">maupassant</a>.
+        
+    </div>
+</footer>
+
+
+<a id="rocket" href="#top"></a>
+<script type="text/javascript" src="/js/totop.js?v=0.0.0" async=""></script>
+
+
+
+<script type="text/javascript" src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js" async></script>
+
+
+
+
+
+</body>
+</html>

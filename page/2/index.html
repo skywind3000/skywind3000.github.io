@@ -1,0 +1,743 @@
+<!doctype html>
+<html lang="zh-cn">
+<head>
+
+    <meta charset="utf-8">
+    <meta name="generator" content="Hugo 0.54.0" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <title>Skywind Inside | 写自己的代码，让别人猜去吧！</title>
+    <meta property="og:title" content="Skywind Inside | 写自己的代码，让别人猜去吧！">
+    <meta property="og:type" content="website">
+    <meta name="Keywords" content="golang,go语言,go语言笔记,飞雪无情,java,android,博客,项目管理,python,软件架构,公众号,小程序">
+    <meta name="description" content="Putty 本无树，MinGW 亦非台">
+    <meta property="og:url" content="https://skywind3000.com/">
+    <link rel="shortcut icon" href="/favicon.ico" type="image/x-icon">
+
+    <link rel="stylesheet" href="/css/normalize.css">
+    
+    <link rel="stylesheet" href="/css/style.css">
+    <link rel="alternate" type="application/rss+xml+xml" href="https://skywind3000.com/index.xml" title="Skywind Inside" />
+    <script type="text/javascript" src="//cdn.bootcss.com/jquery/3.2.1/jquery.min.js"></script>
+
+    
+
+
+    
+    
+</head>
+
+
+<body>
+<header id="header" class="clearfix">
+    <div class="container">
+        <div class="col-group">
+            <div class="site-name ">
+                
+                    <h1>
+                        <a id="logo" href="https://skywind3000.com/">
+                            Skywind Inside
+                        </a>
+                    </h1>
+                
+                <p class="description">写自己的代码，让别人猜去吧！</p>
+            </div>
+            <div>
+                <nav id="nav-menu" class="clearfix">
+                    <a class="current" href="https://skywind3000.com/">首页</a>
+                    
+                    <a  href="https://skywind3000.com/categories/" title="文章分类">文章分类</a>
+                    
+                    <a  href="https://skywind3000.com/tags/" title="标签">标签</a>
+                    
+                    <a  href="https://skywind3000.com/archives/" title="归档">归档</a>
+                    
+                    <a  href="https://skywind3000.com/about/" title="关于">关于</a>
+                    
+                </nav>
+            </div>
+        </div>
+    </div>
+</header>
+
+
+<div id="body">
+    <div class="container">
+        <div class="col-group">
+
+            <div class="col-8" id="main">
+                <div class="res-cons">
+                    
+                        <article class="post">
+                            <header>
+                                <h1 class="post-title">
+                                    <a href="https://skywind3000.com/blog/archives/2051/" title="Vim 中文速查表/Cheatsheet（全网最完善）" >Vim 中文速查表/Cheatsheet（全网最完善）</a>
+                                </h1>
+                            </header>
+                            <date class="post-meta meta-date">
+                                2018年3月7日
+                            </date>
+                            
+                            <div class="post-meta">
+                                <span>|</span>
+                                
+                                <span class="meta-category"><a href="https://skywind3000.com/categories/%E9%9A%8F%E7%AC%94">随笔</a></span>
+                                
+                            </div>
+                            
+                            <div class="post-content">
+                                春节期间整理了一份 Vim 中文速查表，免得经常东搜索西搜索的：
+https://github.com/skywind3000/awesome-cheatsheets/blob/master/editors/vim.txt
+看了一下，应该是现在 Vim 所有中英文速查表里最完善的一份，有时候速查表比看书搜网页高效多了。……
+                            </div>
+                            <p class="readmore"><a href="https://skywind3000.com/blog/archives/2051/">阅读全文</a></p>
+                        </article>
+                    
+                        <article class="post">
+                            <header>
+                                <h1 class="post-title">
+                                    <a href="https://skywind3000.com/blog/archives/2036/" title="GDB 从裸奔到穿戴整齐" >GDB 从裸奔到穿戴整齐</a>
+                                </h1>
+                            </header>
+                            <date class="post-meta meta-date">
+                                2018年2月28日
+                            </date>
+                            
+                            <div class="post-meta">
+                                <span>|</span>
+                                
+                                <span class="meta-category"><a href="https://skywind3000.com/categories/%E9%9A%8F%E7%AC%94">随笔</a></span>
+                                
+                            </div>
+                            
+                            <div class="post-content">
+                                无数次被问道：你在终端下怎么调试更高效？或者怎么在 Vim 里调试？好吧，今天统一回答下，我从来不在 vim 里调试，因为它还不成熟。那除了命令行 GDB 裸奔以外，终端下还有没有更高效的方法？能够让我事半功倍？
+当然有，选择恰当的工具和方法，让 GDB 调试效率成倍的提升并没有任何问题。当然，前提条件是你至少会在使用最原始的 GDB。
+裸奔状态：原始的 GDB 命令行 穿上各种衣服前，至少得先学会裸奔，找份简单的 GDB cheat sheet 对照一下：
+生产环境中出现崩溃时，因线上服务器一般没有开发环境，也无配套源代码，所以程序崩溃后，如果你懒得把 core 文件拖回到开发机检查，可以先在线上服务器先简单gdb看一下。
+GDB命令密密麻麻，常用的也就表格上那几条，比如进去以后第一步先用 bt 查看一下调用栈，info local查看一下本地变量，再配合 up/down 在整个调用栈的不同层次之间上下移动一下，检查各处局部变量的值，print 一下某个表达式，即便没代码，看下符号和反汇编，一般也能调试个七七八八。
+碰到复杂点的 BUG，必须配合源代码了，那你得把 core 文件拉到开发环境中，再用 gdb 对照源代码调试，配合 list [行号] 指令查看当前运行的源代码，再配合其他方法进行调试。
+那么这时候，如果调试复杂度继续上升，你需要不断的断点，每次 next / step 单步完后你都需要 list 一下前后源代码，或者用 disassemble [函数名/地址] 查看一下指令的话，不少人会感觉到抓狂，这时我们需要给裸奔的 GDB 穿条内裤了。
+穿上内裤的 GDB - TUI 这是 gdb 自带的文本界面，使用 gdb -tui 命令启动，比如：
+gdb -tui hello  即可打开我们的文本界面：
+上方是源代码窗口，下面是 gdb 终端，窗口管理快捷键模仿 emacs，使用 c-x o 进行窗口切换，如果你还想查看指令窗口，可以输入：layout split
+然后你单步的时候上面的源代码窗口会跟着滚动，比之前不停的 list 方便不少吧，要看前后源代码可以继续 c-x o 切换窗口后上下滚动。
+有时候你 up/down 切换了栈帧后，上面的代码也许来不及更新，那么你用 update 指令，让上面的代码窗口定位到你最新的执行位置，有时也需要 CTRL-L 重绘下整个界面。
+在 gdb 自带的 tui 模式中，你不但可以随时查看代码/指令，还可以查看寄存器。好吧，其实 gdb再简陋，本身还是配套了一条内裤的，只是很多人忘记拿出来穿了。
+穿上内衣：gdbinit 如果上述文本 TUI的信息不够丰富的话，也许你会对 .gdbinit 感兴趣，~/.gdbinit 是一个 gdb配置脚本，可以设定一些由 python 编写的插件，比如 peda：
+在 ~/.gdbinit 上面配置了 peda 后，可以看到命令提示符就从 (gdb) 变成了 gdb-peda$ 。每敲一个单步命令，peda 都会显示出无比丰富的信息，你还可以配置添加更多，配合高亮，你可以得到一个加强版的命令行。
+不过这个我用的并不多，因为它会影响 TUI 模式的界面，我不喜欢在我的 gdb 里搞太多乱七八糟的东西。同时，当我们的调试需求继续变得更加复杂，你要不停的断点，频繁的单步，这些传统命令行里不停的输入各种指令显然已经让我们疲惫不堪了，能否直接在界面上查看源代码并且直接在代码上快捷键断点，快捷键单步呢？
+可以啊，试试 cgdb。
+穿上外套的 GDB：cgdb CGDB 类似 gdb tui 分为终端窗口和代码窗口：
+上面的代码窗口称为 cgdb mode, 下面的 gdb 窗口称为 gdb mode，调试就是不停的在两种模式间切换，按键模仿 vim，按 ESC 切换回 cgdb 模式，按 i 切换到 gdb 模式。
+这看起来和 TUI gdb 差不多啊？除了语法高亮外它比 gdb tui 高效在哪里呢？答案是：大部分操作皆可在 cgdb mode 下（即源代码窗口）用快捷键操作。
+方向键 或者 hjkl 移动光标，page-down/up 或 c-f / c-b 前后翻页，按 o键会列出当前可执行文件的源代码列表，可以切换查看其他相关代码文件，按 / 或者 ？ 可以进行文档搜索。
+上面这些快捷键基本和 vim 对应，能让你方便的浏览源代码，同时在代码窗口可以用空格键来切换断点，还有其他一些快捷键：
+ F5 - Send a run command to GDB. F6 - Send a continue command to GDB. F7 - Send a finish command to GDB. F8 - Send a next command to GDB.……
+                            </div>
+                            <p class="readmore"><a href="https://skywind3000.com/blog/archives/2036/">阅读全文</a></p>
+                        </article>
+                    
+                        <article class="post">
+                            <header>
+                                <h1 class="post-title">
+                                    <a href="https://skywind3000.com/blog/archives/2021/" title="终端软件里正确设置 ALT 键和 BACKSPACE 键" >终端软件里正确设置 ALT 键和 BACKSPACE 键</a>
+                                </h1>
+                            </header>
+                            <date class="post-meta meta-date">
+                                2018年2月23日
+                            </date>
+                            
+                            <div class="post-meta">
+                                <span>|</span>
+                                
+                                <span class="meta-category"><a href="https://skywind3000.com/categories/%E9%9A%8F%E7%AC%94">随笔</a></span>
+                                
+                            </div>
+                            
+                            <div class="post-content">
+                                不管你在终端下使用 vim/neovim, emacs, nano 或者 zsh，你都会碰到使用 ALT 键的情况（终端下叫做 meta键），而由于历史原因，大部分终端软件的默认设置都无法正确使用 ALT 键。
+要在终端下正确使用 ALT键最简单的做法是：首先将终端软件的 “使用 Alt键作为 Meta键” 的功能打开，意思是如果你在终端下按下 ALT+X，那么终端软件将会发送 &lt;ESC&gt;x 两个字节过去，字节码为：0x27, 0x78。
+SecureCRT：终端设置
+XShell4 终端设置：
+其他终端软件里：
+ Putty/MinTTY 默认ALT+X 就是发送 &lt;ESC&gt;x过去 Mac下面的 iTerm2/Terminal.app 需要跟 XShell / SecureCRT一样设置一下 Ubuntu 下面的 GnomeTerminal 默认也是发送 &lt;ESC&gt;x过去的 任意平台下面的 xterm 可以配置 ~/.Xdefaults 来设置这个行为。  这样的话，终端里的软件就能识别你的 ALT 组合键了，设置好以后，你可以在终端下使用命令：
+showkey -a  来查看自己的设置正确不，是不是按下 ALT_a 后正确发送了 0x1b, 0x61 两个字节过去了？
+功能键超时
+那么终端里按下 ALT_X 和先按 ESC 键再按 X键有什么区别呢？答案是没有区别，你在 emacs 中快速先后按下 ESC 和 v 的话，emacs 就会以为你按了 ALT_v，然后给你来个上翻页了。
+远程主机一般靠超时来区别到底是 ALT_X 还是先按 ESC 再按 X 键，如果你 100 毫秒内先后发送了 ESC 和 X 过来，远程主机会识别成 ALT_X 键，否则识别成 ESC 和 X 两个键，这个超时时间可以设置，一般设置成 100ms 或者 50ms ，但不要低于 25ms，否则网络一卡可能有概率会判断错误。
+在 Vim/NeoVim 中你可以通过 ttimeoutlen 来设置功能键超时检测为 50 毫秒，比如：
+:set ttimeout ttimeoutlen=50  而 tmux 中，也有类似配置，比如：
+set-option -g escape-time 50  就连 ncurses 库中也有类似功能键超时检测的设置，来区别到底是功能键/组合键，还是数个单独的按键。这里你可能觉得这样靠超时检测很不可靠，那你要问 VT100, VT220 的标准制定者了。不过我个人常年设置成 50 毫秒后，连接到各种国内外速度不一的主机上并没有被网速慢把功能键卡成两个键的情况，应该是终端软件中本身也在尽量保证同一组按键序列能够尽量同时发送，所以我链接到国外 rtt=400 左右的主机上工作时，尽管网速经常不稳定，也没有发生错误识别的问题，那其他网速正常的主机就更不用担心了。
+更友好的终端设置
+上面在 SecureCRT / XShell 中设置了将 alt 键作为发送 +ESC x 的 meta 键后，你会发现，终端软件中固有的一些 ALT 组合键全部失效了，比如原来在终端中 ALT_1 到 ALT_9 可以切换终端的 TAB，ALT_B 可以打开链接管理器，这下都全部用不了了，这是件比较坑爹的事情，能不能保留有限的几个 ALT 组合键给终端软件使用，剩下的全部当作 meta 键呢？答案是可以的，先取消终端里 ALT 当作 meta 键的设置，恢复成默认状态，然后打开终端软件 keymap 设置窗口，将你不需要保留的 ALT 组合键全部设置成发送 +ESC x 字符串。
+那么一个个设置可能有些麻烦，对于 SecureCRT 的话，我生成了一个配置文件：
+A VK_A &quot;\033a&quot; A VK_D &quot;\033d&quot; A VK_E &quot;\033e&quot; A VK_G &quot;\033g&quot; A VK_H &quot;\033h&quot; .... AS VK_A &quot;\033A&quot; AS VK_B &quot;\033B&quot; AS VK_C &quot;\033C&quot; AS VK_D &quot;\033D&quot;  可以到 这里 下载现成的，在 keymap editor 窗口中加载进去即可。……
+                            </div>
+                            <p class="readmore"><a href="https://skywind3000.com/blog/archives/2021/">阅读全文</a></p>
+                        </article>
+                    
+                        <article class="post">
+                            <header>
+                                <h1 class="post-title">
+                                    <a href="https://skywind3000.com/blog/archives/2006/" title="基础优化-最不坏的哈希表" >基础优化-最不坏的哈希表</a>
+                                </h1>
+                            </header>
+                            <date class="post-meta meta-date">
+                                2017年12月8日
+                            </date>
+                            
+                            <div class="post-meta">
+                                <span>|</span>
+                                
+                                <span class="meta-category"><a href="https://skywind3000.com/categories/%E7%BC%96%E7%A8%8B%E6%8A%80%E6%9C%AF">编程技术</a></span>
+                                
+                            </div>
+                            
+                            <div class="post-content">
+                                哈希表性能优化的方法有很多，比如：
+ 使用双 hash 检索冲突 使用开放+封闭混合寻址法组织哈希表 使用跳表快速定位冲突 使用 LRU 缓存最近访问过的键值，不管表内数据多大，短时内访问的总是那么几个 使用更好的分配器来管理 key_value_pair 这个节点对象  上面只要随便选两条你都能得到一个比 unordered_map 快不少的哈希表，类似的方法还有很多，比如使用除以质数来归一化哈希值（x86下性能最好，整数除法非常快，但非x86就不行了，arm还没有整数除法指令，要靠软件模拟，代价很大）。
+哈希表最大的问题就是过分依赖哈希函数得到一个正态分布的哈希值，特别是开放寻址法（内存更小，速度更快，但是更怕哈希冲突），一旦冲突多了，或者 load factor 上去了，性能就急剧下降。
+Python 的哈希表就是开放寻址的，速度是快了，但是面对哈希碰撞攻击时，挂的也是最惨的，早先爆出的哈希碰撞漏洞，攻击者可以通过哈希碰撞来计算成千上万的键值，导致 Python / Php / Java / V8 等一大批语言写成的服务完全瘫痪。
+后续 Python 推出了修正版本，解决方案是增加一个哈希种子，用随机数来初始化它，这都不彻底，开放寻址法对hash函数的好坏仍然高度敏感，碰到特殊的数据，性能下降很厉害。
+经过最近几年的各种事件，让人们不得不把目光从“如何实现个更快的哈希表”转移到 “如何实现一个最不坏的哈希表”来，以这个新思路重新思考 hash 表的设计。
+哈希表定位主要靠下面一个操作：
+index_pos = hash(key) % index_size;  来决定一个键值到底存储在什么地方，虽然 hash(key) 返回的数值在 0-0xffffffff 之前，但是索引表是有大小限制的，在 hash 值用 index_size 取模以后，大量不同哈希值取模后可能得到相同的索引位置，所以即使哈希值不一样最终取模后还是会碰撞。
+第一种思路是尽量避免冲突，比如双哈希，比如让索引大小 index_size 保持质数式增长，但是他们都太过依赖于哈希函数本身；所以第二种思路是把注意力放在碰撞发生了该怎么处理上，比如多层哈希，开放+封闭混合寻址法，跳表，封闭寻址+平衡二叉树。
+优化方向
+今天我们就来实现一下最后一种，也是最彻底的做法：封闭寻址+平衡二叉树，看看最终性能如何？能否达到我们的要求？实现起来有哪些坑？其原理简单说起来就是，将原来封闭寻址的链表，改为平衡二叉树：
+传统的封闭寻址哈希表，也是 Linux / STL 等大部分哈希表的实现，碰到碰撞时链表一长就挂掉，所谓哈希表+平衡二叉树就是：
+将原来的链表（有序或者无序）换成平衡二叉树，这是复杂度最高的做法，同时也是最可靠的做法。发生碰撞时能将时间复杂度由 O(N) 降低到 O(logN)，10个节点，链表的复杂度就是 10，而使用平衡二叉树的复杂度是 3；100个节点前者的时间是100，后者只有6.6 越往后差距约明显。
+面临问题
+树表混合结构（哈希表+平衡二叉树）的方法，Hash table - Wikipedia 上面早有说明，之所以一直没有进入各大语言/SDK的主流实现主要有四个问题：
+ 比起封闭寻址（STL，Java）来讲，节点少时，维持平衡（旋转等）会比有序链表更慢。 比起开放寻址（python，v8实现）来讲，内存不紧凑，缓存不够友好。 占用更多内存：一个平衡二叉树节点需要更多指针。 设计比其他任何哈希表都要复杂。  所以虽然早就有人提出，但是一直都是一个边缘方法，并未进入主流实现。而最近两年随着各大语言暴露出来的各种哈希碰撞攻击，和原有设计基本无力应对坏一些的情况，于是又开始寻求这种树表混合结构是否还有优化的空间。
+先来解决第一个问题，如果二叉树节点只有3-5个，那还不如使用有序链表，这是公认的事实，Java 8 最新实现的树表混合结构里，引入了一个 TREEIFY_THRESHOLD = 8 的常量，同一个索引内（或者叫同一个桶/slot/bucket内），冲突键值小于 8 的，使用链表，大于这个阈值时当前 index 内所有节点进行树化操作（treeify）。
+Java 8 靠这个方法有效的解决了第一个问题和第三个问题，最终代替了原有 java4-7 一直在使用的 HashMap 老实现，那么我们要使用 Java 8 的方法么？
+不用，今天我们换种实现。
+java 8 经过了反复测试选择了 TREEIFY_THRESHOLD=8 这个阈值，因为它 treeify 的过程的代价是非常大的：
+ 要为每个节点重新分配一个 TreeNode ，分配内存过本身就是很大的一个开销。 构造二叉平衡树，其维护平衡即便不需要再平衡，进去也是要走一堆逻辑判断。 当节点降低到 UNTREEIFY_THRESHOLD=6这个阈值以内，又要把树节点全部删除掉，换回链表去，那如果 index 内节点就在 5-9 之间波动，这就傻了，这是第三项成本。 每次插入节点时要判断这是链表还是树，到阈值没有，大家知道这些额外增加的分支都是对 CPU的流水线十分不友好的。  如果我们能想办法不多分配内存（开销最大），那基本上这个阈值可以降低到 4，再此基础上使用更紧凑的搜索代码，在 gcc 那里可以获得更好的优化，现代CPU对小型分支预测的处理都比较完善，x86下还有 cmov 指令解决跳转，树搜索时多用紧凑的三元式：
+node = (key &lt; node-&gt;key)? node-&gt;left : node-&gt;right;  最终生成 cmov 的代码是没有分支的，实测新老 gcc，新版本 gcc 生成 cmov指令性能是没有用 cmov 的一倍以上，诸如此类的代码层的优化技巧我们尽量用起来，让这个阈值降低到 2-3 的时候，也就是说传统的有序链表操作已经没有优化余地了，但是通过降低 treeify 过程中再次分配内存的消耗，树维护的消耗，以及提高树的性能，可以把阈值从 8 降低到 4，再通过代码层的优化降低到 2-3，也就是说，最终链表只有在 2-3个节点以内才比树更快，如果做到这一点，那好，我们的故事就变了。
+再链表/树的性能对比阈值降低到 2-3个节点后，接下来我们就可以完全抛弃链表，index里面只保留树结构，然后给平衡二叉树增加几条 fast path，让其性能尽量接近链表，比如大部分时候（hash值较为平均），每个 index只有 0-2个节点的时候，我们的这些快速路径就生效了：
+ 当某 index 下面节点数为 0 时，要增加一个节点，我们直接更改树的根节点即可，完全跳过后面的各种再平衡逻辑，以及比较逻辑。 如果本来有 1 个节点，要增加一个新节点，那么也完全不需要再平衡，一次比较后直接设置成左或者右儿子同样跳过再平衡逻辑。 如果是2个节点变3个节点，那同样很简单，把最大和最小节点找出来，放在剩下节点的左右子树即可，同样跳过再平衡。  这样 3个节点以内我们采取一次性直接构造树的方法免去再平衡逻辑，基本上保证了3个节点以内的树操作和链表代价相同，又因为自始至终只有一种节点，避免了 java8 中同节点可能需要两次内存分配的问题，又大大缩小了链表和树的性能差距，只使用树结构，免除了 treeify, untreeify 两道逻辑和开头的判断，最终达到和链表性能差不多的树结构。
+指针优化
+再看 TreeNode 内容，大家猜猜一个 java.util.HashMap.TreeNode 对象有多少个成员变量？不说不知道，一说吓一跳，整整 9个变量（HashMap.Node 本身有4个对象，其派生类 HashMap.TreeNode 又增加了5个新变量）。还有每次分配一断内存其实都有一个 overhead ，表明这个内存是从哪里分配出来的，释放的时候好找到归还的位置，全部加在一起有 10个变量，变量越多缓存越不集中，每次操作的成本也越大，我没研究过 java 的对象内存布局，就以 C语言为例 10个变量 32位下要占用 40字节的空间，64位下占用更多。……
+                            </div>
+                            <p class="readmore"><a href="https://skywind3000.com/blog/archives/2006/">阅读全文</a></p>
+                        </article>
+                    
+                        <article class="post">
+                            <header>
+                                <h1 class="post-title">
+                                    <a href="https://skywind3000.com/blog/archives/1987/" title="AVL/RBTREE 实际比较" >AVL/RBTREE 实际比较</a>
+                                </h1>
+                            </header>
+                            <date class="post-meta meta-date">
+                                2017年12月8日
+                            </date>
+                            
+                            <div class="post-meta">
+                                <span>|</span>
+                                
+                                <span class="meta-category"><a href="https://skywind3000.com/categories/%E7%BC%96%E7%A8%8B%E6%8A%80%E6%9C%AF">编程技术</a></span>
+                                
+                            </div>
+                            
+                            <div class="post-content">
+                                网上对 AVL被批的很惨，认为性能不如 rbtree，这里给 AVL 树平反昭雪。最近优化了一下我之前的 AVL 树，总体跑的和 linux 的 rbtree 一样快了：
+他们都比 std::map 快很多（即便使用动态内存分配，为每个新插入节点临时分配个新内存）。
+项目代码在：skywind3000/avlmini 其他 AVL/RBTREE 评测也有类似的结论，见：STL AVL Map
+谣言1：RBTREE的平均统计性能比 AVL 好
+统计下来一千万个节点插入 AVL 共旋转 7053316 次（先左后右算两次），RBTREE共旋转 5887217 次，RBTREE看起来少是吧？应该很快？但是别忘了 RBTREE 再平衡的操作除了旋转外还有再着色，每次再平衡噼里啪啦的改一片颜色，父亲节点，叔叔，祖父，兄弟节点都要访问一圈，这些都是代价，再者平均树高比 AVL 高也成为各项操作的成本。
+谣言2：RBTREE 一般情况只比 AVL 高一两层，这个代价忽略不计
+纯粹谣言，随便随机一下，一百万个节点的 RBTREE 树高27，和一千万个节点的 AVL树相同，而一千万个节点的 RBTREE 树高 33，比 AVL 多了 6 层，这还不是最坏情况，最坏情况 AVL 只有 1.440 * log(n + 2) - 0.328, 而 RBTREE 是 2 * log(n + 1)，也就是说同样100万个节点，AVL最坏情况是 28 层，rbtree 最坏可以到 39 层。
+谣言3：AVL树删除节点是需要回溯到根节点
+我以前也是这么写 AVL 树的，后来发现根据 AVL 的定义，可以做出两个推论，再平衡向上回溯时：
+插入更新时：如当前节点的高度没有改变，则上面所有父节点的高度和平衡也不会改变。 删除更新时：如当前节点的高度没有改变且平衡值在 [-1, 1] 区间，则所有父节点的高度和平衡都不会改变。
+根据这两个推论，AVL的插入和删除大部分时候只需要向上回溯一两个节点即可，范围十分紧凑。
+谣言4：虽然二者插入一万个节点总时间类似，但是rbtree树更平均，avl有时很快，有时慢很多，rbtree 只需要旋转两次重新染色就行了，比 avl 平均
+完全说反了，avl是公认的比rbtree平均的数据结构，插入时间更为平均，rbtree才是不均衡，有时候直接插入就返回了（上面是黑色节点），有时候插入要染色几个节点但不旋转，有时候还要两次旋转再染色然后递归到父节点。该说法最大的问题是以为 rbtree 插入节点最坏情况是两次旋转加染色，可是忘记了一条，需要向父节点递归，比如：当前节点需要旋转两次重染色，然后递归到父节点再旋转两次重染色，再递归到父节点的父节点，直到满足 rbtree 的5个条件。这种说法直接把递归给搞忘记了，翻翻看 linux 的 rbtree 代码看看，再平衡时那一堆的 while 循环是在干嘛？不就是向父节点递归么？avl和rbtree 插入和删除的最坏情况都需要递归到根节点，都可能需要一路旋转上去，否则你设想下，假设你一直再树的最左边插入1000个新节点，每次都想再局部转两次染染色，而不去调整整棵树，不动根节点，可能么？只是说整个过程avl更加平均而已。
+比较结论
+AVL / RBTREE 真的差不多，AVL被早期各种乱七八糟的实现和数学上的“统计”给害了，别盯着 linux 用了 rbtree 就觉得 rbtree 一定好过 avl了，solaris 里面大范围的使用 avltree ，完全没有 rbtree 的痕迹那。
+补充测试
+更新：有人比较疑惑 std::map 那么容易被超越么？无图无真相，给一下我测试的编译器和标准库版本吧，否则疑惑我在和 vc6 的 STL 做比较呢。
+主要开发环境：mingw gcc 5.2.0
+linux rbtree with 10000000 nodes: insert time: 4451ms, height=32 search time: 2037ms error=0 delete time: 548ms total: 7036ms avlmini with 10000000 nodes: insert time: 4563ms, height=27 search time: 2018ms error=0 delete time: 598ms total: 7179ms std::map with 10000000 nodes: insert time: 4281ms search time: 4124ms error=0 delete time: 767ms total: 9172ms linux rbtree with 1000000 nodes: insert time: 355ms, height=26 search time: 171ms error=0 delete time: 46ms total: 572ms avlmini with 1000000 nodes: insert time: 438ms, height=24 search time: 141ms error=0 delete time: 47ms total: 626ms std::map with 1000000 nodes: insert time: 345ms search time: 360ms error=0 delete time: 62ms total: 767ms 又测试了一下 vs2017，结论类似： linux rbtree with 10000000 nodes: insert time: 4201ms, height=32 search time: 3411ms error=0 delete time: 567ms total: 8179ms avlmini with 10000000 nodes: insert time: 4250ms, height=27 search time: 3233ms error=0 delete time: 658ms total: 8141ms std::map with 10000000 nodes: insert time: 4658ms search time: 4275ms error=0 delete time: 815ms total: 9748ms linux rbtree with 1000000 nodes: insert time: 330ms, height=26 search time: 316ms error=0 delete time: 62ms total: 708ms avlmini with 1000000 nodes: insert time: 409ms, height=24 search time: 266ms error=0 delete time: 53ms total: 728ms std::map with 1000000 nodes: insert time: 426ms search time: 375ms error=0 delete time: 78ms total: 879ms  注意，avlmini 和 linux rbtree 都是使用结构体内嵌的形式，这样和 std::map 这种需要 overhead 的容器比较起来 std::map 太吃亏了，所以我测试时，每次插入 avlmini 和 linux rbtree 之前都会模拟 std::map 为每对新的 (key, value) 分配一个结构体（包含node信息和 key, value），再插入，这样加入了内存分配的开销，才和 std::map 进行比较。……
+                            </div>
+                            <p class="readmore"><a href="https://skywind3000.com/blog/archives/1987/">阅读全文</a></p>
+                        </article>
+                    
+                        <article class="post">
+                            <header>
+                                <h1 class="post-title">
+                                    <a href="https://skywind3000.com/blog/archives/1958/" title="如何优雅的使用 Vim" >如何优雅的使用 Vim</a>
+                                </h1>
+                            </header>
+                            <date class="post-meta meta-date">
+                                2017年6月20日
+                            </date>
+                            
+                            <div class="post-meta">
+                                <span>|</span>
+                                
+                                <span class="meta-category"><a href="https://skywind3000.com/categories/%E9%9A%8F%E7%AC%94">随笔</a></span>
+                                
+                            </div>
+                            
+                            <div class="post-content">
+                                根据 Bram 前后几个关于高效使用 Vim的视频，大家每天需要花很多时间来编辑：代码、文档、邮件、日志 等等，除去这些外，还要分时间参加会议和人沟通，每个人的时间却都是不够的，优雅使用 Vim 无外乎：
+ 检测不高效的地方：你的整个工作流里，什么地方比较浪费时间？ 寻找一个更快的方式：官方文档，学习他人经验，自己编写 VimScript 使它习惯化：开始使用，并且不断完善  以上三点反复循环，能让你的 Vim 越来越顺手。所以重点是根据自己的工作流不断迭代。而不是象大部分教程那样教你安装一大堆插件。插件都是别人写的为了解决通用需求而提炼的东西，和每个人的具体需求都有差别。上面这三点我屡试不爽，随着时间增长，有种越来越顺手的感觉，举几个我具体碰到的例子：
+问题1：边开发边参考网上解决方案的问题 比如碰到问题搜到一段代码，需要试一下，一会又看会 Chrome ，一会又切回 GVim 里去写代码，反复 ALT_TAB，有时候中间使用了一下资源管理器或者其他程序，ALT_TAB 的顺序就会被打乱，你一切换就切跑了，十分低效。
+于是我用 VimScript + 内嵌 Python 写了一个功能，按快捷键可以让 GVim 在透明/不透明两种状态间自由切换：
+就是 VimScript 简单封装一个函数，里面用内嵌 Python 找到 GVim 的顶层 HWND，并设置透明度。平时默认不透明，需要参考其他资料时切换成透明，参考完了又快捷键切换回来，感觉比缘来切来切去顺畅很多。
+问题2：浏览文档时的窗口滚动问题 比如你在抄写或者改写一段代码，窗口分为左右两个，左边是你引用参考的源代码，右边是你正在编辑的源代码。你抄着抄着，抄到左边最后一行了，或者你想前后看看正在引用的文本，你就需要将焦点从右边切换到左边，滚动，再切换交点回来，十分麻烦，于是撸一小段 VimScript 来解决这个问题：
+&quot; 0:up, 1:down, 2:pgup, 3:pgdown, 4:top, 5:bottom function! Tools_PreviousCursor(mode) if winnr('$') &lt;= 1 return endif noautocmd silent! wincmd p if a:mode == 0 exec &quot;normal! \&lt;c-y&gt;&quot; elseif a:mode == 1 exec &quot;normal! \&lt;c-e&gt;&quot; elseif a:mode == 2 exec &quot;normal! &quot;.winheight('.').&quot;\&lt;c-y&gt;&quot; elseif a:mode == 3 exec &quot;normal! &quot;.winheight('.').&quot;\&lt;c-e&gt;&quot; elseif a:mode == 4 normal! gg elseif a:mode == 5 normal! G elseif a:mode == 6 exec &quot;normal! \&lt;c-u&gt;&quot; elseif a:mode == 7 exec &quot;normal! \&lt;c-d&gt;&quot; elseif a:mode == 8 exec &quot;normal! k&quot; elseif a:mode == 9 exec &quot;normal! j&quot; endif noautocmd silent! wincmd p endfunc  把这个函数绑定到 ALT_U, ALT_D 两个按键上，你正在编辑着当前文档时，不用退出 INSERT 模式，更不用切换窗口交点，直接 ALT_U, ALT_D，就可以上下滚动正在参考的文档内容了，有了这个改进后，我的工作又高效了那么一点点。
+同理，Quickfix 窗口经常用来查看编译错误，或者 Grep 结果，我也写了一个专门针对 Quickfix 窗口的滚屏函数，不用切焦点随时浏览 Quickfix 内容。
+问题3：Tag Preview 十分低效 默认 CTRL-] 可以跳转到 Tag 定义处，但有时候我就像看一眼，并不像把当前文档给切走，也不想预览下其他文件就开一大堆文件，污染 buffer list。后来发现一个快捷键 &lt;C-W&gt;&lt;C-]&gt; 可以打开预览窗口预览符号定义。
+用了一段时间又发现两个问题：每次 &lt;c-w&gt;&lt;c-]&gt; 如果有多处定义，vim会打印显示一大串定义位置，让你选择要看哪个，比较讨厌，而且开始预览时是默认上下分屏，现在都是宽屏显示器时代了，上下分屏十分影响观感。于是自己用 VimScript 重新撸了 Tag Preview：
+需要预览时按下 “ALT+;”，右边弹出预览窗口，并且高亮符号名称，下面显示该 tag一共有 3处定义，现在正在查看第1个定义，连续按下 &ldquo;ALT+;&rdquo; 可以将右边预览窗口切换到下一处定义，切换到最后一个了又会折头到第一个。
+配合前面的当前窗口控制其他窗口滚动的代码，编辑模式下直接 &ldquo;ALT+;&rdquo; 打开 tag预览并切换到你想要的定义处，然后 ALT+U, ALT+D 上下滚动预览窗口来查看前后内容，看完了 &ldquo;ALT+SHIFT+;&rdquo; 就可以关闭预览窗口。
+从开始到结束不需要切换窗口交点，更不需要切换编辑模式，还没有 &lt;c-w&gt;&lt;c-]&gt; 乱七八糟的列表选择过程，使用一个星期以后，彻底淘汰原生的 tag功能了，感觉自己的流畅度又提升了一些。
+具体代码见： https://github.com/skywind3000/vim/blob/master/autoload/asclib.vim#L365
+后面继续迭代，有时在函数调用时候，想不起该函数的参数了，需要查看一下原型（声明和参数），不需要打开整个预览窗口查看实现，我就又开发了一个查看函数原型的 VimScript 函数，绑定到 ALT_Q 上，同样不需要退出插入模式：……
+                            </div>
+                            <p class="readmore"><a href="https://skywind3000.com/blog/archives/1958/">阅读全文</a></p>
+                        </article>
+                    
+                        <article class="post">
+                            <header>
+                                <h1 class="post-title">
+                                    <a href="https://skywind3000.com/blog/archives/1951/" title="Emacs/Vim 深度比较" >Emacs/Vim 深度比较</a>
+                                </h1>
+                            </header>
+                            <date class="post-meta meta-date">
+                                2016年12月24日
+                            </date>
+                            
+                            <div class="post-meta">
+                                <span>|</span>
+                                
+                                <span class="meta-category"><a href="https://skywind3000.com/categories/%E9%9A%8F%E7%AC%94">随笔</a></span>
+                                
+                            </div>
+                            
+                            <div class="post-content">
+                                生命在于折腾，折腾完了 Atom Editor，开始跟着陈斌大婶和 purcell的配置折腾 Emacs，比较下。很多人都在比较键位，比较插件，这是十分肤浅的，我们比较点深入的东西：
+代码结构
+ Emacs 源代码：eLisp 79%, C 21% Vim 源代码：C 52%, VimScript 48%  从代码结构上来讲，Emacs的代码最多的是 elisp，C代码只是一个微内核，Vim 里C代码还是大头。当然不排除 24.X, 25.X以后 Emacs源代码里带了好几个重量级的包，而 Vim向来比较精简一些，官方没带啥大点的插件有关。去除自带插件后，Emacs的 elisp代码比例应该会下降很多，不过总体来说，Emacs有更多组件使用 elisp开发而成，也就是说可以被用户修改或者替换的地方比 Vim要多，当然速度也会相应慢一点（比如 Emacs新打开上万行的文件连续按住PageDown时cpu 100%占满），不过比较大 JB，Atom Editor来说，还是快不少。
+系统接口
+大框架基本类似：
+ Vim 可以操作： buffer, window, tabpage, 光标，marker, region 跳转表等等。 Emacs 可以操作：buffer, window, frame, 光标，marker，region 异步进程 等等。  Vim 有 local，Emacs有 mode，Vim有事件触发，Emacs有各种钩子，基本大框架类似的。
+键位设置也都很灵活，会配置的话，可以把 Emacs键位全部弄成 Vim的，比如 Evil，或者Vim里面也可以配制成进去就自动进入插入模式，全部用 Emacs键位。
+具体到比如 buffer 或者窗口里面，Emacs的窗口或者 buffer /window 属性更多一些，Vim也有一些 Emacs没有的基础设施，比如 jumplist, quickfix之类的，不过 Emacs也可以用插件实现，实现 jumplist没问题，比较独立，但每个插件实现一个类似的 quickfix的东西，实在是比较蛋疼。
+脚本语言
+VimScript 类似 Lua，但更啰嗦些，没啥好说的，要上手可能就是2-3天的样子，主要是实际编写中熟悉各种 Vim内部结构体系，以及api。
+EmacsLisp 类似 clisp，稍微有些区别而已。clisp中的向量： (vector 1 2 3 4) 在 elisp中可以用中括号来表示：[1 2 3 4] 这样对减少小括号数量有一些帮助，代码读起来没那么拗口，可惜实际写 elisp的过程中，向量用的并不多，各种插件用的最多的还是 list，alist，plist 几种容器，小括号还是满天飞，如果不借助编辑器的匹配，缩进，还有彩虹括号（不同层次的括号用不同颜色的小插件）代码很难阅读，自己写好写点，看别人代码要对括号对半天（特别是他们把很多写一行的话）。
+Lisp变量可视范围比较好用，局部变量可以 “遮盖住” 全局变量，比如你在 VimScript里面要临时跳转到一个新目录需要这么写：
+let cd = haslocaldir()? &quot;cd&quot; : &quot;lcd&quot; let saved = getcwd() silent! exec cd &quot;my new directory&quot; ...... silent! exec cd saved  而 elisp里面，利用局部变量遮盖特性，简单的：
+(let ((default-directory &quot;my new directory&quot;)) ..... )  在这个 let的作用范围内，buffer的全局变量 default-directory 被新定义的同名局部变量给遮盖住了，里面的代码（包括调用外面定义的函数）取这个名字的变量，都会取到你新定义的变量，作用范围结束就恢复了，这样比 vimscript方便不少，类似的用法还有 (with-selected-window new-window...) 把当前窗口设置成 new- window并做一些事情，当离开代码作用域以后，自动恢复成先前的窗口，如果VimScript来做这事情，又需要保存前窗口，然后跳转，最后又恢复。
+VimScript在 vim6.0及以前的时代里比 EmacsLisp弱很多，连个 List，HashTable之类的容器都没有，怎么写复杂的程序嘛，Vim7.0以后补充了字典和列表还有三元式，简单面向对象等，终于可以写点复杂的东西了，而 Vim下很多传奇性的插件，其实也正是 7.0以后才出现的。Vim8.0以后又进一步补充了匿名函数和 partial function (类似简陋版的 curry 函数）等等特性，除了啰嗦外，写点复杂东西问题不大，比如前久有人用 VimScript写了一个 C编译器，可以在Vim里跑 C脚本。
+Lisp里面的宏类似C++模版加强版，C++模版只有一层，定义好模版，然后生成代码。Lisp的宏可以先用程序生成模版，再由模版生成代码，类似模版的模版。不过实际使用中，为了不让自己的代码飞的太远，难以维护，大部分插件开发者在 elisp里面最多就是 require一下 common lisp的兼容包，用一些 common lisp里面诸如 loop, for, incf, case 之类的通用宏，自己定义也限于定义一些小工具，没有人丧心病狂的搞一些影响程序结构的东西，定义成另外一门语言。
+大部分插件开发者实际上还是把它当作充满括号的 lua 来用，除去一些便利性外，麻烦也还是挺多的。
+异步进程
+早期的 Vim没有异步进程操作，导致很多插件没有 Emacs那么顺畅，比如生成 tag或者编译，Vim只有傻等着，Emacs可以同时做其他事情，Vim8.0以后异步接口和后台时钟等也比较完善了，假以时日各大常见插件能逐步发挥 8.0特性的时候，相信也能带来一致的体验，包括纯vimscript实现的 shell，以及 gdb集成，发邮件等，问题不大。
+实际使用中最紧缺的异步任务，虽然系统都支持，但是显然就插件来讲，Vim的插件跟进的速度还有待提高，毕竟本身已经晚出了那么多年了。不过好在自己可以撸，熟悉 VimScript的话，可以把最紧缺的 tag 生成，编译， grep等几项日常使用频率最高的工作自己写插件异步化了，比如我自己撸的： skywind3000/asyncrun.vim
+Vim里面的 CtrlP（模糊文件查找），还有 tagbar（文件符号列表），先前用起来就是一个字 “卡”，经常卡住做不了别的事情。同比之下，Emacs的 Helm系列全家桶做文件模糊查找就顺畅的多。同样的 python实时补全插件 jedi，在 Vim下会卡，Emacs下很流畅也是这个原因。好在最新版的 CtrlP已经增加了异步任务支持，可以后台检索文件，是没卡界面了，但是确实还需要时间进一步完善改bug。
+Emacs的 flycheck 被人津津乐道，方便的后台异步检查当前编辑文件的语法，并且标注出错的地方。Vim的同类产品 syntastic 以往会把界面卡住，你需要停下编辑，等着跑 lint跑完了以后它才给你标注出来。所以很多人比较了 flycheck以后，觉得 flycheck很爽，一边写着，前面出错的地方就会被自动标注，根本不用停下来，于是坚定不移的转战了 Emacs了。当然，Vim8.……
+                            </div>
+                            <p class="readmore"><a href="https://skywind3000.com/blog/archives/1951/">阅读全文</a></p>
+                        </article>
+                    
+                        <article class="post">
+                            <header>
+                                <h1 class="post-title">
+                                    <a href="https://skywind3000.com/blog/archives/1924/" title="Aix 折腾手记" >Aix 折腾手记</a>
+                                </h1>
+                            </header>
+                            <date class="post-meta meta-date">
+                                2016年12月7日
+                            </date>
+                            
+                            <div class="post-meta">
+                                <span>|</span>
+                                
+                                <span class="meta-category"><a href="https://skywind3000.com/categories/%E9%9A%8F%E7%AC%94">随笔</a></span>
+                                
+                            </div>
+                            
+                            <div class="post-content">
+                                早年开发工作主要在 FreeBSD进行，2006年后来切换到 Linux下，期间穿插使用了一下 Solaris，所以我的网络库一直都是只支持这三个系统。为了让网络库支持更多平台，网上购置了一台 IBM AIX 小型机，因为其他大部分非 Linux系统，今天基本都可以在虚拟机里面安装了，而 AIX系统，你真的没法虚拟。
+弄了几天以后，发现真他妈的麻烦，强大是强大，但是真的太琐碎了，相比之下，Linux/FreeBSD之流基本是傻瓜了。不看说明直接操作 AIX的话，可能连开机都麻烦，或者关机没关对，下次直接启动不了。
+文字终端就没什么好拍的了，先上一张图形桌面的靓照吧：
+是的你没看错，这就是 AIX 7，2012年的操作系统，就是那么的霸道，四处透着古典 Unix的味道。这样的机器今天还跑在各大银行的机房里，AIX系统管理员也拿着比 Linux系统管理员多几倍的工资，虽然工作岗位比较稀少。
+下面来感受一下你想正常开关机，安装软件的话要怎么弄：
+查看微码：lsmcode 光盘检测：开机键盘检测后按5光盘启动再按1 图形下设置网络： smitty tcpip
+开机： 第一步：插电，风扇开始转，等两分钟 第二步：待前面板绿灯开始闪时，安白色开机键，绿灯长亮，等三分钟 第三步：显示器上出现画面，按提示进行操作
+关机： 第一步：shutdown -F 第二步：等待系统结束后，显示器无信号，再等待一分钟 第三步：风扇降速，前面板绿灯从长亮回到闪烁状态 第四步：拔掉电源
+解决亮黄灯： 第一步：root执行 diag 第二步：选择第2项，advanced diagnostics routines; 第三步：选择 system verification 第四步：选择 all resources 第五步：F7（或者 ESC+7）执行检测 第六步：看返回结果，是否存在故障，记录故障及errpt -a，再做处理
+如果还不行补充1： 第一步：diag-&gt;task selection(diagnostics, advanced diagnostics, service aid） 第二步：identify and attention indicators 第三步：set system attention indicator to normal/set all identify …. To normal 第四步：F7执行 实在不行：# /usr/lpp/diagnostics/bin/usysfault -s normal
+安装系统： 第一步：加电开机，插入安装 DVD 第二步：到系统键盘自检时按1，或者F1 第三步：输入密码（默认：admin）开始安装
+更新微码： 危险：http://www-912.ibm.com/eserver/support/fixes 查看处理器：prtconf
+加载光驱： mount -v cdrfs -o ro /dev/cd0/ /mnt
+添加用户： mkgroup dba useradd -G dba -d /home/oracle -m oracle
+全局变量：
+# cat /etc/environment 只能写 key=value # cat /etc/profile 可以写shell脚本  分区操作：
+# lsvg rootvg 查看分区 # df -tk 查看文件系统按1K来查看 # chfs -a size=+2000000 /home 给home增加1G空间  安装软件：
+# smitty 安装系统包 # ftp ftp.software.ibm.com/aix/freeSoftware/aixtoolbox/RPMS/ppc 下载工具 # rpm -hUv xxx.rpm 安装工具 # rpm -e python 卸载工具 # rpm -qa 查看所有已经安装的包 # rpm -qpR xxx.rpm 查看依赖关系 # installp -qaXgd rpm.rte rpm.rte 安装 rte，或者试用smitty # zcat xxx.tar.Z | tar -vxf -  第三方包：
+http://www.perzl.org/aix/index.php?n=Main.Apr-util ftp://www.oss4aix.org/latest/aix71/  调试代码：
+使用 truss 相当于 strace
+。。。。。
+玩了几天，看了N多 AIX资料，给程序增加了 AIX支持并调试正常后，觉得 IBM AIX System Administrator 认证（非 User）估计还真不是那么好考的。……
+                            </div>
+                            <p class="readmore"><a href="https://skywind3000.com/blog/archives/1924/">阅读全文</a></p>
+                        </article>
+                    
+                        <article class="post">
+                            <header>
+                                <h1 class="post-title">
+                                    <a href="https://skywind3000.com/blog/archives/1909/" title="Linux 网桥设置" >Linux 网桥设置</a>
+                                </h1>
+                            </header>
+                            <date class="post-meta meta-date">
+                                2016年12月7日
+                            </date>
+                            
+                            <div class="post-meta">
+                                <span>|</span>
+                                
+                                <span class="meta-category"><a href="https://skywind3000.com/categories/%E9%9A%8F%E7%AC%94">随笔</a></span>
+                                
+                            </div>
+                            
+                            <div class="post-content">
+                                在公司机房的物理机上架设 KVM虚拟化的时候，经常需要配置网桥，先要安装网桥工具：
+apt-get install bridge-utils apt-get install uml-utilities  编辑 /etc/network/interfaces，参考下面配置加入网桥配置信息：
+auto lo iface lo inet loopback auto eth0 iface eth0 inet manual auto br0 iface br0 inet static address 192.168.10.6 netmask 255.255.255.0 network 192.168.10.0 broadcast 192.168.10.255 dns-search dell1 bridge_ports eth0 bridge_stp off bridge_fd 0 bridge_maxwait 0 auto eth1 iface eth1 inet manual auto br1 iface br1 inet static address 14.152.50.6 netmask 255.255.255.192 network 14.152.50.0 broadcast 14.152.50.63 gateway 14.152.50.1 bridge_ports eth1 bridge_stp off bridge_fd 0 bridge_maxwait 0 # dns-* options are implemented by the resolvconf package, if installed dns-nameservers 114.114.114.114 dns-search dell1 auto eth2 iface eth2 inet manual auto br2 iface br2 inet static address 112.93.114.2 netmask 255.255.255.224 network 112.93.114.0 broadcast 112.93.114.255 gateway 112.93.114.1 bridge_ports eth2 bridge_stp off bridge_maxwait 0 dns-nameservers 114.114.114.114 dns-search dell1  上面配置针对双线接入多 IP的情况，这样 br0-br2就可以给虚拟机 guest使用了，br0是内网，br1-br2是电信或者联通出口。……
+                            </div>
+                            <p class="readmore"><a href="https://skywind3000.com/blog/archives/1909/">阅读全文</a></p>
+                        </article>
+                    
+                        <article class="post">
+                            <header>
+                                <h1 class="post-title">
+                                    <a href="https://skywind3000.com/blog/archives/1904/" title="Linux 硬件时区折腾备忘" >Linux 硬件时区折腾备忘</a>
+                                </h1>
+                            </header>
+                            <date class="post-meta meta-date">
+                                2016年12月7日
+                            </date>
+                            
+                            <div class="post-meta">
+                                <span>|</span>
+                                
+                                <span class="meta-category"><a href="https://skywind3000.com/categories/%E9%9A%8F%E7%AC%94">随笔</a></span>
+                                
+                            </div>
+                            
+                            <div class="post-content">
+                                前段时间折腾家中 Nas的虚拟化服务，有时候虚拟机系统时间总是快8个小时。Guest这边设好了，到了 物理机就会慢8个小时。网上说只要修改/etc/default/rcS中的 UTC=no就行了，但还是没反映，没办法，一步步找问题。发现在/etc/rcS.d/S05hwclock.sh有这样一段话：
+# 2012-02-16 Roger Leigh rleigh@debian.org # - Use the UTC/LOCAL setting in /etc/adjtime rather than # the UTC setting in /etc/default/rcS. Additionally # source /etc/default/hwclock to permit configuration.  也就是说时间是按照/etc/adjtime设置的，而不是/etc/default/rcS，晕倒。查了下adjtime文件，原来这个才是现在调整时间的设置文件，那个rcS已经被忽略了，也就是网上的那些方法只适合以前的系统，看来走了不少弯路啊。
+将 /etc/adjtime 第三行由 UTC 改为 LOCAL 即可。……
+                            </div>
+                            <p class="readmore"><a href="https://skywind3000.com/blog/archives/1904/">阅读全文</a></p>
+                        </article>
+                    
+
+                    
+
+
+<ol class="page-navigator">
+    
+    <li class="prev">
+        <a href="https://skywind3000.com/">上一页</a>
+    </li>
+    
+
+    
+    <li >
+        <a href="https://skywind3000.com/">1</a>
+    </li>
+    
+    <li  class="current">
+        <a href="https://skywind3000.com/page/2/">2</a>
+    </li>
+    
+    <li >
+        <a href="https://skywind3000.com/page/3/">3</a>
+    </li>
+    
+    <li >
+        <a href="https://skywind3000.com/page/4/">4</a>
+    </li>
+    
+    <li >
+        <a href="https://skywind3000.com/page/5/">5</a>
+    </li>
+    
+    <li >
+        <a href="https://skywind3000.com/page/6/">6</a>
+    </li>
+    
+    <li >
+        <a href="https://skywind3000.com/page/7/">7</a>
+    </li>
+    
+    <li >
+        <a href="https://skywind3000.com/page/8/">8</a>
+    </li>
+    
+    <li >
+        <a href="https://skywind3000.com/page/9/">9</a>
+    </li>
+    
+    <li >
+        <a href="https://skywind3000.com/page/10/">10</a>
+    </li>
+    
+    <li >
+        <a href="https://skywind3000.com/page/11/">11</a>
+    </li>
+    
+    <li >
+        <a href="https://skywind3000.com/page/12/">12</a>
+    </li>
+    
+    <li >
+        <a href="https://skywind3000.com/page/13/">13</a>
+    </li>
+    
+    <li >
+        <a href="https://skywind3000.com/page/14/">14</a>
+    </li>
+    
+
+    
+    <li class="next">
+        <a href="https://skywind3000.com/page/3/">下一页</a>
+    </li>
+    
+</ol>
+
+
+
+                </div>
+            </div>
+
+            <div id="secondary">
+    <section class="widget">
+        <form id="search" action="//www.google.com/search" method="get" accept-charset="utf-8" target="_blank" _lpchecked="1">
+      
+      <input type="text" name="q" maxlength="20" placeholder="Search">
+      <input type="hidden" name="sitesearch" value="https://skywind3000.com/">
+      <button type="submit" class="submit icon-search"></button>
+</form>
+    </section>
+    
+    <section class="widget">
+        <h3 class="widget-title">最近文章</h3>
+<ul class="widget-list">
+    
+    <li>
+        <a href="https://skywind3000.com/posts/2019/shell_init_sh/" title="提高效率从编写 init.sh 开始">提高效率从编写 init.sh 开始</a>
+    </li>
+    
+    <li>
+        <a href="https://skywind3000.com/posts/intro/" title="个人主页搬迁到新系统">个人主页搬迁到新系统</a>
+    </li>
+    
+    <li>
+        <a href="https://skywind3000.com/blog/archives/2250/" title="如何实现和优化 SVM（支持向量机）？">如何实现和优化 SVM（支持向量机）？</a>
+    </li>
+    
+    <li>
+        <a href="https://skywind3000.com/blog/archives/2229/" title="别让 cd 浪费你的时间">别让 cd 浪费你的时间</a>
+    </li>
+    
+    <li>
+        <a href="https://skywind3000.com/blog/archives/2193/" title="VimScript 五分钟入门（翻译）">VimScript 五分钟入门（翻译）</a>
+    </li>
+    
+    <li>
+        <a href="https://skywind3000.com/blog/archives/2173/" title="Windows 10 - 1803 更新又给我出幺蛾子">Windows 10 - 1803 更新又给我出幺蛾子</a>
+    </li>
+    
+    <li>
+        <a href="https://skywind3000.com/blog/archives/2084/" title="Vim 8 下 C/C&#43;&#43; 开发环境搭建">Vim 8 下 C/C&#43;&#43; 开发环境搭建</a>
+    </li>
+    
+    <li>
+        <a href="https://skywind3000.com/blog/archives/2071/" title="Bash 中文速查表/Cheatsheet （全网最全）">Bash 中文速查表/Cheatsheet （全网最全）</a>
+    </li>
+    
+    <li>
+        <a href="https://skywind3000.com/blog/archives/2060/" title="为什么说 zsh 是 shell 中的极品？">为什么说 zsh 是 shell 中的极品？</a>
+    </li>
+    
+    <li>
+        <a href="https://skywind3000.com/blog/archives/2051/" title="Vim 中文速查表/Cheatsheet（全网最完善）">Vim 中文速查表/Cheatsheet（全网最完善）</a>
+    </li>
+    
+</ul>
+    </section>
+
+    
+
+    <section class="widget">
+        <h3 class="widget-title">分类</h3>
+<ul class="widget-list">
+    
+    <li>
+        <a href="https://skywind3000.com/categories/%E4%BA%BA%E5%B7%A5%E6%99%BA%E8%83%BD/">人工智能(8)</a>
+    </li>
+    
+    <li>
+        <a href="https://skywind3000.com/categories/%E5%9B%BE%E5%BD%A2%E7%BC%96%E7%A8%8B/">图形编程(20)</a>
+    </li>
+    
+    <li>
+        <a href="https://skywind3000.com/categories/%E5%A4%A7%E6%B5%AA%E6%B7%98%E6%B2%99/">大浪淘沙(12)</a>
+    </li>
+    
+    <li>
+        <a href="https://skywind3000.com/categories/%E5%BC%80%E6%BA%90%E9%A1%B9%E7%9B%AE/">开源项目(8)</a>
+    </li>
+    
+    <li>
+        <a href="https://skywind3000.com/categories/%E6%9C%AA%E5%88%86%E7%B1%BB/">未分类(6)</a>
+    </li>
+    
+    <li>
+        <a href="https://skywind3000.com/categories/%E6%B8%B8%E6%88%8F%E5%BC%80%E5%8F%91/">游戏开发(27)</a>
+    </li>
+    
+    <li>
+        <a href="https://skywind3000.com/categories/%E7%BC%96%E7%A8%8B%E6%8A%80%E6%9C%AF/">编程技术(45)</a>
+    </li>
+    
+    <li>
+        <a href="https://skywind3000.com/categories/%E7%BC%96%E8%AF%91%E6%8A%80%E6%9C%AF/">编译技术(6)</a>
+    </li>
+    
+    <li>
+        <a href="https://skywind3000.com/categories/%E7%BD%91%E7%BB%9C%E7%BC%96%E7%A8%8B/">网络编程(14)</a>
+    </li>
+    
+    <li>
+        <a href="https://skywind3000.com/categories/%E9%9A%8F%E7%AC%94/">随笔(57)</a>
+    </li>
+    
+</ul>
+    </section>
+
+    <section class="widget">
+        <h3 class="widget-title">标签</h3>
+<div class="tagcloud">
+    
+    <a href="https://skywind3000.com/tags/ai/">ai</a>
+    
+    <a href="https://skywind3000.com/tags/android/">android</a>
+    
+    <a href="https://skywind3000.com/tags/as3/">as3</a>
+    
+    <a href="https://skywind3000.com/tags/c&#43;&#43;/">c&#43;&#43;</a>
+    
+    <a href="https://skywind3000.com/tags/cygwin/">cygwin</a>
+    
+    <a href="https://skywind3000.com/tags/dos/">dos</a>
+    
+    <a href="https://skywind3000.com/tags/kcp/">kcp</a>
+    
+    <a href="https://skywind3000.com/tags/linux/">linux</a>
+    
+    <a href="https://skywind3000.com/tags/p2p/">p2p</a>
+    
+    <a href="https://skywind3000.com/tags/python/">python</a>
+    
+    <a href="https://skywind3000.com/tags/shell/">shell</a>
+    
+    <a href="https://skywind3000.com/tags/vim/">vim</a>
+    
+    <a href="https://skywind3000.com/tags/win32/">win32</a>
+    
+    <a href="https://skywind3000.com/tags/%E4%BC%98%E5%8C%96/">优化</a>
+    
+    <a href="https://skywind3000.com/tags/%E5%90%8C%E6%AD%A5/">同步</a>
+    
+    <a href="https://skywind3000.com/tags/%E5%9B%BE%E5%BD%A2/">图形</a>
+    
+    <a href="https://skywind3000.com/tags/%E5%B0%8F%E6%B8%B8%E6%88%8F/">小游戏</a>
+    
+    <a href="https://skywind3000.com/tags/%E6%8A%97%E9%94%AF%E9%BD%BF/">抗锯齿</a>
+    
+    <a href="https://skywind3000.com/tags/%E6%B1%87%E7%BC%96/">汇编</a>
+    
+    <a href="https://skywind3000.com/tags/%E6%BC%94%E7%A4%BA/">演示</a>
+    
+    <a href="https://skywind3000.com/tags/%E7%9F%A2%E9%87%8F%E4%BD%9C%E5%9B%BE/">矢量作图</a>
+    
+    <a href="https://skywind3000.com/tags/%E7%9F%A5%E4%B9%8E/">知乎</a>
+    
+    <a href="https://skywind3000.com/tags/%E7%AD%96%E5%88%92/">策划</a>
+    
+    <a href="https://skywind3000.com/tags/%E7%AE%97%E6%B3%95/">算法</a>
+    
+    <a href="https://skywind3000.com/tags/%E7%B3%BB%E7%BB%9F%E5%BC%80%E5%8F%91/">系统开发</a>
+    
+    <a href="https://skywind3000.com/tags/%E7%BD%91%E7%BB%9C/">网络</a>
+    
+    <a href="https://skywind3000.com/tags/%E7%BF%BB%E8%AF%91/">翻译</a>
+    
+    <a href="https://skywind3000.com/tags/%E8%99%9A%E6%8B%9F%E6%9C%BA/">虚拟机</a>
+    
+    <a href="https://skywind3000.com/tags/%E8%A7%86%E9%A2%91/">视频</a>
+    
+    <a href="https://skywind3000.com/tags/%E8%AE%B2%E4%B9%89/">讲义</a>
+    
+    <a href="https://skywind3000.com/tags/%E8%AF%8D%E6%B3%95%E5%88%86%E6%9E%90/">词法分析</a>
+    
+    <a href="https://skywind3000.com/tags/%E8%AF%AD%E6%B3%95%E5%88%86%E6%9E%90/">语法分析</a>
+    
+    <a href="https://skywind3000.com/tags/%E8%B6%B3%E8%BF%B9/">足迹</a>
+    
+    <a href="https://skywind3000.com/tags/%E9%97%B2%E8%81%8A/">闲聊</a>
+    
+    <a href="https://skywind3000.com/tags/%E9%9A%8F%E7%AC%94/">随笔</a>
+    
+</div>
+    </section>
+
+    
+
+    <section class="widget">
+        <h3 class="widget-title">其它</h3>
+        <ul class="widget-list">
+            <li><a href="https://skywind3000.com/index.xml">文章 RSS</a></li>
+        </ul>
+    </section>
+</div>
+        </div>
+    </div>
+</div>
+<footer id="footer">
+    <div class="container">
+        &copy; 2019 <a href="https://skywind3000.com/">Skywind Inside By skywind</a>.
+        Powered by <a rel="nofollow noreferer noopener" href="https://gohugo.io" target="_blank">Hugo</a>.
+        <a href="https://www.flysnow.org/" target="_blank">Theme</a> based on <a href="https://github.com/rujews/maupassant-hugo" target="_blank">maupassant</a>.
+        
+    </div>
+</footer>
+
+
+<a id="rocket" href="#top"></a>
+<script type="text/javascript" src="/js/totop.js?v=0.0.0" async=""></script>
+
+
+
+<script type="text/javascript" src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js" async></script>
+
+
+
+
+
+</body>
+</html>

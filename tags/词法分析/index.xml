@@ -6,15 +6,59 @@
     <description>Recent content in 词法分析 on Skywind Inside</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>zh-cn</language>
-    <lastBuildDate>Tue, 10 Apr 2001 16:08:23 +0800</lastBuildDate>
+    <lastBuildDate>Fri, 10 Apr 2015 11:33:09 +0000</lastBuildDate>
     
 	<atom:link href="https://skywind3000.com/tags/%E8%AF%8D%E6%B3%95%E5%88%86%E6%9E%90/index.xml" rel="self" type="application/rss+xml" />
     
     
     <item>
+      <title>转换 Intel汇编格式到 AT&amp;amp;T汇编风格</title>
+      <link>https://skywind3000.com/blog/archives/1244/</link>
+      <pubDate>Fri, 10 Apr 2015 11:33:09 +0000</pubDate>
+      
+      <guid>https://skywind3000.com/blog/archives/1244/</guid>
+      <description>常用 MSVC写内嵌汇编需要兼容 GCC是一件头疼的事情，不是说你不会写 GCC的 AT&amp;amp;T风格汇编，而是说同一份代码写两遍，还要调试两遍，是一件头疼的事情，特别是汇编写了上百行的时候。于是五年前写过一个小工具，可以方便的进行转换，能把 MSVC/MASM的汇编转成纯 AT&amp;amp;T风格汇编，或者 GCC Inline风格汇编，自动识别寄存器和变量，还有跳转地址，并且自动导出。今天把他放上来，或许有用到的人吧。
+项目下载：https://github.com/skywind3000/Intel2GAS。
+支持GUI转换和命令行转换，GUI转换使用 intel2gui.py, 命令行使用 intel2gui.py，当年用 Python匆匆完成，代码写的比较烂，但是还是在我后面的项目中帮了比较大的忙，MSVC里面调试干净了，一次性转换到GCC，再也不用象以前一样人肉转换汇编，写两份代码了。</description>
+    </item>
+    
+    <item>
+      <title>[业余土制] Build工具 EasyMake</title>
+      <link>https://skywind3000.com/blog/archives/153/</link>
+      <pubDate>Sat, 24 Jul 2010 01:50:31 +0000</pubDate>
+      
+      <guid>https://skywind3000.com/blog/archives/153/</guid>
+      <description>用最简单的方法描述工程信息，简化gnumake的繁琐操作，让不会用gnumake的同学们彻底解脱： 项目地址：http://code.google.com/p/easymake/</description>
+    </item>
+    
+    <item>
+      <title>[业余土制] 实时汇编编译器</title>
+      <link>https://skywind3000.com/blog/archives/154/</link>
+      <pubDate>Sun, 05 Jul 2009 13:32:10 +0000</pubDate>
+      
+      <guid>https://skywind3000.com/blog/archives/154/</guid>
+      <description>实时动态在内存中编译汇编代码，并返回函数调用指针，可用于JIT系统的后端： 项目地址：http://code.google.com/p/asmpure/ 例子：
+const char *AlphaBlendAsm = &amp;quot;PROC C1:DWORD, C2:DWORD, A:DWORD\n&amp;quot; &amp;quot; movd mm0, A\n&amp;quot; &amp;quot; punpcklwd mm0, mm0\n&amp;quot; &amp;quot; punpckldq mm0, mm0\n&amp;quot; &amp;quot; pcmpeqb mm7, mm7\n&amp;quot; &amp;quot; psubw mm7, mm0\n&amp;quot; &amp;quot; \n&amp;quot; &amp;quot; punpcklbw mm1, C1\n&amp;quot; &amp;quot; psrlw mm1, 8\n&amp;quot; &amp;quot; punpcklbw mm2, C2\n&amp;quot; &amp;quot; psrlw mm2, 8\n&amp;quot; &amp;quot; \n&amp;quot; &amp;quot; pmullw mm1, mm7\n&amp;quot; &amp;quot; pmullw mm2, mm0\n&amp;quot; &amp;quot; paddw mm1, mm2\n&amp;quot; &amp;quot; \n&amp;quot; &amp;quot; psrlw mm1, 8\n&amp;quot; &amp;quot; packuswb mm1, mm1\n&amp;quot; &amp;quot; movd eax, mm1\n&amp;quot; &amp;quot; emms\n&amp;quot; &amp;quot; ret\n&amp;quot; &amp;quot;ENDP\n&amp;quot;; void testAlphaBlend(void) { CAssembler *casm; int c; int (*AlphaBlendPtr)(int, int, int); // create assembler casm = casm_create(); // append assembly source casm_source(casm, AlphaBlendAsm); AlphaBlendPtr = (int (*)(int, int, int))casm_callable(casm, NULL); if (AlphaBlendPtr == NULL) { printf(&amp;quot;error: %s\n&amp;quot;, casm-&amp;gt;error); casm_release(casm); return; } printf(&amp;quot;==================== Alpha Blend ====================\n&amp;quot;); casm_dumpinst(casm, stdout); printf(&amp;quot;\nExecute code (y/n)?\n\n&amp;quot;); do { c = getch(); } while(c != &#39;y&#39; &amp;amp;&amp;amp; c != &#39;n&#39;); if(c == &#39;y&#39;) { int x = AlphaBlendPtr(0x00FF00FF, 0xFF00FF00, 128); printf(&amp;quot;output: %.8X\n\n&amp;quot;, x); } free(AlphaBlendPtr); casm_release(casm); }  **output: 7f7f7f7f **</description>
+    </item>
+    
+    <item>
+      <title>虚拟机及VmBasic编译引擎说明</title>
+      <link>https://skywind3000.com/blog/archives/91/</link>
+      <pubDate>Thu, 18 Apr 2002 08:33:16 +0000</pubDate>
+      
+      <guid>https://skywind3000.com/blog/archives/91/</guid>
+      <description> 虚拟机及VmBasic编译引擎说明 2001-2002期间开发的虚拟机/编译器开源项目代码和资料
+ 关于虚拟机及其编译器的说明 VmBasic开发/调试环境的介绍及说明 关于其他 所有资料可以从下面地址下载： 下载可执行 源程序下载 设计说明书 关于虚拟机及其编译器的说明 记得3DS/MAX里面实现了一个类似BASIC的脚本，Animator里面实现了一个类C的脚本语言，Autodesk公司的软件对于脚本支持的很出色，好的脚本引擎在乎平台无关性、高效性和扩充性，一个脚本引擎的需要对一个好程序来说非常迫切，于是半年前我写了一款虚拟机，最近又实现了一个类Basic的脚本编译器，特性说明：
+ 高效性和独立于平台：由于虚拟机运行是解释二进制的字节码因此速度明显快于每次运行及时解释的脚本语言，比如Perl和PHP，而虚拟机的核心程序代码也经过数个C++编译器和平台的测试，可以毫无修改的编译运行于多个操作系统。
+ 充分的开放：通过虚拟机的端口I/O技术，要对它进行扩充变得十分容易，VmBeta指令通过输出/输入的方法向用户自己的程序进行通讯，用户通过处理输出输入消息来达到功能的扩充，使它符合你产品的需要，具体的虚拟机实现和设计说明参考文档 vmbeta.txt
+ 可设安全级别：通过可设置安全级别，对程序运行状态进行检控 通过半年的修改我自己觉得虚拟机够高效开放，就是vmbasic编译器写的没有多高的水准：完全没有对生成代码做优化，弄出许多繁琐的中间代码，不过还是明显快于及时解释语言，通过测试速度大概是DOS自带的QBASIC程序的三倍左右(可以通过目录下的几个算法程序来实验)。 为了检验其效率和扩充性，我将虚拟机程序扩充了一些作图功能写成了 Windows版本的，然后用vmbasic编写了一个空战小游戏，虽然由于一开始我太相信GDI而没有选择DDraw，且编译器要生成1/2左右的重复性代码，但是仍可以从游戏中看出效率来(可以用vmbide.exe打开fire.bas运行)，关于编译程序VmBasic的更详细说明见basic.htm 程序说明：压缩档包括虚拟机运行程序(vmbeta.exe)VmBasic调试开发平台(vmbide.exe)四个算法例子(alex1-4.bas) 一个射击游戏例子(fire.bas)及其图片，说明帮助文档若干&amp;hellip;. VmBasic开发/调试环境的介绍及说明： 右边的图是完整的开发环境左边是语句帮助，中间是代码编写区，下面是编译的错误和过程记录，系统热键说明： 1.F8编译成VMS文件 2.F9编译并运行程序 3.F1对VmBasic的帮助 4.Shift+F1帮助IDE 另外点击运行图表左边的图表可以查看编译出来的虚拟机汇编代码。点击工具目录，可以做一系列设置：虚拟机程序设置，预连接库设置，开发环境设置等，都是简单的东西 用VmBasic编写的射击小游戏:必须Windows版的虚拟机程序运行(扩充了GDI图形功能) 显示查看虚拟机汇编 关于其他 半年前在论坛上面看见过一些师兄们关于编译的争论，忽然有所感悟，那时刚好写了虚拟机，于是就决定为它写款语言，本来考虑写类C或者类Pascal的，但是想着Basic用起来简单，而且分析起来似乎也简单，后来我才发现虽然没有 C的编译难写但由于Basic经历了长时间的发展，语法变化很大，总的来说没有同意的规范，模块表示也不明确，就连IF语句都有好多种版本，所以一个支持函数/过程的Basic编译器我觉得比Pascal难写的多。目录DOS下有DOS环境的编译器和虚拟机，可以用来编译运行非扩展的vmbasic程序:alex1-4.bas，可以在IDE的工具-&amp;gt;设置里面设定虚拟机的运行程序。 这是个引擎的演示版本，毕竟好的东西都不是一个人整出来的，我也会在学校不断的学习，非常欢迎来信讨论相关技术，和游戏/图形程式设计，如果你觉得这套引擎对你有价值，可以写信给我，如果你对相关的东西很感兴趣，也可以写信给我，联系方法： 成都建设路电子科技大学20013080 林伟 邮编：610000 电话：028-83200790 信箱：skywind3000@163.net 无名鸟游戏工作组制作 http://www.skywind.me
+  </description>
+    </item>
+    
+    <item>
       <title>PL0 编译程序Turbo Pascal代码</title>
       <link>https://skywind3000.com/blog/archives/71/</link>
-      <pubDate>Tue, 10 Apr 2001 16:08:23 +0800</pubDate>
+      <pubDate>Tue, 10 Apr 2001 07:04:52 +0000</pubDate>
       
       <guid>https://skywind3000.com/blog/archives/71/</guid>
       <description>&lt;p&gt;麻雀虽小，五脏具全，对编译原理的代码以TPASCAL格式重新整理和排版，还原最原版的代码。&lt;/p&gt;
