@@ -150,7 +150,7 @@ END
 
 <p>请看下边的搜索试列图</p>
 
-<p><img src="http://www.skywind.me/maker/astar0.GIF" alt="astar progress" /></p>
+<p><img src="https://skywind3000.github.io/images/blog/wp-content/2011/03/astar0.GIF" alt="astar progress" /></p>
 
 <p>图表3: 算法搜索过程的图形解释</p>
 
@@ -171,11 +171,11 @@ END
 <p>到是估价值的计算方法很多，但是写的好坏也关系到搜索的规模：坐标差之绝对值乘加权值求和，平方和开方还有些怪的呢，可以看看前导的代码估价函数是怎么写的。我看到网上有文章说当前节点到终点的估计距离不能比实际距离大，说什么才能叫做<code>A*</code> 算法，否则只能叫A算法(人工智能书上说的)，因为不一定是最短路径，呵呵但是如果只是满足估价值小于真实值也不一定就可以找到最短路径故暂且不论，先看 JudgeCost的意义
 &ndash;使搜索更靠近终点，势必减小JudgeCost将会增加搜索的宽度及规模，增加JudgeCost则使搜索跟快地向终点靠 拢。下面是使用不同估价函数的对比：</p>
 
-<p><img src="http://www.skywind.me/maker/astar1.GIF" alt="astar result 1" /></p>
+<p><img src="https://skywind3000.github.io/images/blog/wp-content/2011/03/astar1.GIF" alt="astar result 1" /></p>
 
 <p>图表4:搜索代价之JudgeCost=abs(dx)+abs(dy)</p>
 
-<p><img src="http://www.skywind.me/maker/astar2.GIF" alt="astar result 2" /></p>
+<p><img src="https://skywind3000.github.io/images/blog/wp-content/2011/03/astar2.GIF" alt="astar result 2" /></p>
 
 <p>图表5:搜索代价之JudgeCost=abs(dx),abs(dy)加权求和</p>
 
@@ -205,7 +205,6 @@ END
 <li>“Intelligent PF” <a href="http://www.gamasutra.com/features/19970801/pathfinding.htm">http://www.gamasutra.com/features/19970801/pathfinding.htm</a></li>
 <li>“The Game AI Page” <a href="http://www.gameai.com/">http://www.gameai.com/</a> 本文电子版和源程序：<a href="../../maker/astar.htm">http://www.skywind.me/maker/astar.htm</a></li>
 </ol>
-
                         </div>
 
                         
