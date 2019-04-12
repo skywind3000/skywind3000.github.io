@@ -233,9 +233,17 @@
                             </div>
                             
                             <div class="post-content">
-                                这是我2005-2007年在公司培训时候的讲义，当时现场效果相当热烈：
-可以到下面地址下载：
-课程用例下载：http://www.skywind.me/blog/archives/83……
+                                <p><img src="https://skywind3000.github.io/images/blog/wp-content/2011/04/PPT1_thumb.png" alt="PPT1" /></p>
+
+<p>这是我2005-2007年在公司培训时候的讲义，当时现场效果相当热烈：</p>
+
+<p>可以到下面地址下载：</p>
+
+<p>课程用例下载：<a href="http://www.skywind.me/blog/archives/83">http://www.skywind.me/blog/archives/83</a></p>
+
+<p><img src="https://skywind3000.github.io/images/blog/wp-content/2011/04/clip_image0021.gif" alt="clip_image002" /></p>
+
+<p><img src="https://skywind3000.github.io/images/blog/wp-content/2011/04/clip_image003.gif" alt="clip_image003" /></p>……
                                 <p class="readmore"><a href="https://skywind3000.com/blog/archives/176/">阅读全文</a></p>
                             </div>
                         </article>
@@ -264,7 +272,46 @@
                             </div>
                             
                             <div class="post-content">
-                                图像：64种不同的像素格式，色彩空间变换，多种图形图像变换。 质量：支持3种级别抗锯齿效果，高质量几何图形绘制。 实现：轻量级纯软件实现，100% C代码（仅700KB代码）。 优化：SSE2/MMX优化 地址：https://github.com/skywind3000/pixellib 1. 图像变换： 支持仿射变换和透视变换，提供大量图像变换操作接口。 2. 抗锯齿： 所有图形绘制支持3级不同程度的抗锯齿效果。 3. 图像绘制： 图像任意拉伸，旋转，3D旋转，并且同时进行色彩空间变换。全部采用浮点数坐标，图像移动更为平滑。 4. 几何作图： 全面的抗锯齿几何作图效果。 5. 图像扭曲： 在源图像上布置若干关键点，然后改变这些关键点在屏幕上的对于位置即可实现图像扭曲。 **使用 Pixellib 来渲染 iOS 风格的图标 ** ……
+                                <ul>
+<li>图像：64种不同的像素格式，色彩空间变换，多种图形图像变换。</li>
+<li>质量：支持3种级别抗锯齿效果，高质量几何图形绘制。</li>
+<li>实现：轻量级纯软件实现，100% C代码（仅700KB代码）。</li>
+<li>优化：SSE2/MMX优化 地址：<a href="https://github.com/skywind3000/pixellib">https://github.com/skywind3000/pixellib</a></li>
+</ul>
+
+<p><strong>1. 图像变换：</strong></p>
+
+<p><img src="http://www.skywind.me/mw/images/8/8e/Pixellib_image_transform.png" alt="" /></p>
+
+<p>支持仿射变换和透视变换，提供大量图像变换操作接口。</p>
+
+<p><strong>2. 抗锯齿：</strong></p>
+
+<p><img src="http://www.skywind.me/mw/images/9/9c/Pixellib_anti_aliasing.png" alt="" /></p>
+
+<p>所有图形绘制支持3级不同程度的抗锯齿效果。</p>
+
+<p><strong>3. 图像绘制：</strong></p>
+
+<p><img src="http://www.skywind.me/mw/images/4/41/Pixellib_image_drawing.png" alt="" /></p>
+
+<p>图像任意拉伸，旋转，3D旋转，并且同时进行色彩空间变换。全部采用浮点数坐标，图像移动更为平滑。</p>
+
+<p><strong>4. 几何作图：</strong></p>
+
+<p><img src="http://www.skywind.me/mw/images/1/1e/Pixellib_geometry.png" alt="" /></p>
+
+<p>全面的抗锯齿几何作图效果。</p>
+
+<p><strong>5. 图像扭曲：</strong></p>
+
+<p><img src="http://www.skywind.me/mw/images/c/c9/Pixellib_image_warp.png" alt="" /></p>
+
+<p>在源图像上布置若干关键点，然后改变这些关键点在屏幕上的对于位置即可实现图像扭曲。</p>
+
+<p>**使用 Pixellib 来渲染 iOS 风格的图标 **</p>
+
+<p><img src="http://www.skywind.me/mw/images/e/e7/Pixellib_quality.png" alt="" /></p>……
                                 <p class="readmore"><a href="https://skywind3000.com/blog/archives/137/">阅读全文</a></p>
                             </div>
                         </article>
@@ -289,7 +336,13 @@
                             </div>
                             
                             <div class="post-content">
-                                因为希望将图片转换成字符以后可以方便的帖到论坛或者BBS上，所以画时间写了这个算法。现有很多算法都是将一个点匹配成一个字符，这样转换工作只是简单的将点亮度查表后换成ASCII字符而已，但是其实这样做的效果并不十分好，首先80x25的字符屏幕就只能表示80x25个点，无法充分发挥单个字符的字形特点，而且图片很多精度和细节都丢失了。比如下面这个连接： http://www.sebastian-r.de/asciiart/exe.php?image=http%3A%2F%2Fwww.sebastian-r.de%2Fasciiart%2Fpng%2Fcatherine.png&amp;resolution=3&amp;mode=1&amp;color=%23000000&amp;font-size=11&amp;line-height=9&amp;letter- spacing=0&amp;fixed_char=W&amp;new_window=on 所以我的算法主要是匹配周围一部分点到ASCII字符，这样斜线能够顺利匹配成“/”，其他形状的东西也能够顺利按照字形特点进行匹配，因此同样80x25个点，但是后者所能够表达的像素点更多，细节度更加丰富： 上面的效果是作了误差扩散的，其实转换成ASCII字符时不做也可以，只是说希望转换前的局部/整体亮度等于转换后亮度，能量守恒一些而已。其实如果用同 一种颜色的64个常见字符表达精度和细节度很高，对比度不高的图片还是比较困难的，可以进一步优化的方法也有几种，其一是对照片作拉普拉斯变换，将噪声过 滤掉再取出轮廓，这样转换出来的就是仅仅包含轮廓的对比度很高的图片了。或者将图片频谱中能量不高的，比较弱的频率去掉，留下能量高的频率，这样图片看起 来更干净一些，只是后面这两种方法就无法保证实时渲染了。……
+                                因为希望将图片转换成字符以后可以方便的帖到论坛或者BBS上，所以画时间写了这个算法。
+现有很多算法都是将一个点匹配成一个字符，这样转换工作只是简单的将点亮度查表后换成ASCII字符而已，但是其实这样做的效果并不十分好，首先80x25的字符屏幕就只能表示80x25个点，无法充分发挥单个字符的字形特点，而且图片很多精度和细节都丢失了。比如下面这个连接：
+www.sebastian-r.de
+所以我的算法主要是匹配周围一部分点到ASCII字符，这样斜线能够顺利匹配成“/”，其他形状的东西也能够顺利按照字形特点进行匹配，因此同样80x25个点，但是后者所能够表达的像素点更多，细节度更加丰富：
+上面的效果是作了误差扩散的，其实转换成ASCII字符时不做也可以，只是说希望转换前的局部/整体亮度等于转换后亮度，能量守恒一些而已。
+其实如果用同 一种颜色的64个常见字符表达精度和细节度很高，对比度不高的图片还是比较困难的，可以进一步优化的方法也有几种，其一是对照片作拉普拉斯变换，将噪声过 滤掉再取出轮廓，这样转换出来的就是仅仅包含轮廓的对比度很高的图片了。
+或者将图片频谱中能量不高的，比较弱的频率去掉，留下能量高的频率，这样图片看起 来更干净一些，只是后面这两种方法就无法保证实时渲染了。……
                                 <p class="readmore"><a href="https://skywind3000.com/blog/archives/194/">阅读全文</a></p>
                             </div>
                         </article>
