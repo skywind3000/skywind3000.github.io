@@ -99,7 +99,7 @@
                         <div class="post-content">
                             <p>不到两百行的俄罗斯方块游戏，教学用：</p>
 
-<pre><code>/*=====================================================================
+<pre><code class="language-cpp">/*=====================================================================
 // FOOLTRS.C: Fool tetris game v1.0 by skywind
 // 最简俄罗斯，游戏设计入门傻瓜版，林伟 1999年8月11日
 //
@@ -115,10 +115,12 @@
 #include &lt;conio.h&gt;
 #include &lt;string.h&gt;
 #include &lt;dos.h&gt;
+ 
 /*---------------------------------------------------------------------
 // 基本定义：地图和砖块
 //---------------------------------------------------------------------*/
 int map[26][10]; /* 游戏地图定义: 所有砖块将被描述在地图中 ............*/
+ 
 typedef struct { int d[4][4]; } Block;  /* 砖块结构定义 ...............*/
 int BlockList[7][4][4] = {      /* 七种传统的方块定义 .................*/
   { { 0, 0, 0, 0 }, { 0, 1, 0, 0 }, { 0, 1, 0, 0 }, { 0, 1, 1, 0 } },
@@ -130,6 +132,7 @@ int BlockList[7][4][4] = {      /* 七种传统的方块定义 .................
   { { 0, 0, 0, 0 }, { 0, 7, 7, 0 }, { 0, 7, 7, 0 }, { 0, 0, 0, 0 } }};
 unsigned char cmap[]={0,0x72,0x30,0x47,0x57,0x27,0x60,0x74}; /* 颜色表 */
 long GameMode = 0, GameSpeed = -1, GameScore = 0; /* 全局定义：各状态 .*/
+ 
 /*---------------------------------------------------------------------
 // 视频相关数据定义
 //---------------------------------------------------------------------*/
@@ -137,6 +140,7 @@ char far* TextBuf = (char far*)0xb8000000l; /* 文本状态的显存地址 .....
 char TextBck[20][10];                       /* 文本状态的二级缓存 .....*/
 #define SCREEN(x,y) (TextBuf[((y) * 160) + ((x) * 2)])   /* 显存中字符 */
 #define SCOLOR(x,y) (TextBuf[((y) * 160) + ((x) * 2) + 1]) /* 屏幕颜色 */
+ 
 /*---------------------------------------------------------------------
 // 基本砖块操作函数
 //---------------------------------------------------------------------*/
@@ -146,11 +150,13 @@ void Rotate(const Block* src, Block* dest)  /* 旋转砖块src到dest ......*/
     for (j = 0; j &lt; 4; j++) for (i = 0; i &lt; 4; i++)
     dest-&gt;d[i][j] = src-&gt;d[j][3 - i];
 }
+ 
 int MapCheck(int x, int y) /* 检测地图中某坐标是否有砖块 ..............*/
 {
     if (x &lt; 0 || x &gt;=10 || y &lt; 0 || y &gt;= 26) return -1;
     return map[y][x];
 }
+ 
 int BlockCheck(int x, int y, const Block* src) /* 检测砖块位置合法性 ..*/
 {
     int i, j;
@@ -158,6 +164,7 @@ int BlockCheck(int x, int y, const Block* src) /* 检测砖块位置合法性 ..
         if (MapCheck(x + j, y - i) &amp;&amp; src-&gt;d[i][j]) return 0;
     return 1;
 }
+ 
 void CreateBlock(Block* src) /* 随机创建一个砖块，然后保存到src .......*/
 {
     int i,j,k = rand() % 7;
@@ -166,6 +173,7 @@ void CreateBlock(Block* src) /* 随机创建一个砖块，然后保存到src ..
         src-&gt;d[i][j] = BlockList[k][i][j];
     for (i = rand() % 4; i &gt; 0; i--, *src = t) Rotate(src, &amp;t);
 }
+ 
 long TimePass = 0, TimeExit = -1, GameTime = -1, w;
 void GameMain(void);
 /*---------------------------------------------------------------------
@@ -180,19 +188,24 @@ void main(void)
         SCREEN(w,0)=254, SCOLOR(w,0)=8, SCREEN(w,21)=254, SCOLOR(w,21)=8,
         SCREEN(0,w)=254, SCOLOR(0,w)=8, SCREEN(21,w)=254, SCOLOR(21,w)=8;
     GameSpeed = 2;                          /* 初始化：设置速度 .......*/
+ 
     GameMain();                             /* 进入游戏主程序 .........*/
 }
+ 
 int readkey(void)           /* 无等待的接收一个键盘消息 ...............*/
 {
     if (!kbhit()) return 0; /* 如果当前没有按键消息则直接返回 .........*/
     if ((w = getch()) == 0) return getch();   /* 返回非控制键 .........*/
     return (int)w;
 }
+ 
 int SpeedX[10] = { 17, 15, 13, 11, 9, 7, 5, 4, 3, 2 }; /* 速度级别 ....*/
 int x = 3, y = 20, v = 0, level;    /* 全局定义：砖块的坐标，速度 .....*/
 Block A, B, C;                      /* 全局定义：A, B, C三个活动砖块 ..*/
+ 
 void GameDriver(void);
 void GameView(void);
+ 
 /*---------------------------------------------------------------------
 // 游戏逻辑核心(重要): 每秒循环18.2次，处理砖块移动/下落/消除等逻辑
 //---------------------------------------------------------------------*/
@@ -200,6 +213,7 @@ void GameMain(void)
 {
     long key, i, j, m, n, old_time = 0;         /* 定义各变量 .........*/
     CreateBlock(&amp;A); CreateBlock(&amp;C);           /* 初始化砖块 .........*/
+ 
     for (GameMode = 0, v = SpeedX[GameSpeed]; GameMode == 0; TimePass++)
     {
         while (clock() == old_time);   /* 速度控制，clock()为 18.2Hz ..*/
@@ -237,9 +251,11 @@ void GameMain(void)
     while (!kbhit());
     nosound();                                  /* 关闭扬声器 .........*/
 }
+ 
 void GameDriver(void)      /* 处理消除行 ..............................*/
 {
     int inc[5]={10,100,300,600,1000}, count = 0, x, y, k, i, j;
+ 
     for (y = 0; y &lt; 25; y++) for (; ; count++) { /* 扫描map测试消行 ...*/
         for (x = 0, k = 0; x &lt; 10; x++) k += (map[y][x])? 1 : 0;
         if (k &lt; 10) break;              /* 计算一行是否可以消去 .......*/
@@ -250,13 +266,16 @@ void GameDriver(void)      /* 处理消除行 ..............................*/
     GameScore += inc[count];                /* 计算新的分数 ...........*/
     sound((count == 0)? 75 : 900);
 }
+ 
 void GameView(void)        /* 绘制：将map里面的砖块绘制到屏幕 .........*/
 {
     int i, j, m, n;
+ 
     for (i=0; i&lt;10; i++) for (j=0; j&lt;20; j++) /* 更新TextBck二级缓存 ..*/
         TextBck[j][i] = map[j][i];
     for (i=0, n=x; i&lt;4; i++, n++) for (j = 0, m=y; j &lt; 4; j++, m--)
         if (m&gt;=0&amp;&amp;m&lt;20 &amp;&amp; n&gt;=0&amp;&amp;n&lt;10 &amp;&amp; A.d[j][i]) TextBck[m][n] = A.d[j][i];
+ 
     for (i = 0; i &lt; 10; i++) for (j = 0; j &lt; 20; j++) { /* 显示地图 ...*/
         m = TextBck[19 - j][i], n = i * 2;
         SCREEN(n+1,j+1) = (m)? '[':'.', SCOLOR(n+1,j+1) = (m)? cmap[m] : 8;
@@ -278,7 +297,6 @@ void GameView(void)        /* 绘制：将map里面的砖块绘制到屏幕 ....
     gotoxy(1, 23);
 }
 </code></pre>
-
                         </div>
 
                         
@@ -421,7 +439,7 @@ void GameView(void)        /* 绘制：将map里面的砖块绘制到屏幕 ....
     </li>
     
     <li>
-        <a href="https://skywind3000.com/categories/%E7%BC%96%E7%A8%8B%E6%8A%80%E6%9C%AF/">编程技术(45)</a>
+        <a href="https://skywind3000.com/categories/%E7%BC%96%E7%A8%8B%E6%8A%80%E6%9C%AF/">编程技术(44)</a>
     </li>
     
     <li>

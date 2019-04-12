@@ -99,8 +99,7 @@
                             </div>
                             
                             <div class="post-content">
-                                不到两百行的俄罗斯方块游戏，教学用：
-/*===================================================================== // FOOLTRS.C: Fool tetris game v1.0 by skywind // 最简俄罗斯，游戏设计入门傻瓜版，林伟 1999年8月11日 // // 游戏并无任何扩展，仅以最简单的方式向人说明俄罗斯方块的基本功能实现 // 程序运行于MS-DOS，虽然现在写游戏的平台早已变化了许多， // 但是我尽量容入了一些不变理论，希望才入门的游戏设计者能得到一些帮助 // 用方向键/空格游戏，代码不超过两百行，初学C者皆能读懂，请用TC20编译 // //=====================================================================*/ #include &lt;stdio.h&gt; #include &lt;stdlib.h&gt; #include &lt;time.h&gt; #include &lt;conio.h&gt; #include &lt;string.h&gt; #include &lt;dos.h&gt; /*--------------------------------------------------------------------- // 基本定义：地图和砖块 //---------------------------------------------------------------------*/ int map[26][10]; /* 游戏地图定义: 所有砖块将被描述在地图中 ............*/ typedef struct { int d[4][4]; } Block; /* 砖块结构定义 ...............*/ int BlockList[7][4][4] = { /* 七种传统的方块定义 .................*/ { { 0, 0, 0, 0 }, { 0, 1, 0, 0 }, { 0, 1, 0, 0 }, { 0, 1, 1, 0 } }, { { 0, 0, 0, 0 }, { 0, 0, 2, 0 }, { 0, 0, 2, 0 }, { 0, 2, 2, 0 } }, { { 0, 3, 0, 0 }, { 0, 3, 0, 0 }, { 0, 3, 0, 0 }, { 0, 3, 0, 0 } }, { { 0, 4, 0, 0 }, { 0, 4, 4, 0 }, { 0, 0, 4, 0 }, { 0, 0, 0, 0 } }, { { 0, 0, 5, 0 }, { 0, 5, 5, 0 }, { 0, 5, 0, 0 }, { 0, 0, 0, 0 } }, { { 0, 6, 6, 6 }, { 0, 0, 6, 0 }, { 0, 0, 0, 0 }, { 0, 0, 0, 0 } }, { { 0, 0, 0, 0 }, { 0, 7, 7, 0 }, { 0, 7, 7, 0 }, { 0, 0, 0, 0 } }}; unsigned char cmap[]={0,0x72,0x30,0x47,0x57,0x27,0x60,0x74}; /* 颜色表 */ long GameMode = 0, GameSpeed = -1, GameScore = 0; /* 全局定义：各状态 .……
+                                <p>不到两百行的俄罗斯方块游戏，教学用：</p>……
                                 <p class="readmore"><a href="https://skywind3000.com/blog/archives/88/">阅读全文</a></p>
                             </div>
                         </article>
@@ -127,8 +126,9 @@
                             </div>
                             
                             <div class="post-content">
-                                此程序仅向人说明编写游戏程序的若干功能实现和常用处理方法，编译版本下载： http://www.skywind.me/resource/oldworks/foolfly.zip
-/* Fool fly game v1.0 by skywind * 空战摸拟源程序，林伟 1999年7月30日 * * 这是一个空战程序的模式例子，并没有做任何优化与扩充 * 仅仅向人说明编写游戏程序的若干功能实现或常用处理方法 * 程序是DOS版的，现在写游戏的平台早已变化了许多，但是 * 我尽量容入了一些不变理论，希望才入门的游戏设计者能受 * 到一些启发，通过它也可以看出当日DOS下设计的困难重重。 * * 整个程序不足300行，请用BC31或者TC20的Large模式编译 */ #include &lt;stdio.h&gt; #include &lt;dos.h&gt; #include &lt;stdlib.h&gt; #include &lt;conio.h&gt; #include &lt;mem.h&gt; #include &lt;time.h&gt; #include &lt;math.h&gt; #include &lt;alloc.h&gt; #define MAX_STAR 80 /* 最多星星数目 */ #define MAX_OBJ 30 /* 最多物体(子弹和敌人) */ #define MAXY 169 /* y坐标的最大值 */ typedef unsigned long ulong; char far *VideoBuf=(char far*)0xa0000000L, *MemBuf; /* MemBuf 图形二级缓存 */ char keys[128]; /* keys[0..100] 键盘上各键的状态 */ const KEY_UP=72,KEY_DOWN=80,KEY_LEFT=75,KEY_RIGHT=77,KEY_ESC=1,KEY_CTRL=29; /* 键盘扫描码 */ void interrupt far (*OldInt9)(void); /* 老的键盘中断程序地址 */ void interrupt NewInt9(void); /* 新的键盘中断服务程序 */ char GameStart(void); struct TStars { int x,y,v; } Stars[MAX_STAR]; /* 星星的描述 */ struct TObj { int mode,type,index,next,x,y; } Objs[MAX_OBJ]; /* 子弹和敌人的描述 */ long GameScore=0; /* 游戏分数 */ unsigned char fly_pic[260]={ /* 飞机的图形，我是用程序将PCX图形转换过来的 */ 16,0,16,0,0,0,0,29,25,0,0,0,0,25,29,196,0,0,0,0,0,0,0,25,25,0,0,0,0,25,0,196,0, 0,0,0,112,112,0,25,196,40,40,29,112,112,40,112,0,112,112,112,40,40,112,112,40,40, 25,25,112,40,40,112,112,112,112,112,112,40,112,25,40,40,112,112,112,40,40,25, 40,112,112,0,0,112,112,25,40,40,40,112,40,40,40,25,40,112,0,0,0,0,112,25,40, 112,40,112,112,112,40,25,112,0,0,0,0,0,0,29,112,0,40,0,112,0,112,29,0,0,0,0, 0,0,0,29,112,0,40,54,112,0,112,29,0,0,0,0,0,0,0,29,0,0,40,54,112,0,0,29,0,0, 0,0,0,0,0,0,0,40,112,25,112,112,0,0,0,0,0,0,0,0,0,0,0,40,112,25,112,112,0,0, 0,0,0,0,0,0,0,0,0,40,112,112,112,112,0,0,0,0,0,0,0,0,0,0,0,0,40,112,112,0,0, 0,0,0,0,0,0,0,0,0,0,0,40,25,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,112,0,0,0,0,0,0,0, 0}; /* 数据头四个字节分别由两个16位数据表示图片的长和宽，后面是图片8bit的颜色数据 */ void copyright(void) { printf(&quot;Game Over. your score %ld\n&quot;,GameScore); printf(&quot;Thank you for play it, if you have any question please call me\n&quot;); printf(&quot;(0871)7167710 or lwwind@yeah.net, Lin Wei\n&quot;); } int game_init(void); int game_restore(void); void main(void) { if (!game_init()) return; /* 游戏初始化 */ printf(&quot; - STAR WAR -\r&quot;); /* 打印标题 */ GameStart(); /* 游戏主循环 */ game_restore(); /* 还原初始化 */ copyright(); /* 显示说明文 */ } int game_init(void) { long i; union REGS regs; MemBuf=(char far*)farmalloc(320L*(MAXY+1)); if (!……
+                                <p>此程序仅向人说明编写游戏程序的若干功能实现和常用处理方法，编译版本下载：</p>
+
+<p><a href="http://www.skywind.me/resource/oldworks/foolfly.zip">http://www.skywind.me/resource/oldworks/foolfly.zip</a></p>……
                                 <p class="readmore"><a href="https://skywind3000.com/blog/archives/83/">阅读全文</a></p>
                             </div>
                         </article>
@@ -230,7 +230,7 @@
     </li>
     
     <li>
-        <a href="https://skywind3000.com/categories/%E7%BC%96%E7%A8%8B%E6%8A%80%E6%9C%AF/">编程技术(45)</a>
+        <a href="https://skywind3000.com/categories/%E7%BC%96%E7%A8%8B%E6%8A%80%E6%9C%AF/">编程技术(44)</a>
     </li>
     
     <li>

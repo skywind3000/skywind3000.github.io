@@ -95,11 +95,7 @@
                         </div>
                         
                         <div class="post-content">
-                            
-
-<h1 id="成就系统的最佳实践">成就系统的最佳实践</h1>
-
-<p><strong>Achievements and Gamerscore: Best Practices</strong></p>
+                            <p><strong>Achievements and Gamerscore: Best Practices</strong></p>
 
 <p>-&mdash; By Jeff Sullivan, Developer Relations Manager, Microsoft Game Technology Group</p>
 
@@ -116,7 +112,7 @@
 <li>内容回顾</li>
 </ol>
 
-<p>Xbox 360的<strong>“玩家成就（</strong><strong>achievements</strong><strong>）”</strong>和<strong>“成就积分（</strong><strong>gamerscore</strong><strong>）”</strong>重新激起了玩家的游戏兴趣，玩家将更多的时间和精力投入到游戏中，不断尝试更高的难度设置。整个游戏行业，一夜之间涌现出各种业余的、专业的积分站点，开始讨论游戏成就，以及怎么获得更多的成就分。游戏设计者们也从中受益匪浅，有史以来第一次，他们可以分析玩家在多个游戏
+<p>Xbox 360的<strong>“玩家成就（achievements）”</strong>和<strong>“成就积分（gamerscore）”</strong>重新激起了玩家的游戏兴趣，玩家将更多的时间和精力投入到游戏中，不断尝试更高的难度设置。整个游戏行业，一夜之间涌现出各种业余的、专业的积分站点，开始讨论游戏成就，以及怎么获得更多的成就分。游戏设计者们也从中受益匪浅，有史以来第一次，他们可以分析玩家在多个游戏
 中的表现。成千上万的人都在问这两个问题：“你的成就分是多少？你最喜欢的成就是什么？”</p>
 
 <p>成就系统的价值和吸引力是无可否认的，关键是怎么充分利用它们来提高你的游戏品质。</p>
@@ -142,18 +138,18 @@ miles：翻译成中文的意思是航空积分里程，由于经常使用某一
 
 <p>成就系统能吸引很多人，有趣的是它们能吸引那些以前在游戏世界中没有获得过社交和持续性鼓励（social or lasting rewards）的玩家。</p>
 
-<p>• 玩家分类</p>
-
-<p>• 需要避免的成就类型</p>
-
-<p>• 最佳实践的成就类型</p>
+<ul>
+<li>玩家分类</li>
+<li>需要避免的成就类型</li>
+<li>最佳实践的成就类型</li>
+</ul>
 
 <h3 id="玩家分类">玩家分类</h3>
 
 <p>下一节参考了Richard Bartle 的玩家原型分类研究，尽管他的目标是将MUD（Multi-User Dungeon）的玩家进行分类（如图1），但他的研究也适用于现在Xbox Live上的玩家。</p>
 
-<p><img src="https://skywind3000.github.io/images/blog/wp-content/2011/04/clip_image002_thumb6.jpg" alt="clip_image002" />**<br />
-图1 Richard Bartle 的MUD玩家分类（杀手型，成就型，社交型，探险型）**** **</p>
+<p><img src="https://skywind3000.github.io/images/blog/wp-content/2011/04/clip_image002_thumb6.jpg" alt="clip_image002" />
+图1 Richard Bartle 的MUD玩家分类（杀手型，成就型，社交型，探险型）</p>
 
 <p>这四种类型大致对应4个区域，玩家可以在玩家profile中选择他的所属区域：杀手=地下的，社交者＝家庭的，探索者＝娱乐的，以及 职业选手＝看重成就的。</p>
 
@@ -162,8 +158,8 @@ miles：翻译成中文的意思是航空积分里程，由于经常使用某一
 <p>后来，Xbox 360和Xbox Live开始将受众拓宽到所有类型的玩家，逐步加入玩家区域和名誉来达到这个目标。区域将不同原型的玩家粗略地隔离开，用名声系统（Reputation，其实就是玩家互相评级也叫User Feedback系统）鼓励玩家的在游戏中做到受人欢迎。Xbox360通过个性化、观战模式、玩家自定义内容、持续聊天频道和丰富的在线信息来吸引社会性的玩家。（rich presence:
 <a href="http://www.gamasutra.com/features/20050831/carless_01.shtml">这里</a>有微软对这一概念的解释，大致是说可以看到好友的在线状态、以及他正在玩什么游戏等，吸引其它玩家去了解和玩那个游戏） 排名系统（ranked）和玩家匹配系统给了玩家可以选择他喜欢和哪些人，不喜欢和哪些人玩游戏的控制权。</p>
 
-<p><img src="https://skywind3000.github.io/images/blog/wp-content/2011/04/clip_image0025_thumb.jpg" alt="clip_image002\[5\]" />**<br />
-图2 XBOX Live 各个系统与四种类型玩家之间的需求关系**** **</p>
+<p><img src="https://skywind3000.github.io/images/blog/wp-content/2011/04/clip_image0025_thumb.jpg" alt="clip_image002\[5\]" />
+图2 XBOX Live 各个系统与四种类型玩家之间的需求关系</p>
 
 <p>成就系统同样也适用于这个分区体系，嘉奖那些以前没有因为他们的行为获得明确的社会奖励的玩家，从而吸引Bartle玩家分类图（见图一）右侧的那些玩家。成就系统还可为单人和离线模式提供积极的反馈，从平台的观点来看，以往奖励多数是给了多人竞技的那些玩家。但成就可以也应该偏向图的左侧。</p>
 
@@ -196,16 +192,17 @@ miles：翻译成中文的意思是航空积分里程，由于经常使用某一
 
 <p>推荐阅读：Hopson’s Behavioral Game Design [gamesutra.com, 免费注册]</p>
 
-<p>• 授予成就的时机</p>
-
-<p>• 激励时机中需要避免什么</p>
-
-<p>• 激励时机中的最佳实践</p>
+<ul>
+<li>授予成就的时机</li>
+<li>激励时机中需要避免什么</li>
+<li>激励时机中的最佳实践</li>
+</ul>
 
 <h3 id="授予成就的节奏">授予成就的节奏</h3>
 
-<p>成就的授予应严格参考其它经典的游戏模型：<strong>激励节奏</strong>（reward
-scheduling）。虽然它过去有许多种叫法，<strong>激励节奏</strong>是一门研究怎样实施奖励，从正面鼓励玩家的上进心，或避免消极精神状态的学科。并且影响他们的决定对或继续游戏或者退出游戏。简而言之，提供频繁奖励是好的；无休止地要求玩家在游戏中越来越努力的持续得获得奖励是不好的。同时最有可能让玩家离开游戏的时间点，存在于玩家取得一个成就之后，在需要花太长时间才能取得的下一个成就之前。</p>
+<p>成就的授予应严格参考其它经典的游戏模型：</p>
+
+<p><strong>激励节奏</strong>（reward scheduling）。虽然它过去有许多种叫法，<strong>激励节奏</strong>是一门研究怎样实施奖励，从正面鼓励玩家的上进心，或避免消极精神状态的学科。并且影响他们的决定对或继续游戏或者退出游戏。简而言之，提供频繁奖励是好的；无休止地要求玩家在游戏中越来越努力的持续得获得奖励是不好的。同时最有可能让玩家离开游戏的时间点，存在于玩家取得一个成就之后，在需要花太长时间才能取得的下一个成就之前。</p>
 
 <p>故此，提供易变的和无规律的奖励周期能将玩家的活跃性保持在一定的水平，不太可能让玩家们选择放弃游戏。理想的情况是玩家在游戏中努力数个小时总能取到下一个成就。</p>
 
@@ -246,19 +243,17 @@ scheduling）。虽然它过去有许多种叫法，<strong>激励节奏</strong
 
 <p>现在，你已经把你的成就系统，锁定到很多不同的玩家，而且你也思考了很久，哪些是玩家需要的。但是这还不够。为了让成就系统，更好的融入到游戏中，还有很多事情你可以做。</p>
 
-<p>• 使用有趣的图标</p>
-
-<p>• 游戏中提供显示</p>
-
-<p>• 显示进度</p>
-
-<p>• 结合额外的数据</p>
-
-<p>• 创造附加的价值</p>
+<ul>
+<li>使用有趣的图标</li>
+<li>游戏中提供显示</li>
+<li>显示进度</li>
+<li>结合额外的数据</li>
+<li>创造附加的价值</li>
+</ul>
 
 <h3 id="使用有趣的图标">使用有趣的图标</h3>
 
-<p>要让没有成就或者没有玩过该游戏的玩家，对游戏成就系统感兴趣，最直接的办法，就是为成就系统做一些有趣的图标。那些无趣的图片或者是copy来的图片，基本不可能吸引玩家，或者说不可煽动其他玩家来尝试玩你的游戏。相反，利用一些诱惑人的或者古怪的或者幽默的图标则能很好的吸引玩家。成就图标虽然只有64*64像素大小，但已经能够让很多有艺术细胞的人创造出很多东东来了。</p>
+<p>要让没有成就或者没有玩过该游戏的玩家，对游戏成就系统感兴趣，最直接的办法，就是为成就系统做一些有趣的图标。那些无趣的图片或者是copy来的图片，基本不可能吸引玩家，或者说不可煽动其他玩家来尝试玩你的游戏。相反，利用一些诱惑人的或者古怪的或者幽默的图标则能很好的吸引玩家。成就图标虽然只有64x64像素大小，但已经能够让很多有艺术细胞的人创造出很多东东来了。</p>
 
 <h3 id="游戏中提供显示">游戏中提供显示</h3>
 
@@ -277,11 +272,11 @@ scheduling）。虽然它过去有许多种叫法，<strong>激励节奏</strong
 
 <p>考虑让成就系统结合真实的价值，考虑让奖励与玩家的能力挂钩。让玩家知道，在这里，有很多的机会。一些例子：</p>
 
-<p>在成就中，显示新的服饰-____-</p>
+<p>在成就中，显示新的服饰</p>
 
-<p>显示游戏的幕后制作-__________-</p>
+<p>显示游戏的幕后制作</p>
 
-<p>让成就的数量与某种形式的购买力相等 -___-#</p>
+<p>让成就的数量与某种形式的购买力相等</p>
 
 <p>让有经验的玩家在在线游戏中扮演指挥官的角色。</p>
 
@@ -297,23 +292,17 @@ scheduling）。虽然它过去有许多种叫法，<strong>激励节奏</strong
 
 <p>下面是一些已发售游戏的成就设定例子。基于前面的考虑，我们能够比较出各个游戏成就设计的好坏。</p>
 
-<p>• Teachers</p>
-
-<p>• Carrots</p>
-
-<p>• Mode Exploration</p>
-
-<p>• Socials</p>
-
-<p>• Hidden Treasures</p>
-
-<p>• Grinders</p>
-
-<p>• Mission Impossible</p>
-
-<p>• Trophies</p>
-
-<p>• Scarlet Letter</p>
+<ul>
+<li>Teachers</li>
+<li>Carrots</li>
+<li>Mode Exploration</li>
+<li>Socials</li>
+<li>Hidden Treasures</li>
+<li>Grinders</li>
+<li>Mission Impossible</li>
+<li>Trophies</li>
+<li>Scarlet Letter</li>
+</ul>
 
 <h3 id="teachers">Teachers</h3>
 
@@ -360,10 +349,7 @@ abstraction between the achievement and the action itself.)。举例来说，不
 
 <p>评价: K</p>
 
-<p>Mission Impossible成就用于奖励游戏里的英勇行为。最好的情况下，它奖励挑战极限，并且让玩家不用太多地重复游戏，如果让玩家可以打乱游戏进程而游戏，并且又提供足够的存盘点的话，那么“以最高难度通关”就是最好的例子。（这句不会翻译-_-:Mission impossible achievements could also be used well in context as
-teachers.）举个例子，“保持无损伤并在大规模袭击（Juggernaut
-Assault）中存活下来”（游戏中一个虽短但难于完成的片段），该成就糟糕的地方是，它打击了玩家玩游戏的乐趣，因为玩家会认为这种挑战是不能克服的。例如，“一命通关”就是过度地挑战玩家的能力，特别是它要求玩家为了证明自己的实力，一遍遍地玩早期的关卡，从而忽略了以后的关卡。这种成就应该渐进地提供，并且现实一点，让大部分玩家都能达成。如果使用Mission
-impossible的目的，只是_人工_地延长游戏寿命，一定会失败。如果运用适当，这种形式的奖励，会是玩家游戏过程中的好伙伴，并提供一种公平的办法让玩家去炫耀他们的成就。</p>
+<p>Mission Impossible成就用于奖励游戏里的英勇行为。最好的情况下，它奖励挑战极限，并且让玩家不用太多地重复游戏，如果让玩家可以打乱游戏进程而游戏，并且又提供足够的存盘点的话，那么“以最高难度通关”就是最好的例子。（这句不会翻译: Mission impossible achievements could also be used well in context as teachers.）举个例子，“保持无损伤并在大规模袭击（Juggernaut Assault）中存活下来”（游戏中一个虽短但难于完成的片段），该成就糟糕的地方是，它打击了玩家玩游戏的乐趣，因为玩家会认为这种挑战是不能克服的。例如，“一命通关”就是过度地挑战玩家的能力，特别是它要求玩家为了证明自己的实力，一遍遍地玩早期的关卡，从而忽略了以后的关卡。这种成就应该渐进地提供，并且现实一点，让大部分玩家都能达成。如果使用Mission impossible的目的，只是人工地延长游戏寿命，一定会失败。如果运用适当，这种形式的奖励，会是玩家游戏过程中的好伙伴，并提供一种公平的办法让玩家去炫耀他们的成就。</p>
 
 <h3 id="trophies">Trophies</h3>
 
@@ -385,11 +371,11 @@ well.这里的翻译有疑问）</p>
 
 <p>下面有些关于传统类型游戏如何授予游戏成就的例子，这些例子趋向于描述游戏该如何根据规则设置成就，而不是说明如何定义一个真实游戏成就的方法。每个游戏成就的权衡都会有所轻微的变化，取决于如何在该游戏中获取成就的动机，此外，一些能够进一步改善游戏成就设定的方法也迫切需要被提出来。传统类型游戏有以下三种：</p>
 
-<p>• 第一人称射击游戏</p>
-
-<p>• 竞技游戏</p>
-
-<p>• 角色扮演游戏</p>
+<ul>
+<li>第一人称射击游戏</li>
+<li>竞技游戏</li>
+<li>角色扮演游戏</li>
+</ul>
 
 <h3 id="第一人称设计游戏">第一人称设计游戏</h3>
 
@@ -397,11 +383,11 @@ well.这里的翻译有疑问）</p>
 
 <p>出发点有几个：</p>
 
-<p>l 鼓励一个玩家在游戏中的技巧提高</p>
-
-<p>l 鼓励玩家尝试所有的游戏模式</p>
-
-<p>l 鼓励游戏中的社交行为</p>
+<ul>
+<li>鼓励一个玩家在游戏中的技巧提高</li>
+<li>鼓励玩家尝试所有的游戏模式</li>
+<li>鼓励游戏中的社交行为</li>
+</ul>
 
 <p>在三种难度中任何一种的10个阶段的每一个阶段都设立一个成就，由此将产生30个成就（如果总成就为50，则技能成就占了60％），简单的技能成就应该被抛弃，1-20号成就作为游戏的基本奖赏成就，21号成就为完成每件困难的任务，考虑到可能有1－2个级别非常的难，所以奖励21号成就比较合理，游戏也可以为取得21号成就的玩家授予一个特殊图片，于是玩家可以容易地向世界展示他的游戏技能。</p>
 
@@ -419,410 +405,368 @@ well.这里的翻译有疑问）</p>
 
 <p>Table 1. Achievements for First Person Shooter X</p>
 
-<p><strong>#</strong>
-<strong>Achievement</strong>
-<strong>Gamerscore</strong>
-<strong>Total</strong></p>
-
-<p>1</p>
-
-<p>Complete Level 1 on Medium</p>
-
-<p>15</p>
-
-<p>15</p>
-
-<p>2</p>
-
-<p>Complete Level 1 on Hard</p>
-
-<p>25</p>
-
-<p>40</p>
-
-<p>3</p>
-
-<p>Complete Level 2 on Medium</p>
-
-<p>15</p>
-
-<p>55</p>
-
-<p>4</p>
-
-<p>Complete Level 2 on Hard</p>
-
-<p>25</p>
-
-<p>80</p>
-
-<p>5</p>
-
-<p>Complete Level 3 on Medium</p>
-
-<p>15</p>
-
-<p>95</p>
-
-<p>6</p>
-
-<p>Complete Level 3 on Hard</p>
-
-<p>25</p>
-
-<p>120</p>
-
-<p>7</p>
-
-<p>Complete Level 4 on Medium</p>
-
-<p>15</p>
-
-<p>135</p>
-
-<p>8</p>
-
-<p>Complete Level 4 on Hard</p>
-
-<p>25</p>
-
-<p>160</p>
-
-<p>9</p>
-
-<p>Complete Level 5 on Medium</p>
-
-<p>15</p>
-
-<p>175</p>
-
-<p>10</p>
-
-<p>Complete Level 5 on Hard</p>
-
-<p>25</p>
-
-<p>200</p>
-
-<p>11</p>
-
-<p>Complete Level 6 on Medium</p>
-
-<p>15</p>
-
-<p>215</p>
-
-<p>12</p>
-
-<p>Complete Level 6 on Hard</p>
-
-<p>25</p>
-
-<p>240</p>
-
-<p>13</p>
-
-<p>Complete Level 7 on Medium</p>
-
-<p>15</p>
-
-<p>255</p>
-
-<p>14</p>
-
-<p>Complete Level 7 on Hard</p>
-
-<p>25</p>
-
-<p>280</p>
-
-<p>15</p>
-
-<p>Complete Level 8 on Medium</p>
-
-<p>15</p>
-
-<p>295</p>
-
-<p>16</p>
-
-<p>Complete Level 8 on Hard</p>
-
-<p>25</p>
-
-<p>320</p>
-
-<p>17</p>
-
-<p>Complete Level 9 on Medium</p>
-
-<p>15</p>
-
-<p>335</p>
-
-<p>18</p>
-
-<p>Complete Level 9 on Hard</p>
-
-<p>25</p>
-
-<p>360</p>
-
-<p>19</p>
-
-<p>Complete Level 10 on Medium</p>
-
-<p>15</p>
-
-<p>375</p>
-
-<p>20</p>
-
-<p>Complete Level 10 on Hard</p>
-
-<p>25</p>
-
-<p>400</p>
-
-<p>21</p>
-
-<p>Complete every level on Hard</p>
-
-<p>40</p>
-
-<p>440</p>
-
-<p>22</p>
-
-<p>Use the laser in combination with the EMP Grenade to create a dispersion field</p>
-
-<p>20</p>
-
-<p>460</p>
-
-<p>23</p>
-
-<p>Use only alternate fire to beat a level</p>
-
-<p>20</p>
-
-<p>480</p>
-
-<p>24</p>
-
-<p>Keep the target reticule locked on to a Flyer for 10 seconds</p>
-
-<p>20</p>
-
-<p>500</p>
-
-<p>25</p>
-
-<p>Master the crouch-jump by jumping ten feet</p>
-
-<p>20</p>
-
-<p>520</p>
-
-<p>26</p>
-
-<p>Discover the hidden weapons cache (Level 4)</p>
-
-<p>20</p>
-
-<p>540</p>
-
-<p>27</p>
-
-<p>Discover the Well of Eons (Level 8)</p>
-
-<p>20</p>
-
-<p>560</p>
-
-<p>28</p>
-
-<p>Find all 10 Golden Armor pieces (one each level)</p>
-
-<p>20</p>
-
-<p>580</p>
-
-<p>29</p>
-
-<p>Find all 5 missing colonists (one every other level)</p>
-
-<p>20</p>
-
-<p>600</p>
-
-<p>30</p>
-
-<p>Climb to the highest spot in the game</p>
-
-<p>20</p>
-
-<p>620</p>
-
-<p>31</p>
-
-<p>Complete a level in co-op with someone that hasn&rsquo;t previously completed it</p>
-
-<p>20</p>
-
-<p>640</p>
-
-<p>32</p>
-
-<p>Complete a level with a stranger in co-op</p>
-
-<p>10</p>
-
-<p>650</p>
-
-<p>33</p>
-
-<p>Play Level 2 from both perspectives in co-op</p>
-
-<p>15</p>
-
-<p>665</p>
-
-<p>34</p>
-
-<p>Play Level 6 from both perspectives in co-op</p>
-
-<p>15</p>
-
-<p>680</p>
-
-<p>35</p>
-
-<p>Create a custom game type and play it with at least 7 friends</p>
-
-<p>20</p>
-
-<p>700</p>
-
-<p>36</p>
-
-<p>Be a part of something big - play online at the same time as 10,000 other players</p>
-
-<p>10</p>
-
-<p>710</p>
-
-<p>37</p>
-
-<p>6 Degrees - a viral achievement that starts with the first 100 hundred players online</p>
-
-<p>10</p>
-
-<p>720</p>
-
-<p>38</p>
-
-<p>Place in the top half on a Death Match (ranked)</p>
-
-<p>10</p>
-
-<p>730</p>
-
-<p>39</p>
-
-<p>Place #1 in a Death Match (ranked)</p>
-
-<p>30</p>
-
-<p>760</p>
-
-<p>40</p>
-
-<p>Contribute your share of the kills in a winning Team Death Match (ranked)</p>
-
-<p>10</p>
-
-<p>770</p>
-
-<p>41</p>
-
-<p>Leading contributor of kills in a winning Team Death Match (ranked)</p>
-
-<p>30</p>
-
-<p>800</p>
-
-<p>42</p>
-
-<p>Your team captures and successfully defends the flag in a CTF game (ranked)</p>
-
-<p>10</p>
-
-<p>810</p>
-
-<p>43</p>
-
-<p>You capture a flag and kill an enemy flag carrier in a single CTF game (ranked)</p>
-
-<p>30</p>
-
-<p>840</p>
-
-<p>44</p>
-
-<p>Your team destroys and successfully defends the objective in an Objective game (ranked)</p>
-
-<p>10</p>
-
-<p>850</p>
-
-<p>45</p>
-
-<p>You destroy the objective and defuse a bomb in a single Objective game (ranked)</p>
-
-<p>30</p>
-
-<p>880</p>
-
-<p>46</p>
-
-<p>Win a game on every map (ranked) and acquire all other multiplayer achievements</p>
-
-<p>40</p>
-
-<p>920</p>
-
-<p>47</p>
-
-<p>Reserved for DLC: a new single-player level on Medium?</p>
-
-<p>20</p>
-
-<p>940</p>
-
-<p>48</p>
-
-<p>Reserved for DLC: a new single-player level on Hard?</p>
-
-<p>20</p>
-
-<p>960</p>
-
-<p>49</p>
-
-<p>Reserved for DLC: a new multiplayer map?</p>
-
-<p>20</p>
-
-<p>980</p>
-
-<p>50</p>
-
-<p>Reserved for DLC: a new multiplayer map?</p>
-
-<p>20</p>
-
-<p>1000</p>
+<table>
+<thead>
+<tr>
+<th>#</th>
+<th>Achievement</th>
+<th>Gamerscore</th>
+<th>Total</th>
+</tr>
+</thead>
+
+<tbody>
+<tr>
+<td>1</td>
+<td>Complete Level 1 on Medium</td>
+<td>15</td>
+<td>15</td>
+</tr>
+
+<tr>
+<td>2</td>
+<td>Complete Level 1 on Hard</td>
+<td>25</td>
+<td>40</td>
+</tr>
+
+<tr>
+<td>3</td>
+<td>Complete Level 2 on Medium</td>
+<td>15</td>
+<td>55</td>
+</tr>
+
+<tr>
+<td>4</td>
+<td>Complete Level 2 on Hard</td>
+<td>25</td>
+<td>80</td>
+</tr>
+
+<tr>
+<td>5</td>
+<td>Complete Level 3 on Medium</td>
+<td>15</td>
+<td>95</td>
+</tr>
+
+<tr>
+<td>6</td>
+<td>Complete Level 3 on Hard</td>
+<td>25</td>
+<td>120</td>
+</tr>
+
+<tr>
+<td>7</td>
+<td>Complete Level 4 on Medium</td>
+<td>15</td>
+<td>135</td>
+</tr>
+
+<tr>
+<td>8</td>
+<td>Complete Level 4 on Hard</td>
+<td>25</td>
+<td>160</td>
+</tr>
+
+<tr>
+<td>9</td>
+<td>Complete Level 5 on Medium</td>
+<td>15</td>
+<td>175</td>
+</tr>
+
+<tr>
+<td>10</td>
+<td>Complete Level 5 on Hard</td>
+<td>25</td>
+<td>200</td>
+</tr>
+
+<tr>
+<td>11</td>
+<td>Complete Level 6 on Medium</td>
+<td>15</td>
+<td>215</td>
+</tr>
+
+<tr>
+<td>12</td>
+<td>Complete Level 6 on Hard</td>
+<td>25</td>
+<td>240</td>
+</tr>
+
+<tr>
+<td>13</td>
+<td>Complete Level 7 on Medium</td>
+<td>15</td>
+<td>255</td>
+</tr>
+
+<tr>
+<td>14</td>
+<td>Complete Level 7 on Hard</td>
+<td>25</td>
+<td>280</td>
+</tr>
+
+<tr>
+<td>15</td>
+<td>Complete Level 8 on Medium</td>
+<td>15</td>
+<td>295</td>
+</tr>
+
+<tr>
+<td>16</td>
+<td>Complete Level 8 on Hard</td>
+<td>25</td>
+<td>320</td>
+</tr>
+
+<tr>
+<td>17</td>
+<td>Complete Level 9 on Medium</td>
+<td>15</td>
+<td>335</td>
+</tr>
+
+<tr>
+<td>18</td>
+<td>Complete Level 9 on Hard</td>
+<td>25</td>
+<td>360</td>
+</tr>
+
+<tr>
+<td>19</td>
+<td>Complete Level 10 on Medium</td>
+<td>15</td>
+<td>375</td>
+</tr>
+
+<tr>
+<td>20</td>
+<td>Complete Level 10 on Hard</td>
+<td>25</td>
+<td>400</td>
+</tr>
+
+<tr>
+<td>21</td>
+<td>Complete every level on Hard</td>
+<td>40</td>
+<td>440</td>
+</tr>
+
+<tr>
+<td>22</td>
+<td>Use the laser in combination with the EMP Grenade to create a dispersion field</td>
+<td>20</td>
+<td>460</td>
+</tr>
+
+<tr>
+<td>23</td>
+<td>Use only alternate fire to beat a level</td>
+<td>20</td>
+<td>480</td>
+</tr>
+
+<tr>
+<td>24</td>
+<td>Keep the target reticule locked on to a Flyer for 10 seconds</td>
+<td>20</td>
+<td>500</td>
+</tr>
+
+<tr>
+<td>25</td>
+<td>Master the crouch-jump by jumping ten feet</td>
+<td>20</td>
+<td>520</td>
+</tr>
+
+<tr>
+<td>26</td>
+<td>Discover the hidden weapons cache (Level 4)</td>
+<td>20</td>
+<td>540</td>
+</tr>
+
+<tr>
+<td>27</td>
+<td>Discover the Well of Eons (Level 8)</td>
+<td>20</td>
+<td>560</td>
+</tr>
+
+<tr>
+<td>28</td>
+<td>Find all 10 Golden Armor pieces (one each level)</td>
+<td>20</td>
+<td>580</td>
+</tr>
+
+<tr>
+<td>29</td>
+<td>Find all 5 missing colonists (one every other level)</td>
+<td>20</td>
+<td>600</td>
+</tr>
+
+<tr>
+<td>30</td>
+<td>Climb to the highest spot in the game</td>
+<td>20</td>
+<td>620</td>
+</tr>
+
+<tr>
+<td>31</td>
+<td>Complete a level in co-op with someone that hasn&#39;t previously completed it</td>
+<td>20</td>
+<td>640</td>
+</tr>
+
+<tr>
+<td>32</td>
+<td>Complete a level with a stranger in co-op</td>
+<td>10</td>
+<td>650</td>
+</tr>
+
+<tr>
+<td>33</td>
+<td>Play Level 2 from both perspectives in co-op</td>
+<td>15</td>
+<td>665</td>
+</tr>
+
+<tr>
+<td>34</td>
+<td>Play Level 6 from both perspectives in co-op</td>
+<td>15</td>
+<td>680</td>
+</tr>
+
+<tr>
+<td>35</td>
+<td>Create a custom game type and play it with at least 7 friends</td>
+<td>20</td>
+<td>700</td>
+</tr>
+
+<tr>
+<td>36</td>
+<td>Be a part of something big – play online at the same time as 10,000 other players</td>
+<td>10</td>
+<td>710</td>
+</tr>
+
+<tr>
+<td>37</td>
+<td>6 Degrees – a viral achievement that starts with the first 100 hundred players online</td>
+<td>10</td>
+<td>720</td>
+</tr>
+
+<tr>
+<td>38</td>
+<td>Place in the top half on a Death Match (ranked)</td>
+<td>10</td>
+<td>730</td>
+</tr>
+
+<tr>
+<td>39</td>
+<td>Place #1 in a Death Match (ranked)</td>
+<td>30</td>
+<td>760</td>
+</tr>
+
+<tr>
+<td>40</td>
+<td>Contribute your share of the kills in a winning Team Death Match (ranked)</td>
+<td>10</td>
+<td>770</td>
+</tr>
+
+<tr>
+<td>41</td>
+<td>Leading contributor of kills in a winning Team Death Match (ranked)</td>
+<td>30</td>
+<td>800</td>
+</tr>
+
+<tr>
+<td>42</td>
+<td>Your team captures and successfully defends the flag in a CTF game (ranked)</td>
+<td>10</td>
+<td>810</td>
+</tr>
+
+<tr>
+<td>43</td>
+<td>You capture a flag and kill an enemy flag carrier in a single CTF game (ranked)</td>
+<td>30</td>
+<td>840</td>
+</tr>
+
+<tr>
+<td>44</td>
+<td>Your team destroys and successfully defends the objective in an Objective game (ranked)</td>
+<td>10</td>
+<td>850</td>
+</tr>
+
+<tr>
+<td>45</td>
+<td>You destroy the objective and defuse a bomb in a single Objective game (ranked)</td>
+<td>30</td>
+<td>880</td>
+</tr>
+
+<tr>
+<td>46</td>
+<td>Win a game on every map (ranked) and acquire all other multiplayer achievements</td>
+<td>40</td>
+<td>920</td>
+</tr>
+
+<tr>
+<td>47</td>
+<td>Reserved for DLC: a new single-player level on Medium?</td>
+<td>20</td>
+<td>940</td>
+</tr>
+
+<tr>
+<td>48</td>
+<td>Reserved for DLC: a new single-player level on Hard?</td>
+<td>20</td>
+<td>960</td>
+</tr>
+
+<tr>
+<td>49</td>
+<td>Reserved for DLC: a new multiplayer map?</td>
+<td>20</td>
+<td>980</td>
+</tr>
+
+<tr>
+<td>50</td>
+<td>Reserved for DLC: a new multiplayer map?</td>
+<td>20</td>
+<td>1000</td>
+</tr>
+</tbody>
+</table>
 
 <h2 id="内容回顾">内容回顾</h2>
 
@@ -845,7 +789,6 @@ in each game, and which ones they go after first.</p>
 
 <p><a href="http://www.lostgarden.com/">http://www.lostgarden.com</a> – Contains lots of interesting meta–game-design information. Start here for content relevant to achievements:
 <a href="http://www.lostgarden.com/essay_genreaddict.htm">http://www.lostgarden.com/essay_genreaddict.htm</a></p>
-
                         </div>
 
                         
@@ -857,8 +800,6 @@ in each game, and which ones they go after first.</p>
     <h2>See Also</h2>
     <ul class="listing">
         
-        <li><a href="/blog/archives/333/">[翻译] 更友好的发布你的功能库</a></li>
-        
         <li><a href="/blog/archives/457/">现实主义题材需要拯救</a></li>
         
         <li><a href="/blog/archives/131/">帧锁定同步算法</a></li>
@@ -866,6 +807,8 @@ in each game, and which ones they go after first.</p>
         <li><a href="/blog/archives/338/">PY2EXE的启动步奏参考－科学的发布</a></li>
         
         <li><a href="/blog/archives/455/">学习游戏编程的八大误区</a></li>
+        
+        <li><a href="/blog/archives/613/">推荐业余作品 - Hurricane2</a></li>
         
     </ul>
 </div>
@@ -988,7 +931,7 @@ in each game, and which ones they go after first.</p>
     </li>
     
     <li>
-        <a href="https://skywind3000.com/categories/%E7%BC%96%E7%A8%8B%E6%8A%80%E6%9C%AF/">编程技术(45)</a>
+        <a href="https://skywind3000.com/categories/%E7%BC%96%E7%A8%8B%E6%8A%80%E6%9C%AF/">编程技术(44)</a>
     </li>
     
     <li>
