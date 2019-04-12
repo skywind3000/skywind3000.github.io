@@ -118,109 +118,109 @@
 <li>-march=armv7-a，生成适合 armv7a 架构的代码</li>
 <li>-mtune=cortex-9，代码生成按照 cortex-9 进行调优</li>
 <li>–mfpu=neon，使用 neon 进行硬件浮点运算，决定 softfp 的硬件方式到底用这个</li>
+<li>-mfpu=vfp，使用 vfp 进行硬件浮点运算，决定 softfp 的硬件方式用这个</li>
+</ul>
 
-<li><p>-mfpu=vfp，使用 vfp 进行硬件浮点运算，决定 softfp 的硬件方式用这个
-测试硬件：</p></li>
+<p>测试硬件：</p>
 
-<li><p>桌面电脑：Intel® Core™ i5-2520M CPU @ 2.50GHz</p></li>
-
-<li><p>安卓手机：三星，双核 CPU 1.73GHz armv7-a cortex-9</p></li>
+<ul>
+<li>桌面电脑：Intel® Core™ i5-2520M CPU @ 2.50GHz</li>
+<li>安卓手机：三星，双核 CPU 1.73GHz armv7-a cortex-9</li>
 </ul>
 
 <p>结果如下：</p>
 
-<blockquote>
-<p>Desktop PC -O2:<br />
-compress : 120 ms<br />
-resample : 290 ms<br />
-int add : 78 ms<br />
-int mul : 86 ms<br />
-int div : 459 ms<br />
-float add: 76 ms<br />
-float mul: 69 ms<br />
-float div: 797 ms<br />
-const div: 190 ms<br />
-matrix : 166 ms<br />
-normalize: 177 ms</p>
+<pre><code>Desktop PC -O2:  
+compress : 120 ms  
+resample : 290 ms  
+int add : 78 ms  
+int mul : 86 ms  
+int div : 459 ms  
+float add: 76 ms  
+float mul: 69 ms  
+float div: 797 ms  
+const div: 190 ms  
+matrix : 166 ms  
+normalize: 177 ms
 
-<p>samsung -O2:<br />
-compress : 577 ms<br />
-resample : 576 ms<br />
-int add : 291 ms<br />
-int mul : 332 ms<br />
-int div : 2267 ms<br />
-float add: 3080 ms<br />
-float mul: 1792 ms<br />
-float div: 7103 ms<br />
-const div: 779 ms<br />
-matrix : 9280 ms<br />
-normalize: 5721 ms</p>
+samsung -O2:  
+compress : 577 ms  
+resample : 576 ms  
+int add : 291 ms  
+int mul : 332 ms  
+int div : 2267 ms  
+float add: 3080 ms  
+float mul: 1792 ms  
+float div: 7103 ms  
+const div: 779 ms  
+matrix : 9280 ms  
+normalize: 5721 ms
 
-<p>samsung -O2, -mfloat-abi=softfp:<br />
-compress : 540 ms<br />
-resample : 558 ms<br />
-int add : 291 ms<br />
-int mul : 333 ms<br />
-int div : 2268 ms<br />
-float add: 266 ms<br />
-float mul: 270 ms<br />
-float div: 986 ms<br />
-const div: 780 ms<br />
-matrix : 301 ms<br />
-normalize: 702 ms</p>
+samsung -O2, -mfloat-abi=softfp:  
+compress : 540 ms  
+resample : 558 ms  
+int add : 291 ms  
+int mul : 333 ms  
+int div : 2268 ms  
+float add: 266 ms  
+float mul: 270 ms  
+float div: 986 ms  
+const div: 780 ms  
+matrix : 301 ms  
+normalize: 702 ms
 
-<p>samsung -O2, -mfloat-abi=softfp, -march=armv7-a:<br />
-compress : 497 ms<br />
-resample : 489 ms<br />
-int add : 537 ms<br />
-int mul : 331 ms<br />
-int div : 2342 ms<br />
-float add: 266 ms<br />
-float mul: 270 ms<br />
-float div: 986 ms<br />
-const div: 703 ms<br />
-matrix : 371 ms<br />
-normalize: 701 ms</p>
+samsung -O2, -mfloat-abi=softfp, -march=armv7-a:  
+compress : 497 ms  
+resample : 489 ms  
+int add : 537 ms  
+int mul : 331 ms  
+int div : 2342 ms  
+float add: 266 ms  
+float mul: 270 ms  
+float div: 986 ms  
+const div: 703 ms  
+matrix : 371 ms  
+normalize: 701 ms
 
-<p>samsung -O2, -mfloat-abi=softfp, -march=armv7-a, -mtune=cortex-a9:<br />
-compress : 493 ms<br />
-resample : 517 ms<br />
-int add : 626 ms<br />
-int mul : 408 ms<br />
-int div : 2381 ms<br />
-float add: 266 ms<br />
-float mul: 271 ms<br />
-float div: 987 ms<br />
-const div: 703 ms<br />
-matrix : 302 ms<br />
-normalize: 701 ms</p>
+samsung -O2, -mfloat-abi=softfp, -march=armv7-a, -mtune=cortex-a9:  
+compress : 493 ms  
+resample : 517 ms  
+int add : 626 ms  
+int mul : 408 ms  
+int div : 2381 ms  
+float add: 266 ms  
+float mul: 271 ms  
+float div: 987 ms  
+const div: 703 ms  
+matrix : 302 ms  
+normalize: 701 ms
 
-<p>samsung -O2, -mfloat-abi=softfp, -march=armv7-a, -mtune=cortex-a9, -mfpu=neon:<br />
-compress : 498 ms<br />
-resample : 474 ms<br />
-int add : 514 ms<br />
-int mul : 330 ms<br />
-int div : 2511 ms<br />
-float add: 267 ms<br />
-float mul: 269 ms<br />
-float div: 987 ms<br />
-const div: 711 ms<br />
-matrix : 302 ms<br />
-normalize: 672 ms</p>
+samsung -O2, -mfloat-abi=softfp, -march=armv7-a, -mtune=cortex-a9, -mfpu=neon:  
+compress : 498 ms  
+resample : 474 ms  
+int add : 514 ms  
+int mul : 330 ms  
+int div : 2511 ms  
+float add: 267 ms  
+float mul: 269 ms  
+float div: 987 ms  
+const div: 711 ms  
+matrix : 302 ms  
+normalize: 672 ms
 
-<p>samsung -O2, -mfloat-abi=softfp, -march=armv7-a, -mtune=cortex-a9, -mfpu=vfpv4:<br />
-compress : 738 ms<br />
-resample : 616 ms<br />
-int add : 590 ms<br />
-int mul : 360 ms<br />
-int div : 2458 ms<br />
-float add: 270 ms<br />
-float mul: 274 ms<br />
-float div: 996 ms<br />
-const div: 718 ms<br />
-matrix : 306 ms<br />
-normalize: 687 ms</p>
-</blockquote>
+samsung -O2, -mfloat-abi=softfp, -march=armv7-a, -mtune=cortex-a9, -mfpu=vfpv4:  
+compress : 738 ms  
+resample : 616 ms  
+int add : 590 ms  
+int mul : 360 ms  
+int div : 2458 ms  
+float add: 270 ms  
+float mul: 274 ms  
+float div: 996 ms  
+const div: 718 ms  
+matrix : 306 ms  
+normalize: 687 ms
+</code></pre>
 
 <p>同PC的各项性能比较，手机上的执行时间除以PC的时间</p>
 
@@ -237,7 +237,6 @@ normalize: 687 ms</p>
 <p>增加：-march=armv7-a 计算压缩有 8%-10%左右提高，但是整数加法性能明显下降。</p>
 
 <p>-mtune=cortex-a9 提高基本看不出来</p>
-
                         </div>
 
                         
@@ -362,7 +361,7 @@ normalize: 687 ms</p>
     </li>
     
     <li>
-        <a href="https://skywind3000.com/categories/%E5%A4%A7%E6%B5%AA%E6%B7%98%E6%B2%99/">大浪淘沙(12)</a>
+        <a href="https://skywind3000.com/categories/%E5%A4%A7%E6%B5%AA%E6%B7%98%E6%B2%99/">大浪淘沙(11)</a>
     </li>
     
     <li>
@@ -390,7 +389,7 @@ normalize: 687 ms</p>
     </li>
     
     <li>
-        <a href="https://skywind3000.com/categories/%E9%9A%8F%E7%AC%94/">随笔(57)</a>
+        <a href="https://skywind3000.com/categories/%E9%9A%8F%E7%AC%94/">随笔(55)</a>
     </li>
     
 </ul>

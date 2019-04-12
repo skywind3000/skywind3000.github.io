@@ -12,14 +12,17 @@
     
     
     <item>
-      <title>转换 Intel汇编格式到 AT&amp;amp;T汇编风格</title>
+      <title>转换 Intel汇编格式到 AT&amp;T 汇编风格</title>
       <link>https://skywind3000.com/blog/archives/1244/</link>
       <pubDate>Fri, 10 Apr 2015 11:33:09 +0000</pubDate>
       
       <guid>https://skywind3000.com/blog/archives/1244/</guid>
-      <description>常用 MSVC写内嵌汇编需要兼容 GCC是一件头疼的事情，不是说你不会写 GCC的 AT&amp;amp;T风格汇编，而是说同一份代码写两遍，还要调试两遍，是一件头疼的事情，特别是汇编写了上百行的时候。于是五年前写过一个小工具，可以方便的进行转换，能把 MSVC/MASM的汇编转成纯 AT&amp;amp;T风格汇编，或者 GCC Inline风格汇编，自动识别寄存器和变量，还有跳转地址，并且自动导出。今天把他放上来，或许有用到的人吧。
-项目下载：https://github.com/skywind3000/Intel2GAS。
-支持GUI转换和命令行转换，GUI转换使用 intel2gui.py, 命令行使用 intel2gui.py，当年用 Python匆匆完成，代码写的比较烂，但是还是在我后面的项目中帮了比较大的忙，MSVC里面调试干净了，一次性转换到GCC，再也不用象以前一样人肉转换汇编，写两份代码了。</description>
+      <description>&lt;p&gt;常用 MSVC写内嵌汇编需要兼容 GCC是一件头疼的事情，不是说你不会写 GCC的 AT&amp;amp;T风格汇编，而是说同一份代码写两遍，还要调试两遍，是一件头疼的事情，特别是汇编写了上百行的时候。于是五年前写过一个小工具，可以方便的进行转换，能把 MSVC/MASM的汇编转成纯 AT&amp;amp;T风格汇编，或者 GCC
+Inline风格汇编，自动识别寄存器和变量，还有跳转地址，并且自动导出。今天把他放上来，或许有用到的人吧。&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&#34;https://raw.githubusercontent.com/skywind3000/Intel2GAS/master/images/intel2gas_1.png&#34; alt=&#34;&#34; /&gt;&lt;/p&gt;
+
+&lt;p&gt;项目下载：&lt;a href=&#34;https://github.com/skywind3000/Intel2GAS&#34;&gt;https://github.com/skywind3000/Intel2GAS&lt;/a&gt;。&lt;/p&gt;</description>
     </item>
     
     <item>

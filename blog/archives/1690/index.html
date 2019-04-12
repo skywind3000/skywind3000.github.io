@@ -95,8 +95,12 @@
                         </div>
                         
                         <div class="post-content">
-                            <p>更好的使用 Vim7.0以后推出的标签（TAB）功能，同现代编辑器一样用标签（TAB）来管理多文件，代替传统 Buffer List： <img src="https://skywind3000.github.io/images/blog/wp-content/2016/05/vim3.png" alt="" /> 让Minibufexplor/tabbar这些上个世纪的插件都退场吧，直接使用标准的标签功能会更加舒服。 <strong>快捷键切换
-TAB</strong> 第一件事情就是要搞定标签快速切换问题，不管是:tabn X还是 Xgt都十分低效，我们需要更快速的在各个文件之间切换。最简单的是设置 0-9 来快速切换tab（默认leader是反斜杠，即先按下\键，再按数字键），不管终端还是GVIM都兼容：</p>
+                            <p>更好的使用 Vim7.0以后推出的标签（TAB）功能，同现代编辑器一样用标签（TAB）来管理多文件，代替传统 Buffer List：</p>
+
+<p><img src="https://skywind3000.github.io/images/blog/wp-content/2016/05/vim3.png" alt="" /></p>
+
+<p>让 Minibufexplor/tabbar 这些上个世纪的插件都退场吧，直接使用标准的标签功能会更加舒服。 <strong>快捷键切换 TAB</strong> 第一件事情就是要搞定标签快速切换问题，
+不管是:tabn X还是 Xgt都十分低效，我们需要更快速的在各个文件之间切换。最简单的是设置 0-9 来快速切换tab（默认leader是反斜杠，即先按下\键，再按数字键），不管终端还是GVIM都兼容：</p>
 
 <pre><code>noremap &lt;silent&gt;&lt;tab&gt;m :tabnew&lt;cr&gt;
 noremap &lt;silent&gt;&lt;tab&gt;e :tabclose&lt;cr&gt;
@@ -120,34 +124,33 @@ inoremap &lt;silent&gt;&lt;s-tab&gt; &lt;ESC&gt;:tabnext&lt;CR&gt;
 
 <p>其次，GVIM/MacVim 下设置 ALT-0-9 来切换TAB：</p>
 
-<pre><code>&quot; keymap to switch table in gui
-if has('gui_running') 
-    set winaltkeys=no
-    set macmeta
-    noremap &lt;silent&gt;&lt;c-tab&gt; :tabprev&lt;CR&gt;
-    inoremap &lt;silent&gt;&lt;c-tab&gt; &lt;ESC&gt;:tabprev&lt;CR&gt;
-    noremap &lt;silent&gt;&lt;m-1&gt; :tabn 1&lt;cr&gt;
-    noremap &lt;silent&gt;&lt;m-2&gt; :tabn 2&lt;cr&gt;
-    noremap &lt;silent&gt;&lt;m-3&gt; :tabn 3&lt;cr&gt;
-    noremap &lt;silent&gt;&lt;m-4&gt; :tabn 4&lt;cr&gt;
-    noremap &lt;silent&gt;&lt;m-5&gt; :tabn 5&lt;cr&gt;
-    noremap &lt;silent&gt;&lt;m-6&gt; :tabn 6&lt;cr&gt;
-    noremap &lt;silent&gt;&lt;m-7&gt; :tabn 7&lt;cr&gt;
-    noremap &lt;silent&gt;&lt;m-8&gt; :tabn 8&lt;cr&gt;
-    noremap &lt;silent&gt;&lt;m-9&gt; :tabn 9&lt;cr&gt;
-    noremap &lt;silent&gt;&lt;m-0&gt; :tabn 10&lt;cr&gt;
-    inoremap &lt;silent&gt;&lt;m-1&gt; &lt;ESC&gt;:tabn 1&lt;cr&gt;
-    inoremap &lt;silent&gt;&lt;m-2&gt; &lt;ESC&gt;:tabn 2&lt;cr&gt;
-    inoremap &lt;silent&gt;&lt;m-3&gt; &lt;ESC&gt;:tabn 3&lt;cr&gt;
-    inoremap &lt;silent&gt;&lt;m-4&gt; &lt;ESC&gt;:tabn 4&lt;cr&gt;
-    inoremap &lt;silent&gt;&lt;m-5&gt; &lt;ESC&gt;:tabn 5&lt;cr&gt;
-    inoremap &lt;silent&gt;&lt;m-6&gt; &lt;ESC&gt;:tabn 6&lt;cr&gt;
-    inoremap &lt;silent&gt;&lt;m-7&gt; &lt;ESC&gt;:tabn 7&lt;cr&gt;
-    inoremap &lt;silent&gt;&lt;m-8&gt; &lt;ESC&gt;:tabn 8&lt;cr&gt;
-    inoremap &lt;silent&gt;&lt;m-9&gt; &lt;ESC&gt;:tabn 9&lt;cr&gt;
-    inoremap &lt;silent&gt;&lt;m-0&gt; &lt;ESC&gt;:tabn 10&lt;cr&gt;
-endif
-</code></pre>
+<p>&rdquo; keymap to switch table in gui
+    if has(&lsquo;gui_running&rsquo;)
+        set winaltkeys=no
+        set macmeta
+        noremap <silent><c-tab> :tabprev<CR>
+        inoremap <silent><c-tab> <ESC>:tabprev<CR>
+        noremap <silent><m-1> :tabn 1<cr>
+        noremap <silent><m-2> :tabn 2<cr>
+        noremap <silent><m-3> :tabn 3<cr>
+        noremap <silent><m-4> :tabn 4<cr>
+        noremap <silent><m-5> :tabn 5<cr>
+        noremap <silent><m-6> :tabn 6<cr>
+        noremap <silent><m-7> :tabn 7<cr>
+        noremap <silent><m-8> :tabn 8<cr>
+        noremap <silent><m-9> :tabn 9<cr>
+        noremap <silent><m-0> :tabn 10<cr>
+        inoremap <silent><m-1> <ESC>:tabn 1<cr>
+        inoremap <silent><m-2> <ESC>:tabn 2<cr>
+        inoremap <silent><m-3> <ESC>:tabn 3<cr>
+        inoremap <silent><m-4> <ESC>:tabn 4<cr>
+        inoremap <silent><m-5> <ESC>:tabn 5<cr>
+        inoremap <silent><m-6> <ESC>:tabn 6<cr>
+        inoremap <silent><m-7> <ESC>:tabn 7<cr>
+        inoremap <silent><m-8> <ESC>:tabn 8<cr>
+        inoremap <silent><m-9> <ESC>:tabn 9<cr>
+        inoremap <silent><m-0> <ESC>:tabn 10<cr>
+    endif</p>
 
 <p>或者在 MacVim 下还可以用 CMD_0-9 快速切换，按着更舒服：</p>
 
@@ -368,7 +371,6 @@ endfunc
     set switchbuf=useopen,usetab,newtab</p>
 
 <p>如此Tab已经很好用了，再配置一些快捷键按ALT-方向键来tabmove，ALT-w来关闭标签，基本上和其他现代编辑器行为很类似了。</p>
-
                         </div>
 
                         
@@ -493,7 +495,7 @@ endfunc
     </li>
     
     <li>
-        <a href="https://skywind3000.com/categories/%E5%A4%A7%E6%B5%AA%E6%B7%98%E6%B2%99/">大浪淘沙(12)</a>
+        <a href="https://skywind3000.com/categories/%E5%A4%A7%E6%B5%AA%E6%B7%98%E6%B2%99/">大浪淘沙(11)</a>
     </li>
     
     <li>
@@ -521,7 +523,7 @@ endfunc
     </li>
     
     <li>
-        <a href="https://skywind3000.com/categories/%E9%9A%8F%E7%AC%94/">随笔(57)</a>
+        <a href="https://skywind3000.com/categories/%E9%9A%8F%E7%AC%94/">随笔(55)</a>
     </li>
     
 </ul>

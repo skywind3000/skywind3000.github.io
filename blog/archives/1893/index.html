@@ -97,7 +97,7 @@
                         <div class="post-content">
                             <p>大公司呆久了，都会对 SA的依赖十分强烈，很多事情 SA都帮我们搞定了。如今控制成本，没有招聘 SA，又没有购买 VPS，从买物理机开始到 IDC部署，服务器调优，虚拟机管理，全部都是自己来，才发现，安装一台 Linux机器自己玩很简单，但是要达到线上服务器的标准，还有若干调优工作需要做，有 SA的日志是多幸福的事情啊。</p>
 
-<p><strong>物理机设备驱动</strong></p>
+<h2 id="物理机设备驱动">物理机设备驱动</h2>
 
 <p>Dell服务器默认安装系统后会报找不到驱动:</p>
 
@@ -112,13 +112,13 @@ deb-src http://ftp.de.debian.org/debian main contrib non-free
 
 <p>然后：</p>
 
-<pre><code>apt-get update
+<pre><code class="language-bash">apt-get update
 apt-get install firmware-linux-free firmware-linux-nonfree
 </code></pre>
 
 <p>解决 Dell驱动报错问题。</p>
 
-<p><strong>配置限制</strong></p>
+<h2 id="配置限制">配置限制</h2>
 
 <p>查看 /etc/security/limits.conf 没有就新建，加入 core 和 nofile 的相关配置，比如：</p>
 
@@ -131,23 +131,23 @@ apt-get install firmware-linux-free firmware-linux-nonfree
 
 <p>之类的，不用到 <code>~/.bashrc</code> 里面调用 ulimit。</p>
 
-<p><strong>网卡多队列</strong></p>
+<h2 id="网卡多队列">网卡多队列</h2>
 
 <p>打开内核网卡多队列支持，避免网卡中断都集中在 cpu0 上处理，多队列打开后，可以让网卡中断均摊到各个 cpu上，对提高并发十分有用：</p>
 
-<pre><code>wget http://skywind3000.github.io/install/set_irq_affinity.sh
+<pre><code class="language-bash">wget http://skywind3000.github.io/install/set_irq_affinity.sh
 </code></pre>
 
 <p>放到 <code>/etc/config</code> 目录下面（没有就新建），然后在 <code>/etc/rc.local</code> 里面加一行，每次重启就跑 <code>set_irq_affinity.sh</code> 且必须用 bash跑，参数传入需要开启多队列的网卡，以下是 <code>/etc/rc.local</code> 的内容：</p>
 
-<pre><code>/bin/bash 
+<pre><code class="language-bash">/bin/bash 
 /etc/set_irq_affinity.sh eth0 eth1 eth2
 exit 0
 </code></pre>
 
 <p>下面是 set_irq_affinity.sh 的代码：</p>
 
-<pre><code># setting up irq affinity according to /proc/interrupts
+<pre><code class="language-bash"># setting up irq affinity according to /proc/interrupts
 # 2008-11-25 Robert Olsson
 # 2009-02-19 updated by Jesse Brandeburg
 #
@@ -171,26 +171,26 @@ exit 0
 #
 set_affinity()
 {
-    MASK=$((1&lt;&lt;$VEC))
-    printf &quot;%s mask=%X for /proc/irq/%d/smp_affinity\n&quot; $DEV $MASK $IRQ
-    printf &quot;%X&quot; $MASK &gt; /proc/irq/$IRQ/smp_affinity
-    #echo $DEV mask=$MASK for /proc/irq/$IRQ/smp_affinity
-    #echo $MASK &gt; /proc/irq/$IRQ/smp_affinity
+	MASK=$((1&lt;&lt;$VEC))
+	printf &quot;%s mask=%X for /proc/irq/%d/smp_affinity\n&quot; $DEV $MASK $IRQ
+	printf &quot;%X&quot; $MASK &gt; /proc/irq/$IRQ/smp_affinity
+	#echo $DEV mask=$MASK for /proc/irq/$IRQ/smp_affinity
+	#echo $MASK &gt; /proc/irq/$IRQ/smp_affinity
 }
 if [ &quot;$1&quot; = &quot;&quot; ] ; then
-    echo &quot;Description:&quot;
-    echo &quot;    This script attempts to bind each queue of a multi-queue NIC&quot;
-    echo &quot;    to the same numbered core, ie tx0|rx0 --&gt; cpu0, tx1|rx1 --&gt; cpu1&quot;
-    echo &quot;usage:&quot;
-    echo &quot;    $0 eth0 [eth1 eth2 eth3]&quot;
+	echo &quot;Description:&quot;
+	echo &quot;    This script attempts to bind each queue of a multi-queue NIC&quot;
+	echo &quot;    to the same numbered core, ie tx0|rx0 --&gt; cpu0, tx1|rx1 --&gt; cpu1&quot;
+	echo &quot;usage:&quot;
+	echo &quot;    $0 eth0 [eth1 eth2 eth3]&quot;
 fi
 # check for irqbalance running
 IRQBALANCE_ON=`ps ax | grep -v grep | grep -q irqbalance; echo $?`
 if [ &quot;$IRQBALANCE_ON&quot; == &quot;0&quot; ] ; then
-    echo &quot; WARNING: irqbalance is running and will&quot;
-    echo &quot;          likely override this script's affinitization.&quot;
-    echo &quot;          Please stop the irqbalance service and/or execute&quot;
-    echo &quot;          'killall irqbalance'&quot;
+	echo &quot; WARNING: irqbalance is running and will&quot;
+	echo &quot;          likely override this script's affinitization.&quot;
+	echo &quot;          Please stop the irqbalance service and/or execute&quot;
+	echo &quot;          'killall irqbalance'&quot;
 fi
 #
 # Set up the desired devices.
@@ -199,27 +199,27 @@ for DEV in $*
 do
   for DIR in rx tx TxRx
   do
-     MAX=`grep $DEV-$DIR /proc/interrupts | wc -l`
-     if [ &quot;$MAX&quot; == &quot;0&quot; ] ; then
-       MAX=`egrep -i &quot;$DEV:.*$DIR&quot; /proc/interrupts | wc -l`
-     fi
-     if [ &quot;$MAX&quot; == &quot;0&quot; ] ; then
-       echo no $DIR vectors found on $DEV
-       continue
-       #exit 1
-     fi
-     for VEC in `seq 0 1 $MAX`
-     do
-        IRQ=`cat /proc/interrupts | grep -i $DEV-$DIR-$VEC&quot;$&quot;  | cut  -d:  -f1 | sed &quot;s/ //g&quot;`
-        if [ -n  &quot;$IRQ&quot; ]; then
-          set_affinity
-        else
-           IRQ=`cat /proc/interrupts | egrep -i $DEV:v$VEC-$DIR&quot;$&quot;  | cut  -d:  -f1 | sed &quot;s/ //g&quot;`
-           if [ -n  &quot;$IRQ&quot; ]; then
-             set_affinity
-           fi
-        fi
-     done
+	 MAX=`grep $DEV-$DIR /proc/interrupts | wc -l`
+	 if [ &quot;$MAX&quot; == &quot;0&quot; ] ; then
+	   MAX=`egrep -i &quot;$DEV:.*$DIR&quot; /proc/interrupts | wc -l`
+	 fi
+	 if [ &quot;$MAX&quot; == &quot;0&quot; ] ; then
+	   echo no $DIR vectors found on $DEV
+	   continue
+	   #exit 1
+	 fi
+	 for VEC in `seq 0 1 $MAX`
+	 do
+		IRQ=`cat /proc/interrupts | grep -i $DEV-$DIR-$VEC&quot;$&quot;  | cut  -d:  -f1 | sed &quot;s/ //g&quot;`
+		if [ -n  &quot;$IRQ&quot; ]; then
+		  set_affinity
+		else
+		   IRQ=`cat /proc/interrupts | egrep -i $DEV:v$VEC-$DIR&quot;$&quot;  | cut  -d:  -f1 | sed &quot;s/ //g&quot;`
+		   if [ -n  &quot;$IRQ&quot; ]; then
+			 set_affinity
+		   fi
+		fi
+	 done
   done
 done
 # done
@@ -227,11 +227,11 @@ done
 
 <p>重启以后，cat 一下 /proc/interrupts里面，最右边网卡相关的中断是不是分摊到不同的cpu上面了。</p>
 
-<p><strong>网络参数优化</strong></p>
+<h2 id="网络参数优化">网络参数优化</h2>
 
 <p>参考下面 /etc/sysctl.conf里面的优化选项和你 /etc/sysctl.conf 的具体内容，视情况更改：</p>
 
-<pre><code>#
+<pre><code class="language-bash">#
 # /etc/sysctl.conf - Configuration file for setting system variables
 fs.file-max = 100000
 #表示开启SYN Cookies。当出现SYN等待队列溢出时，启用cookies来处理，可防范少量SYN攻击，默认为0， 
@@ -309,26 +309,25 @@ net.ipv4.tcp_max_orphans = 3276800
 
 <p>参考上面的经验配置，按需要取消注释。</p>
 
-<p><strong>修改时钟源</strong></p>
+<h2 id="修改时钟源">修改时钟源</h2>
 
 <p>查看当前时钟源和修改时钟源：</p>
 
-<pre><code># cat /sys/devices/system/clocksource/clocksource0/available_clocksource
+<pre><code class="language-bash"># cat /sys/devices/system/clocksource/clocksource0/available_clocksource
 # cat /sys/devices/system/clocksource/clocksource0/current_clocksource
 # echo hpet &gt; /sys/devices/system/clocksource/clocksource0/current_clocksource
 </code></pre>
 
 <p>之前发现有一台服务器同样进程耗费的 cpu比其他服务器高很多，经过查证开发同学在那个进程里频繁取系统时间，同时那台机器 gettimeofday之类的系统调用耗时比其他服务器要久。因为改代码已经来不及了，还好发现原来几台服务器的时钟源不同，经过修改后，取时间的系统调用时间大大下降。</p>
 
-<p><strong>强制扫描磁盘</strong></p>
+<h2 id="强制扫描磁盘">强制扫描磁盘</h2>
 
 <p>机房突然停电，UPS没弄好，机器发生重启，一般会自动扫描硬盘，但是如果不放心要扫描主硬盘的话，可以手动来：</p>
 
-<pre><code>touch /forcefsck
+<pre><code class="language-bash">touch /forcefsck
 </code></pre>
 
 <p>在根目录下面创建一个名为 <code>forcefsdk</code> 的文件即可，然后重新启动就会进入强制 fsck程序。</p>
-
                         </div>
 
                         
@@ -453,7 +452,7 @@ net.ipv4.tcp_max_orphans = 3276800
     </li>
     
     <li>
-        <a href="https://skywind3000.com/categories/%E5%A4%A7%E6%B5%AA%E6%B7%98%E6%B2%99/">大浪淘沙(12)</a>
+        <a href="https://skywind3000.com/categories/%E5%A4%A7%E6%B5%AA%E6%B7%98%E6%B2%99/">大浪淘沙(11)</a>
     </li>
     
     <li>
@@ -481,7 +480,7 @@ net.ipv4.tcp_max_orphans = 3276800
     </li>
     
     <li>
-        <a href="https://skywind3000.com/categories/%E9%9A%8F%E7%AC%94/">随笔(57)</a>
+        <a href="https://skywind3000.com/categories/%E9%9A%8F%E7%AC%94/">随笔(55)</a>
     </li>
     
 </ul>

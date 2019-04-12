@@ -119,10 +119,9 @@ y' = y / w * d + A
 
 <p>再根据他们在同一个平面上，证明屏幕上两个点之间，u/w, v/w 承线性关系，即 t 取任意值有：</p>
 
-<pre><code>x3' = x1' + (x2' - x1') * t
-(u3 / w3) = (u1 / w1) + ((u2 / w2) - (u1 / w1)) * t
-(v3 / w3) = (v1 / w1) + ((v2 / w2) - (v1 / w1)) * t
-</code></pre>
+<p>x3&rsquo; = x1&rsquo; + (x2&rsquo; - x1&rsquo;) * t
+    (u3 / w3) = (u1 / w1) + ((u2 / w2) - (u1 / w1)) * t
+    (v3 / w3) = (v1 / w1) + ((v2 / w2) - (v1 / w1)) * t</p>
 
 <p>具体到代码里面的做法就是三角形的三个顶点/w以后，u和v也同时/w，然后把w换成自己的倒数：w = 1 / w，及把顶点数据：</p>
 
@@ -139,7 +138,6 @@ y' = y / w * d + A
 <p>更进一步，可以证明，所有在三维空间里同x,y,z成线性关系的变量，不管是纹理坐标，顶点色或者法向还是其他，他们在屏幕空间里的插值规则都可以通过：插值前先/w，插值后要用时再 * w得到具体值，然后我们把这类三维空间里同x,y,z成线性关系的变量统进行统一的批量处理，和OpenGL的 attribute，varying处理方法相同。</p>
 
 <p>相关阅读： <a href="http://www.skywind.me/blog/archives/1498">如何写一个软件渲染器</a> <a href="http://www.skywind.me/blog/archives/1363">还原被摄像机透视的纹理</a></p>
-
                         </div>
 
                         
@@ -264,7 +262,7 @@ y' = y / w * d + A
     </li>
     
     <li>
-        <a href="https://skywind3000.com/categories/%E5%A4%A7%E6%B5%AA%E6%B7%98%E6%B2%99/">大浪淘沙(12)</a>
+        <a href="https://skywind3000.com/categories/%E5%A4%A7%E6%B5%AA%E6%B7%98%E6%B2%99/">大浪淘沙(11)</a>
     </li>
     
     <li>
@@ -292,7 +290,7 @@ y' = y / w * d + A
     </li>
     
     <li>
-        <a href="https://skywind3000.com/categories/%E9%9A%8F%E7%AC%94/">随笔(57)</a>
+        <a href="https://skywind3000.com/categories/%E9%9A%8F%E7%AC%94/">随笔(55)</a>
     </li>
     
 </ul>

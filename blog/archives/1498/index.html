@@ -105,11 +105,11 @@
 <p>早年培训学生时候，我花两天时间写的一个 DEMO，今天拿出来重新调整注释一下，性能和功能当然比不过高大上的软件渲染器。但一般来讲，工程类项目代码不容易阅读，太多边界情况和太多细节优化容易让初学者迷失，这个 mini3d 的项目不做任何优化，主要目的就是为了突出主干：</p>
 
 <p>源代码：<a href="https://github.com/skywind3000/mini3d">skywind3000/mini3d · GitHub</a><br />
-可执行：<a href="http://www.skywind.me/mw/images/c/c8/Mini3d.7z">http://www.skywind.me/mw/images/c/c8/Mini3d.7z</a></p>
+可执行：<a href="https://github.com/skywind3000/mini3d/releases/download/v1.2/mini3d-src-binary.zip">mini3d-src-binary</a></p>
 
 <p>操作方式：左右键旋转，前后键前进后退，空格键切换模式，ESC退出。</p>
 
-<p><strong>特性介绍：</strong></p>
+<h4 id="特性介绍">特性介绍：</h4>
 
 <ul>
 <li>单个文件：源代码只有一个 mini3d.c，单个文件实现所有内容，阅读容易。</li>
@@ -124,7 +124,7 @@
 <li>详细注释：主要代码详细注释</li>
 </ul>
 
-<p><strong>截图效果</strong></p>
+<h4 id="截图效果">截图效果</h4>
 
 <p>颜色填充</p>
 
@@ -138,46 +138,47 @@
 
 <p><img src="https://skywind3000.github.io/images/blog/wp-content/2015/08/image_thumb3.png" alt="image" /></p>
 
-<hr />
-
-<hr />
-
 <p>增加光照和二次线性插值（朋友给 Mini3D加的平行光源）效果还行：</p>
 
 <p><img src="https://skywind3000.github.io/images/blog/wp-content/2015/08/image_thumb4.png" alt="image" /></p>
 
-<hr />
-
-<p><strong>阅读要求：</strong></p>
+<h4 id="阅读要求">阅读要求：</h4>
 
 <ul>
 <li>看过并了解 D3D / OGL的矩阵变换。</li>
 <li>用 D3D / OGL 完成过简单程序。</li>
 </ul>
 
-<p><strong>实现说明：</strong></p>
+<h4 id="实现说明">实现说明：</h4>
 
 <ul>
 <li>transform：实现坐标变换，和书本手册同</li>
 <li>vertex： 如何定义顶点？如何定义边？如何定义扫描线？如何定义渲染主体（trapezoid）？</li>
 <li>device： 设备，如何 projection，如何裁剪和归一化，如何切分三角形，如何顶点排序？</li>
 <li>trapezoid：如何生成 trape，如何生成边，如何计算步长，如何计算扫描线</li>
-<li>scanline：如何绘制扫描线，如何透视纠正，如何使用深度缓存，如何绘制
-<strong>基础练习：先前给学生的作业</strong> 增加背面剔<br />
-增加简单光照<br />
-提供更多渲染模式<br />
-实现二次线性差值的纹理读取</li>
+<li>scanline：如何绘制扫描线，如何透视纠正，如何使用深度缓存，如何绘制</li>
 </ul>
 
-<p><strong>扩展练习：给有余力的学生</strong></p>
+<h4 id="基础练习-先前给学生的作业">基础练习：先前给学生的作业</h4>
 
-<p>推导并证明程序中用到的所有几何知识<br />
-优化顶点计算性能<br />
-优化 draw_scanline 性能<br />
-从 BMP/TGA 文件加载纹理<br />
-载入 BSP 场景并实现漫游</p>
+<ul>
+<li>增加背面剔<br /></li>
+<li>增加简单光照<br /></li>
+<li>提供更多渲染模式<br /></li>
+<li>实现二次线性差值的纹理读取</li>
+</ul>
 
-<p><strong>其他内容</strong></p>
+<h4 id="扩展练习-给有余力的学生">扩展练习：给有余力的学生</h4>
+
+<ul>
+<li>推导并证明程序中用到的所有几何知识<br /></li>
+<li>优化顶点计算性能<br /></li>
+<li>优化 draw_scanline 性能<br /></li>
+<li>从 BMP/TGA 文件加载纹理<br /></li>
+<li>载入 BSP 场景并实现漫游</li>
+</ul>
+
+<h4 id="其他内容">其他内容</h4>
 
 <p>当年还用不了 D3D 和 OGL ，开发游戏，做图形实现软件渲染是必备技能，当年机型差，连浮点数都用不了，要用定点数来计算，矩阵稍不注意就越界了。计算透视纠正还是一个比较昂贵的工作，更多游戏使用仿射纹理绘制，只是把离屏幕近的多边形切割成更小的三角形，让人看起来没有那么明显。即便到了 Quake 年代，计算 1/z 的除法也只是四个点才算一次（经过精确计算CPU周期，绘制四个点时下一个点的
 1/z刚好算完），Quake 的四个点内也还是仿射纹理绘制……</p>
@@ -185,7 +186,6 @@
 <p>那时显卡没普及，光软件渲染器的优化就是一个无底洞，今天有了 OGL/D3D和显卡，人的精力才能充分集中在更高层次的场景组织、层次细节、动态光照等功能上。然而有空的时候，花个一周时间坐下来了解一下这部分的大概原理，推导所用到的数学模型，也能帮助大家更好的理解底层运行机制，写出更加优化的代码来。</p>
 
 <p>PS：光线跟踪版本的软件渲染，考虑光照的话，简单实现起来差不多 500 行，比这个要简单一些。各位有兴趣也可以尝试一下，就是简单渲染个立方体足够了。</p>
-
                         </div>
 
                         
@@ -310,7 +310,7 @@
     </li>
     
     <li>
-        <a href="https://skywind3000.com/categories/%E5%A4%A7%E6%B5%AA%E6%B7%98%E6%B2%99/">大浪淘沙(12)</a>
+        <a href="https://skywind3000.com/categories/%E5%A4%A7%E6%B5%AA%E6%B7%98%E6%B2%99/">大浪淘沙(11)</a>
     </li>
     
     <li>
@@ -338,7 +338,7 @@
     </li>
     
     <li>
-        <a href="https://skywind3000.com/categories/%E9%9A%8F%E7%AC%94/">随笔(57)</a>
+        <a href="https://skywind3000.com/categories/%E9%9A%8F%E7%AC%94/">随笔(55)</a>
     </li>
     
 </ul>

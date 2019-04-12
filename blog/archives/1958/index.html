@@ -95,9 +95,7 @@
                         </div>
                         
                         <div class="post-content">
-                            
-
-<p>根据 Bram 前后几个关于高效使用 Vim的视频，大家每天需要花很多时间来编辑：代码、文档、邮件、日志 等等，除去这些外，还要分时间参加会议和人沟通，每个人的时间却都是不够的，优雅使用 Vim 无外乎：</p>
+                            <p>根据 Bram 前后几个关于高效使用 Vim的视频，大家每天需要花很多时间来编辑：代码、文档、邮件、日志 等等，除去这些外，还要分时间参加会议和人沟通，每个人的时间却都是不够的，优雅使用 Vim 无外乎：</p>
 
 <ul>
 <li>检测不高效的地方：你的整个工作流里，什么地方比较浪费时间？</li>
@@ -121,34 +119,34 @@
 
 <p>比如你在抄写或者改写一段代码，窗口分为左右两个，左边是你引用参考的源代码，右边是你正在编辑的源代码。你抄着抄着，抄到左边最后一行了，或者你想前后看看正在引用的文本，你就需要将焦点从右边切换到左边，滚动，再切换交点回来，十分麻烦，于是撸一小段 VimScript 来解决这个问题：</p>
 
-<pre><code>&quot; 0:up, 1:down, 2:pgup, 3:pgdown, 4:top, 5:bottom
+<pre><code class="language-VimL">&quot; 0:up, 1:down, 2:pgup, 3:pgdown, 4:top, 5:bottom
 function! Tools_PreviousCursor(mode)
-    if winnr('$') &lt;= 1
-        return
-    endif
-    noautocmd silent! wincmd p
-    if a:mode == 0
-        exec &quot;normal! \&lt;c-y&gt;&quot;
-    elseif a:mode == 1
-        exec &quot;normal! \&lt;c-e&gt;&quot;
-    elseif a:mode == 2
-        exec &quot;normal! &quot;.winheight('.').&quot;\&lt;c-y&gt;&quot;
-    elseif a:mode == 3
-        exec &quot;normal! &quot;.winheight('.').&quot;\&lt;c-e&gt;&quot;
-    elseif a:mode == 4
-        normal! gg
-    elseif a:mode == 5
-        normal! G
-    elseif a:mode == 6
-        exec &quot;normal! \&lt;c-u&gt;&quot;
-    elseif a:mode == 7
-        exec &quot;normal! \&lt;c-d&gt;&quot;
-    elseif a:mode == 8
-        exec &quot;normal! k&quot;
-    elseif a:mode == 9
-        exec &quot;normal! j&quot;
-    endif
-    noautocmd silent! wincmd p
+	if winnr('$') &lt;= 1
+		return
+	endif
+	noautocmd silent! wincmd p
+	if a:mode == 0
+		exec &quot;normal! \&lt;c-y&gt;&quot;
+	elseif a:mode == 1
+		exec &quot;normal! \&lt;c-e&gt;&quot;
+	elseif a:mode == 2
+		exec &quot;normal! &quot;.winheight('.').&quot;\&lt;c-y&gt;&quot;
+	elseif a:mode == 3
+		exec &quot;normal! &quot;.winheight('.').&quot;\&lt;c-e&gt;&quot;
+	elseif a:mode == 4
+		normal! gg
+	elseif a:mode == 5
+		normal! G
+	elseif a:mode == 6
+		exec &quot;normal! \&lt;c-u&gt;&quot;
+	elseif a:mode == 7
+		exec &quot;normal! \&lt;c-d&gt;&quot;
+	elseif a:mode == 8
+		exec &quot;normal! k&quot;
+	elseif a:mode == 9
+		exec &quot;normal! j&quot;
+	endif
+	noautocmd silent! wincmd p
 endfunc
 </code></pre>
 
@@ -290,7 +288,6 @@ endfunc
 <hr />
 
 <p>超脱堆插件的误区，根据你的日常工作情况，不断打磨编辑器的利爪吧。</p>
-
                         </div>
 
                         
@@ -310,7 +307,7 @@ endfunc
         
         <li><a href="/blog/archives/1835/">Vim 异步运行 Shell 指令的插件 - AsyncRun</a></li>
         
-        <li><a href="/blog/archives/1813/">Vim 异步编译插件 vimmake</a></li>
+        <li><a href="/blog/archives/1745/">如何在不同平台下打开新窗口运行程序？</a></li>
         
     </ul>
 </div>
@@ -415,7 +412,7 @@ endfunc
     </li>
     
     <li>
-        <a href="https://skywind3000.com/categories/%E5%A4%A7%E6%B5%AA%E6%B7%98%E6%B2%99/">大浪淘沙(12)</a>
+        <a href="https://skywind3000.com/categories/%E5%A4%A7%E6%B5%AA%E6%B7%98%E6%B2%99/">大浪淘沙(11)</a>
     </li>
     
     <li>
@@ -443,7 +440,7 @@ endfunc
     </li>
     
     <li>
-        <a href="https://skywind3000.com/categories/%E9%9A%8F%E7%AC%94/">随笔(57)</a>
+        <a href="https://skywind3000.com/categories/%E9%9A%8F%E7%AC%94/">随笔(55)</a>
     </li>
     
 </ul>

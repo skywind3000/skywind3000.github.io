@@ -82,62 +82,6 @@
                         <article class="post">
                             <header>
                                 <h1 class="post-title">
-                                    <a href="https://skywind3000.com/blog/archives/1745/">如何在不同平台下打开新窗口运行程序？</a>
-                                </h1>
-                            </header>
-                            <date class="post-meta meta-date">
-                                2016年5月12日
-                            </date>
-                            
-                            <div class="post-meta meta-category">
-                                |
-                                
-                                    <a href="https://skywind3000.com/categories/%E9%9A%8F%E7%AC%94">随笔</a>
-                                
-                            </div>
-                            
-                            <div class="post-content">
-                                如果可以让自己的工作效率提升一点点，那么即便花费几天来开发一些工具也是值得的。在不同操作系统下自动打开终端窗口来运行指定的命令就是这样一件能提高工作效率的事情。
-就像 Visual Studio 调试命令行程序的人都对打开一个新窗口运行命令行程序的模式情有独钟。EditPlus 也提供新窗口运行程序（可惜只限windows）。
-而如果你在使用 Sublime/Atom/GEdit/GVim 之类的工具，你就会发现调试程序的时候程序基本上是在下面的面板中运行的，所有输出也是输出到下面的面板中。这时如果程序长时间运行是非常不方便的，又或者程序有交互（需要输入数据），基于GUI面板的运行方式也会显得十分笨重，而Vim/GVim之流更过分，一执行程序整个GUI就定住了，没法一边看代码一边查看一些长时间运行的程序状态，虽然Windows下的GVim可以用!start来解决（见Gim !start），但十分遗憾，Linux桌面或者Mac下面的Vim都没有这个 !start功能。
-同时，哪天你切换到Mac/Ubuntu下开发了，你会发现这个问题十分恶心，这时候你往往需要写一些脚本来做这件事情。而在不同的平台下正确的escape并传递参数，正确的生成中间脚本（bash，applescript，batch）并且通过管道传递又是一项比较浪费时间的事情。
-所以这两天写了: https://github.com/skywind3000/terminal 这个脚本来做这些，满足了我如下需求：
- 在 Windows 下打开 cmd窗口执行若干命令 在 Linux 下打开 xterm/gnome-terminal 来执行若干命令 在 Mac OS X 下面打开 Terminal/iTerm 窗口来执行若干命令 不同的操作系统下提供统一的调用接口 可以方便设置：工作目录、窗口标题、窗口配置（Terminal/gnome-terminal/iterm） 新窗口内执行完程序以后可以会等待按任意键才关闭窗口 Windows 打开 Cygwin 的 Mintty窗口并执行 Cygwin命令（Windows下编辑，Cygwin下运行） Cygwin 下直接打开 Windows的 CMD窗口执行 Win32程序（Cygwin下编辑，Windows下运行） Cygwin 下直接打开 Mintty窗口并运行cygwin命令（Cygwin下编辑，cygwin下运行）  如此，不管你运行在哪个操作系统下，使用何种编辑器，都可以提供完全一致的调试体验。一边编辑代码的同时，一边查看另一个窗口的程序实时输出。……
-                                <p class="readmore"><a href="https://skywind3000.com/blog/archives/1745/">阅读全文</a></p>
-                            </div>
-                        </article>
-                    
-                        <article class="post">
-                            <header>
-                                <h1 class="post-title">
-                                    <a href="https://skywind3000.com/blog/archives/1731/">Vim异步编译工程</a>
-                                </h1>
-                            </header>
-                            <date class="post-meta meta-date">
-                                2016年5月9日
-                            </date>
-                            
-                            <div class="post-meta meta-category">
-                                |
-                                
-                                    <a href="https://skywind3000.com/categories/%E9%9A%8F%E7%AC%94">随笔</a>
-                                
-                            </div>
-                            
-                            <div class="post-content">
-                                针对 Vim的最新版本，7.4.1769+ 写了个脚本：build.vim 来实现异步编译。
-主要实现原理是利用 Python 开线程并在后台线程调用脚本（具体执行编译工作的bat/sh文件），实时把stdout/stderr输出的内容投递到队列，而前台UI线程则是使用了Vim最新版本中提供的 timer_start 功能启动一个100ms运行一次的时钟，每次运行时检测队列里面的东西并把他们取出来输出到Vim的 Quickfix窗口。
-几处细节处理是避免后台任务瞬间输出上千行的内容，批量塞入Quickfix的时候把vim 给卡死掉，此处增加了一个限制，即每次时钟发生时最大只塞入Quickfix中50条信息。
-如此，整个世界清静了，以前Vim一编译代码就完全无法编辑的情况可以得到很好的解决了。你可以绑定-到外部命令：job-1 job-4 这四个不同的脚本（windows下是 job-1.cmd - job-4.cmd），用来执行外部命令，每次执行前，把当前编辑的文件名等信息写入环境变量，这样后台job-n.cmd的批处理就可以根据环境变量决定需要编译的文件或者工程信息了：
-let $VIM_FILEPATH = expand(&quot;%:p&quot;) let $VIM_FILENAME = expand(&quot;%:t&quot;) let $VIM_FILEDIR = expand(&quot;%:p:h&quot;) let $VIM_FILENOEXT = expand(&quot;%:t:r&quot;) let $VIM_FILEEXT = &quot;.&quot; . expand(&quot;%:e&quot;) let $VIM_CWD = expand(&quot;%:p:h:h&quot;) let $VIM_RELDIR = expand(&quot;%:h&quot;) let $VIM_RELNAME = expand(&quot;%:p:.&quot;) let $VIM_CWORD = expand(&quot;&lt;cword&gt;&quot;) let $VIM_VERSION = ''.v:version let $VIM_MODE = ''. a:mode let $VIM_GUI = '0' let $VIM_SCRIPT = g:vimmake_path let $VIM_SVRNAME = v:servername if has(&quot;gui_running&quot;) let $VIM_GUI = '1' endif  上面这些环境变量初始化工作可以在每次调用后台脚本之前设置，这几个应该已经足够大家使用了。
-每次编译完还可以调用一下外部程序，播放一个音效（比如windows的感叹号音效），让你知道编译工作成功完成，方便你打开 Quickfix查看编译效果。……
-                                <p class="readmore"><a href="https://skywind3000.com/blog/archives/1731/">阅读全文</a></p>
-                            </div>
-                        </article>
-                    
-                        <article class="post">
-                            <header>
-                                <h1 class="post-title">
                                     <a href="https://skywind3000.com/blog/archives/1708/">GVim 中更好的运行程序</a>
                                 </h1>
                             </header>
@@ -153,14 +97,24 @@ let $VIM_FILEPATH = expand(&quot;%:p&quot;) let $VIM_FILENAME = expand(&quot;%:t
                             </div>
                             
                             <div class="post-content">
-                                GVim（Windows）下面使用!运行程序是非常恶心的事情，比如调用python运行当前脚本：
-:!python %  你会发现，整个VIM界面被冻结了，然后弹出cmd窗口，退出cmd后，还要返回GVim中按任意键才能编辑状态。
-比如你正在调试一个程序，这个程序运行起来不是一分钟能出结果的时候，你想边对照输出结果，边在 GVim 里面查看和修改你的代码，你就会发现傻逼了。正确的做法是：
-:!start python %  这样就不会卡住 Vim了，但是这个做法有个问题，程序结束的时候窗口马上关闭，因此还需要再进化一下：
-:silent !start cmd /c python % &amp; pause  这时你会发现优雅的调用了 python 来跑当前程序，并且GVIM不会被挂起，照样可以编辑，当程序结束的时候，CMD窗口还会pause等待你按任意键一下，这就比较清爽了，你可以把这条命令map到你常用的快捷键上，和 EditPlus里面一样一键运行之。
-然而还是有几处需要完善的地方，首先直接使用 % 展开当前文件名不妥当，如果文件名包含空格就会错误，需要用 shellescape 来进行处理，同时我们有时候还希望运行前跳转到文件所在的目录，运行完又跳转回来，又或者需要运行前保存一下没有保存的文件。
-我写了个函数来做这个事情，放到你 .vimrc里即可使用，同时支持 GVim和终端 Vim：
-&quot; run current file by detecting file extname. if cwd is non-zero, &quot; it will change the current directory to the file location. &quot; Unsaved files will be saved if needsave is non-zero function! VimExecute(cwd, needsave) let savecwd = getcwd() let cd = haslocaldir()? 'lcd ' : 'cd ' let ext = tolower(expand(&quot;%:e&quot;)) if bufname('%') == '' return endif if a:needsave != 0 silent! update endif if a:cwd != 0 let dest = expand('%:p:h') silent! exec cd . fnameescape(dest) endif if has('gui_running') &amp;&amp; (has('win32') || has('win64') || has('win95')) let fname = shellescape(expand(&quot;%&quot;)) if index(['c', 'cpp'], &amp;filetype) &gt;= 0 exec '!start cmd /C '. shellescape(expand(&quot;%&lt;&quot;)) . ' &amp; pause' elseif index(['py', 'pyw', 'pyc', 'pyo'], ext) &gt;= 0 silent exec '!start cmd /C python ' . fname . ' &amp; pause' elseif ext == &quot;js&quot; silent exec '!start cmd /C node ' . fname . ' &amp; pause' elseif ext == 'sh' silent exec '!start cmd /C sh ' . fname . ' &amp; pause' elseif ext == 'lua' silent exec '!……
+                                <p>GVim（Windows）下面使用!运行程序是非常恶心的事情，比如调用python运行当前脚本：</p>
+
+<pre><code>:!python %
+</code></pre>
+
+<p>你会发现，整个VIM界面被冻结了，然后弹出cmd窗口，退出cmd后，还要返回GVim中按任意键才能编辑状态。</p>
+
+<p>比如你正在调试一个程序，这个程序运行起来不是一分钟能出结果的时候，你想边对照输出结果，边在 GVim 里面查看和修改你的代码，你就会发现傻逼了。正确的做法是：</p>
+
+<pre><code>:!start python %
+</code></pre>
+
+<p>这样就不会卡住 Vim了，但是这个做法有个问题，程序结束的时候窗口马上关闭，因此还需要再进化一下：</p>
+
+<pre><code>:silent !start cmd /c python % &amp; pause
+</code></pre>
+
+<p>这时你会发现优雅的调用了 python 来跑当前程序，并且GVIM不会被挂起，照样可以编辑，当程序结束的时候，CMD窗口还会pause等待你按任意键一下，这就比较清爽了，你可以把这条命令map到你常用的快捷键上，和 EditPlus里面一样一键运行之。</p>……
                                 <p class="readmore"><a href="https://skywind3000.com/blog/archives/1708/">阅读全文</a></p>
                             </div>
                         </article>
@@ -183,10 +137,34 @@ let $VIM_FILEPATH = expand(&quot;%:p&quot;) let $VIM_FILENAME = expand(&quot;%:t
                             </div>
                             
                             <div class="post-content">
-                                更好的使用 Vim7.0以后推出的标签（TAB）功能，同现代编辑器一样用标签（TAB）来管理多文件，代替传统 Buffer List： 让Minibufexplor/tabbar这些上个世纪的插件都退场吧，直接使用标准的标签功能会更加舒服。 快捷键切换 TAB 第一件事情就是要搞定标签快速切换问题，不管是:tabn X还是 Xgt都十分低效，我们需要更快速的在各个文件之间切换。最简单的是设置 0-9 来快速切换tab（默认leader是反斜杠，即先按下\键，再按数字键），不管终端还是GVIM都兼容：
-noremap &lt;silent&gt;&lt;tab&gt;m :tabnew&lt;cr&gt; noremap &lt;silent&gt;&lt;tab&gt;e :tabclose&lt;cr&gt; noremap &lt;silent&gt;&lt;tab&gt;n :tabn&lt;cr&gt; noremap &lt;silent&gt;&lt;tab&gt;p :tabp&lt;cr&gt; noremap &lt;silent&gt;&lt;leader&gt;t :tabnew&lt;cr&gt; noremap &lt;silent&gt;&lt;leader&gt;g :tabclose&lt;cr&gt; noremap &lt;silent&gt;&lt;leader&gt;1 :tabn 1&lt;cr&gt; noremap &lt;silent&gt;&lt;leader&gt;2 :tabn 2&lt;cr&gt; noremap &lt;silent&gt;&lt;leader&gt;3 :tabn 3&lt;cr&gt; noremap &lt;silent&gt;&lt;leader&gt;4 :tabn 4&lt;cr&gt; noremap &lt;silent&gt;&lt;leader&gt;5 :tabn 5&lt;cr&gt; noremap &lt;silent&gt;&lt;leader&gt;6 :tabn 6&lt;cr&gt; noremap &lt;silent&gt;&lt;leader&gt;7 :tabn 7&lt;cr&gt; noremap &lt;silent&gt;&lt;leader&gt;8 :tabn 8&lt;cr&gt; noremap &lt;silent&gt;&lt;leader&gt;9 :tabn 9&lt;cr&gt; noremap &lt;silent&gt;&lt;leader&gt;0 :tabn 10&lt;cr&gt; noremap &lt;silent&gt;&lt;s-tab&gt; :tabnext&lt;CR&gt; inoremap &lt;silent&gt;&lt;s-tab&gt; &lt;ESC&gt;:tabnext&lt;CR&gt;  其次，GVIM/MacVim 下设置 ALT-0-9 来切换TAB：
-&quot; keymap to switch table in gui if has('gui_running') set winaltkeys=no set macmeta noremap &lt;silent&gt;&lt;c-tab&gt; :tabprev&lt;CR&gt; inoremap &lt;silent&gt;&lt;c-tab&gt; &lt;ESC&gt;:tabprev&lt;CR&gt; noremap &lt;silent&gt;&lt;m-1&gt; :tabn 1&lt;cr&gt; noremap &lt;silent&gt;&lt;m-2&gt; :tabn 2&lt;cr&gt; noremap &lt;silent&gt;&lt;m-3&gt; :tabn 3&lt;cr&gt; noremap &lt;silent&gt;&lt;m-4&gt; :tabn 4&lt;cr&gt; noremap &lt;silent&gt;&lt;m-5&gt; :tabn 5&lt;cr&gt; noremap &lt;silent&gt;&lt;m-6&gt; :tabn 6&lt;cr&gt; noremap &lt;silent&gt;&lt;m-7&gt; :tabn 7&lt;cr&gt; noremap &lt;silent&gt;&lt;m-8&gt; :tabn 8&lt;cr&gt; noremap &lt;silent&gt;&lt;m-9&gt; :tabn 9&lt;cr&gt; noremap &lt;silent&gt;&lt;m-0&gt; :tabn 10&lt;cr&gt; inoremap &lt;silent&gt;&lt;m-1&gt; &lt;ESC&gt;:tabn 1&lt;cr&gt; inoremap &lt;silent&gt;&lt;m-2&gt; &lt;ESC&gt;:tabn 2&lt;cr&gt; inoremap &lt;silent&gt;&lt;m-3&gt; &lt;ESC&gt;:tabn 3&lt;cr&gt; inoremap &lt;silent&gt;&lt;m-4&gt; &lt;ESC&gt;:tabn 4&lt;cr&gt; inoremap &lt;silent&gt;&lt;m-5&gt; &lt;ESC&gt;:tabn 5&lt;cr&gt; inoremap &lt;silent&gt;&lt;m-6&gt; &lt;ESC&gt;:tabn 6&lt;cr&gt; inoremap &lt;silent&gt;&lt;m-7&gt; &lt;ESC&gt;:tabn 7&lt;cr&gt; inoremap &lt;silent&gt;&lt;m-8&gt; &lt;ESC&gt;:tabn 8&lt;cr&gt; inoremap &lt;silent&gt;&lt;m-9&gt; &lt;ESC&gt;:tabn 9&lt;cr&gt; inoremap &lt;silent&gt;&lt;m-0&gt; &lt;ESC&gt;:tabn 10&lt;cr&gt; endif  或者在 MacVim 下还可以用 CMD_0-9 快速切换，按着更舒服：
-if has(&quot;gui_macvim&quot;) set macmeta noremap &lt;silent&gt;&lt;c-tab&gt; :tabprev&lt;CR&gt; inoremap &lt;silent&gt;&lt;c-tab&gt; &lt;ESC&gt;:tabprev&lt;CR&gt; noremap &lt;silent&gt;&lt;d-1&gt; :tabn 1&lt;cr&gt; noremap &lt;silent&gt;&lt;d-2&gt; :tabn 2&lt;cr&gt; noremap &lt;silent&gt;&lt;d-3&gt; :tabn 3&lt;cr&gt; noremap &lt;silent&gt;&lt;d-4&gt; :tabn 4&lt;cr&gt; noremap &lt;silent&gt;&lt;d-5&gt; :tabn 5&lt;cr&gt; noremap &lt;silent&gt;&lt;d-6&gt; :tabn 6&lt;cr&gt; noremap &lt;silent&gt;&lt;d-7&gt; :tabn 7&lt;cr&gt; noremap &lt;silent&gt;&lt;d-8&gt; :tabn 8&lt;cr&gt; noremap &lt;silent&gt;&lt;d-9&gt; :tabn 9&lt;cr&gt; noremap &lt;silent&gt;&lt;d-0&gt; :tabn 10&lt;cr&gt; inoremap &lt;silent&gt;&lt;d-1&gt; &lt;ESC&gt;:tabn 1&lt;cr&gt; inoremap &lt;silent&gt;&lt;d-2&gt; &lt;ESC&gt;:tabn 2&lt;cr&gt; inoremap &lt;silent&gt;&lt;d-3&gt; &lt;ESC&gt;:tabn 3&lt;cr&gt; inoremap &lt;silent&gt;&lt;d-4&gt; &lt;ESC&gt;:tabn 4&lt;cr&gt; inoremap &lt;silent&gt;&lt;d-5&gt; &lt;ESC&gt;:tabn 5&lt;cr&gt; inoremap &lt;silent&gt;&lt;d-6&gt; &lt;ESC&gt;:tabn 6&lt;cr&gt; inoremap &lt;silent&gt;&lt;d-7&gt; &lt;ESC&gt;:tabn 7&lt;cr&gt; inoremap &lt;silent&gt;&lt;d-8&gt; &lt;ESC&gt;:tabn 8&lt;cr&gt; inoremap &lt;silent&gt;&lt;d-9&gt; &lt;ESC&gt;:tabn 9&lt;cr&gt; inoremap &lt;silent&gt;&lt;d-0&gt; &lt;ESC&gt;:tabn 10&lt;cr&gt; noremap &lt;silent&gt;&lt;d-o&gt; :browse tabnew&lt;cr&gt; inoremap &lt;silent&gt;&lt;d-o&gt; &lt;ESC&gt;:browse tabnew&lt;cr&gt; endif  这下很舒服了，和大部分主流编辑器一样切换tab十分轻松。那终端下 alt没法很好的映射怎么办呢？ 终端下映射 ALT-0-9 快速切换标签 不推荐把中断里的ALT键设置成ESC+，大部分终端（XShell, SecureCRT, iTerm, gnome-terminal）都提供ALT键改为ESC+的模式，即按下ALT-A，终端会连续发送ESC(27)和 A(65)两个字节，这样在emacs下挺好用，但是在vim下就糟糕了，比如你映射了A来代替 ALT-A，那么当你用ESC退出insert模式时，一秒钟内马上按下A来在行末追加内容，Vim会去触发你之前设置的ALT-A的功能，这就对 Vim 原有的功能造成了扰乱，那终端下如何正确设置 ALT功能键呢？ 我们使用终端自定义按键序列，大部分终端都支持自定义按键发送特定字符串（XShell,SecureCRT,iTerm,gnome-terminal），比如我们可以把ALT-1设置成发送 &lt;ESC&gt;]{0}1~ 这个字符串，而 ALT-2设置成发送 &lt;ESC&gt;]{0}2~ 这个字符串，于是我们可以在Vim里面建立快捷映射：……
+                                <p>更好的使用 Vim7.0以后推出的标签（TAB）功能，同现代编辑器一样用标签（TAB）来管理多文件，代替传统 Buffer List：</p>
+
+<p><img src="https://skywind3000.github.io/images/blog/wp-content/2016/05/vim3.png" alt="" /></p>
+
+<p>让 Minibufexplor/tabbar 这些上个世纪的插件都退场吧，直接使用标准的标签功能会更加舒服。 <strong>快捷键切换 TAB</strong> 第一件事情就是要搞定标签快速切换问题，
+不管是:tabn X还是 Xgt都十分低效，我们需要更快速的在各个文件之间切换。最简单的是设置 0-9 来快速切换tab（默认leader是反斜杠，即先按下\键，再按数字键），不管终端还是GVIM都兼容：</p>
+
+<pre><code>noremap &lt;silent&gt;&lt;tab&gt;m :tabnew&lt;cr&gt;
+noremap &lt;silent&gt;&lt;tab&gt;e :tabclose&lt;cr&gt;
+noremap &lt;silent&gt;&lt;tab&gt;n :tabn&lt;cr&gt;
+noremap &lt;silent&gt;&lt;tab&gt;p :tabp&lt;cr&gt;
+noremap &lt;silent&gt;&lt;leader&gt;t :tabnew&lt;cr&gt;
+noremap &lt;silent&gt;&lt;leader&gt;g :tabclose&lt;cr&gt;
+noremap &lt;silent&gt;&lt;leader&gt;1 :tabn 1&lt;cr&gt;
+noremap &lt;silent&gt;&lt;leader&gt;2 :tabn 2&lt;cr&gt;
+noremap &lt;silent&gt;&lt;leader&gt;3 :tabn 3&lt;cr&gt;
+noremap &lt;silent&gt;&lt;leader&gt;4 :tabn 4&lt;cr&gt;
+noremap &lt;silent&gt;&lt;leader&gt;5 :tabn 5&lt;cr&gt;
+noremap &lt;silent&gt;&lt;leader&gt;6 :tabn 6&lt;cr&gt;
+noremap &lt;silent&gt;&lt;leader&gt;7 :tabn 7&lt;cr&gt;
+noremap &lt;silent&gt;&lt;leader&gt;8 :tabn 8&lt;cr&gt;
+noremap &lt;silent&gt;&lt;leader&gt;9 :tabn 9&lt;cr&gt;
+noremap &lt;silent&gt;&lt;leader&gt;0 :tabn 10&lt;cr&gt;
+noremap &lt;silent&gt;&lt;s-tab&gt; :tabnext&lt;CR&gt;
+inoremap &lt;silent&gt;&lt;s-tab&gt; &lt;ESC&gt;:tabnext&lt;CR&gt;
+</code></pre>
+
+<p>其次，GVIM/MacVim 下设置 ALT-0-9 来切换TAB：</p>……
                                 <p class="readmore"><a href="https://skywind3000.com/blog/archives/1690/">阅读全文</a></p>
                             </div>
                         </article>
@@ -292,7 +270,7 @@ if has(&quot;gui_macvim&quot;) set macmeta noremap &lt;silent&gt;&lt;c-tab&gt; :
     </li>
     
     <li>
-        <a href="https://skywind3000.com/categories/%E5%A4%A7%E6%B5%AA%E6%B7%98%E6%B2%99/">大浪淘沙(12)</a>
+        <a href="https://skywind3000.com/categories/%E5%A4%A7%E6%B5%AA%E6%B7%98%E6%B2%99/">大浪淘沙(11)</a>
     </li>
     
     <li>
@@ -320,7 +298,7 @@ if has(&quot;gui_macvim&quot;) set macmeta noremap &lt;silent&gt;&lt;c-tab&gt; :
     </li>
     
     <li>
-        <a href="https://skywind3000.com/categories/%E9%9A%8F%E7%AC%94/">随笔(57)</a>
+        <a href="https://skywind3000.com/categories/%E9%9A%8F%E7%AC%94/">随笔(55)</a>
     </li>
     
 </ul>

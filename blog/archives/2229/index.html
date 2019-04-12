@@ -95,15 +95,13 @@
                         </div>
                         
                         <div class="post-content">
-                            
-
-<p>终端下工作最烦躁的就是路径切换，没有自动路径切换的帮助，就像在泥里走路，于是大家发明了各种 autojump / z / fasd 等工具来提升路径切换的效率，今天向大家介绍一个更好用的工具：<a href="https://github.com/skywind3000/z.lua">z.lua</a>，用熟练了以后就像终端里溜冰，路劲切换从此指哪打哪。</p>
+                            <p>终端下工作最烦躁的就是路径切换，没有自动路径切换的帮助，就像在泥里走路，于是大家发明了各种 autojump / z / fasd 等工具来提升路径切换的效率，今天向大家介绍一个更好用的工具：<a href="https://github.com/skywind3000/z.lua">z.lua</a>，用熟练了以后就像终端里溜冰，路劲切换从此指哪打哪。</p>
 
 <p><a href="https://github.com/skywind3000/z.lua">z.lua</a> 是一个会学习你使用习惯的 <code>cd</code> 命令，它会跟踪你在 shell 下访问过的路径，通过一套称为 Frecent 的机制（源自 Mozilla），经过一段简短的学习之后，<code>z.lua</code> 会帮你跳转到所有匹配正则关键字的路径里 Frecent 值最高的那条路径去。</p>
 
 <p>正则将按顺序进行匹配，&rdquo;z foo bar&rdquo; 可以匹配到 /foo/bar ，但是不能匹配 /bar/foo。</p>
 
-<h4 id="特性说明">特性说明：</h4>
+<h3 id="特性说明">特性说明：</h3>
 
 <ul>
 <li>性能比 <strong>z.sh</strong> 快三倍，比 <strong>fasd</strong> / <strong>autojump</strong> 快十倍以上。</li>
@@ -119,11 +117,11 @@
 <li>自包含且无额外依赖，单个 <code>z.lua</code> 文件完成所有工作。</li>
 </ul>
 
-<h4 id="软件安装">软件安装：</h4>
+<h3 id="软件安装">软件安装：</h3>
 
 <p>将下面对应语句添加到你的 <code>.bashrc</code> / <code>.zshrc</code> / <code>.profile</code> 或者对应 shell 的初始化脚本末尾：</p>
 
-<pre><code>eval &quot;$(lua /path/to/z.lua --init bash enhanced once echo)&quot;    # BASH 初始化
+<pre><code class="language-bash">eval &quot;$(lua /path/to/z.lua --init bash enhanced once echo)&quot;    # BASH 初始化
 eval &quot;$(lua /path/to/z.lua --init zsh enhanced once echo)&quot;     # ZSH 初始化
 eval &quot;$(lua /path/to/z.lua --init posix enhanced once echo)&quot;   # 其他 Posix Shell 初始化
 source (lua /path/to/z.lua --init fish enhanced once echo | psub)  # Fish Shell 初始化
@@ -132,7 +130,7 @@ iex ($(lua /path/to/z.lua --init powershell enhanced once echo) -join &quot;`n&q
 
 <p>然后重新登陆，即可使用。</p>
 
-<h4 id="用户评价">用户评价：</h4>
+<h3 id="用户评价">用户评价：</h3>
 
 <p>“我喜欢它的原理，我在命令行下面的行为十分有规律，并且我十分懒惰，懒得管理和维护一套书签或者路径别名。“</p>
 
@@ -140,7 +138,7 @@ iex ($(lua /path/to/z.lua --init powershell enhanced once echo) -join &quot;`n&q
 
 <p>”我终于可以在自己的树莓派1上使用 autojump 类似的功能了，而不用像以前传统 autojump 那样每次打开终端都要等待 30 秒。”</p>
 
-<h4 id="基本使用">基本使用：</h4>
+<h3 id="基本使用">基本使用：</h3>
 
 <p>cd 到一个包含 foo 的目录：</p>
 
@@ -154,7 +152,9 @@ iex ($(lua /path/to/z.lua --init powershell enhanced once echo) -join &quot;`n&q
 
 <p>对长路径使用多个关键字进行匹配： 假设路径历史数据库（~/.zlua）中有两条记录：</p>
 
-<p>10 /home/user/work/inbox 30 /home/user/mail/inbox</p>
+<pre><code>10 /home/user/work/inbox 
+30 /home/user/mail/inbox
+</code></pre>
 
 <p>&ldquo;z in&rdquo;将会跳转到 /home/user/mail/inbox 因为它有更高的权重，同时你可以传递更多参数给 z.lua 来更加精确的指明，如 &ldquo;z w in&rdquo; 则会让你跳到 /home/user/work/inbox。</p>
 
@@ -173,7 +173,7 @@ iex ($(lua /path/to/z.lua --init powershell enhanced once echo) -join &quot;`n&q
 
 <p>PS：交互选择同时支持 &ldquo;-I&rdquo; 参数（大写 i），让你可以使用 fzf 在多项结果进行快速选择（如果系统里面安装了的话）。</p>
 
-<h4 id="快速回到父目录">快速回到父目录：</h4>
+<h3 id="快速回到父目录">快速回到父目录：</h3>
 
 <p>&rdquo;-b&rdquo; 选项可快速回到某一级父目录，避免重复输入 &ldquo;cd ../../..&ldquo;，一般把 &ldquo;z -b&rdquo; 别名成 &ldquo;zb&rdquo; 命令：</p>
 
@@ -185,43 +185,37 @@ iex ($(lua /path/to/z.lua --init powershell enhanced once echo) -join &quot;`n&q
 
 <p>使用举例：</p>
 
-<pre><code># 一直向上退到项目根目录（就是里面有一个 .git 目录的地方）
+<pre><code class="language-bash"># 一直向上退到项目根目录（就是里面有一个 .git 目录的地方）
 ~/github/lorem/src/public$ zb
   =&gt; cd ~/github/lorem
+
 # cd 到第一个以 g 开头的父目录
 ~/github/vimium/src/public$ zb g
   =&gt; cd ~/github
+
 # 快速回到 site 目录
 ~/github/demo/src/org/main/site/utils/file/reader/whatever$ zb si
   =&gt; cd ~/github/demo/src/org/main/site
+
 # 将 jekyll 替换为 ghost
 ~/github/jekyll/test$ zb jekyll ghost
   =&gt; cd ~/github/ghost/test
 </code></pre>
 
-<p>向后跳转同样也支持环境变量 <code>$_ZL_ECHO</code>（用来显示跳转结果），这样为搭配其他工具提供了可能性（并不需要改变当前工作目录）：</p>
+<p>向后跳转同样也支持环境变量 <code>$_ZL_ECHO</code>（用来显示跳转结果），这样为搭配其他工具提供了可能性（并不需要改变当前工作目录），比如：</p>
 
-<pre><code># 假设我们位于 ~/github/vim/src/libvterm
-# 打开 $_ZL_ECHO 用于在每次跳转后调用一次 pwd 显示当前目录
-$ _ZL_ECHO=1
-# 看看我项目根目录（有 .git 那个）目录里有什么？
+<pre><code># 看看我项目根目录（有 .git 那个）目录里有什么？
 $ ls -l `zb`
   =&gt; ls -l ~/github/vim
-# 检查 &quot;&lt;项目根目录&gt;/logs&quot; 下面的日志
-$ tail -f `zb`/logs/error.log
-  =&gt; tail -f ~/github/vim/logs/error.log
-# 查看一下某一级父目录里有些啥
-$ ls -l `zb git`
-  =&gt; ls -l ~/github
 </code></pre>
 
 <p><strong>Bonus</strong>：“zb ..” 相当于 “cd ..”，“zb &hellip;” 相当于 “cd ../..”，而 “zb &hellip;.” 相当于 “cd ../../..” 等等。 最后 “zb ..20” 等同于调用 “cd ..” 二十次。</p>
 
-<h4 id="常用技巧">常用技巧：</h4>
+<h3 id="常用技巧">常用技巧：</h3>
 
 <p>推荐一些常用别名，放在你的配置文件中：</p>
 
-<pre><code>alias zc='z -c' # 严格匹配当前路径的子路径
+<pre><code class="language-bash">alias zc='z -c' # 严格匹配当前路径的子路径
 alias zz='z -i' # 使用交互式选择模式
 alias zf='z -I' # 使用 fzf 对多个结果进行选择
 alias zb='z -b' # 快速回到父目录
@@ -241,7 +235,6 @@ awk -F '\t' '{print $2 &quot;|&quot; $1 &quot;|&quot; 0}' $FN &gt;&gt; ~/.zlua
 <p>更多内容，参考项目文档：</p>
 
 <p><a href="https://github.com/skywind3000/z.lua">https://github.com/skywind3000/z.lua</a></p>
-
                         </div>
 
                         
@@ -366,7 +359,7 @@ awk -F '\t' '{print $2 &quot;|&quot; $1 &quot;|&quot; 0}' $FN &gt;&gt; ~/.zlua
     </li>
     
     <li>
-        <a href="https://skywind3000.com/categories/%E5%A4%A7%E6%B5%AA%E6%B7%98%E6%B2%99/">大浪淘沙(12)</a>
+        <a href="https://skywind3000.com/categories/%E5%A4%A7%E6%B5%AA%E6%B7%98%E6%B2%99/">大浪淘沙(11)</a>
     </li>
     
     <li>
@@ -394,7 +387,7 @@ awk -F '\t' '{print $2 &quot;|&quot; $1 &quot;|&quot; 0}' $FN &gt;&gt; ~/.zlua
     </li>
     
     <li>
-        <a href="https://skywind3000.com/categories/%E9%9A%8F%E7%AC%94/">随笔(57)</a>
+        <a href="https://skywind3000.com/categories/%E9%9A%8F%E7%AC%94/">随笔(55)</a>
     </li>
     
 </ul>

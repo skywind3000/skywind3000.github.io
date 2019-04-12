@@ -17,12 +17,47 @@
       <pubDate>Fri, 17 Jun 2016 10:20:18 +0000</pubDate>
       
       <guid>https://skywind3000.com/blog/archives/1774/</guid>
-      <description>以前 DOS下做游戏，操作系统除了磁盘和文件管理外基本不管事情，所有游戏都是直接操作显卡和声卡的，用不了什么驱动。
-虽然没有驱动，但是硬件标准还是放在那里，VGA, SVGA, VESA, VESA2.0 之类的硬件标准，最起码，你只做320x200x256c的游戏，或者 ModeX 下 320x240x256c 的游戏的话，需要用到VGA和部分 SVGA标准，而要做真彩高彩，更高分辨率的游戏的话，就必须掌握 VESA的各项规范了。
-翻几段以前写的代码演示下：
-例子1： 初始化 VGA/VESA 显示模式
-基本是参考 VGA的编程手册来做：
-INT 10,0 - Set Video Mode AH = 00 AL = 00 40x25 B/W text (CGA,EGA,MCGA,VGA) = 01 40x25 16 color text (CGA,EGA,MCGA,VGA) = 02 80x25 16 shades of gray text (CGA,EGA,MCGA,VGA) = 03 80x25 16 color text (CGA,EGA,MCGA,VGA) = 04 320x200 4 color graphics (CGA,EGA,MCGA,VGA) = 05 320x200 4 color graphics (CGA,EGA,MCGA,VGA) = 06 640x200 B/W graphics (CGA,EGA,MCGA,VGA) = 07 80x25 Monochrome text (MDA,HERC,EGA,VGA) = 08 160x200 16 color graphics (PCjr) = 09 320x200 16 color graphics (PCjr) = 0A 640x200 4 color graphics (PCjr) = 0B Reserved (EGA BIOS function 11) = 0C Reserved (EGA BIOS function 11) = 0D 320x200 16 color graphics (EGA,VGA) = 0E 640x200 16 color graphics (EGA,VGA) = 0F 640x350 Monochrome graphics (EGA,VGA) = 10 640x350 16 color graphics (EGA or VGA with 128K) 640x350 4 color graphics (64K EGA) = 11 640x480 B/W graphics (MCGA,VGA) = 12 640x480 16 color graphics (VGA) = 13 320x200 256 color graphics (MCGA,VGA) = 8x EGA, MCGA or VGA ignore bit 7, see below = 9x EGA, MCGA or VGA ignore bit 7, see below - if AL bit 7=1, prevents EGA,MCGA &amp;amp; VGA from clearing display - function updates byte at 40:49; bit 7 of byte 40:87 (EGA/VGA Display Data Area) is set to the value of AL bit 7  转换成代码的话，类似这样：</description>
+      <description>&lt;p&gt;以前 DOS下做游戏，操作系统除了磁盘和文件管理外基本不管事情，所有游戏都是直接操作显卡和声卡的，用不了什么驱动。&lt;/p&gt;
+
+&lt;p&gt;虽然没有驱动，但是硬件标准还是放在那里，VGA, SVGA, VESA, VESA2.0 之类的硬件标准，最起码，你只做320x200x256c的游戏，或者 ModeX 下 320x240x256c 的游戏的话，需要用到VGA和部分 SVGA标准，而要做真彩高彩，更高分辨率的游戏的话，就必须掌握 VESA的各项规范了。&lt;/p&gt;
+
+&lt;p&gt;翻几段以前写的代码演示下：&lt;/p&gt;
+
+&lt;h3 id=&#34;例子1-初始化-vga-vesa-显示模式&#34;&gt;例子1： 初始化 VGA/VESA 显示模式&lt;/h3&gt;
+
+&lt;p&gt;基本是参考 VGA的编程手册来做：&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;INT 10,0 - Set Video Mode
+    AH = 00
+    AL = 00  40x25 B/W text (CGA,EGA,MCGA,VGA)
+       = 01  40x25 16 color text (CGA,EGA,MCGA,VGA)
+       = 02  80x25 16 shades of gray text (CGA,EGA,MCGA,VGA)
+       = 03  80x25 16 color text (CGA,EGA,MCGA,VGA)
+       = 04  320x200 4 color graphics (CGA,EGA,MCGA,VGA)
+       = 05  320x200 4 color graphics (CGA,EGA,MCGA,VGA)
+       = 06  640x200 B/W graphics (CGA,EGA,MCGA,VGA)
+       = 07  80x25 Monochrome text (MDA,HERC,EGA,VGA)
+       = 08  160x200 16 color graphics (PCjr)
+       = 09  320x200 16 color graphics (PCjr)
+       = 0A  640x200 4 color graphics (PCjr)
+       = 0B  Reserved (EGA BIOS function 11)
+       = 0C  Reserved (EGA BIOS function 11)
+       = 0D  320x200 16 color graphics (EGA,VGA)
+       = 0E  640x200 16 color graphics (EGA,VGA)
+       = 0F  640x350 Monochrome graphics (EGA,VGA)
+       = 10  640x350 16 color graphics (EGA or VGA with 128K)
+         640x350 4 color graphics (64K EGA)
+       = 11  640x480 B/W graphics (MCGA,VGA)
+       = 12  640x480 16 color graphics (VGA)
+       = 13  320x200 256 color graphics (MCGA,VGA)
+       = 8x  EGA, MCGA or VGA ignore bit 7, see below
+       = 9x  EGA, MCGA or VGA ignore bit 7, see below
+    - if AL bit 7=1, prevents EGA,MCGA &amp;amp; VGA from clearing display
+    - function updates byte at 40:49;  bit 7 of byte 40:87
+      (EGA/VGA Display Data Area) is set to the value of AL bit 7
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;转换成代码的话，类似这样：&lt;/p&gt;</description>
     </item>
     
     <item>
@@ -31,47 +66,9 @@ INT 10,0 - Set Video Mode AH = 00 AL = 00 40x25 B/W text (CGA,EGA,MCGA,VGA) = 01
       <pubDate>Thu, 28 Apr 2016 16:00:37 +0000</pubDate>
       
       <guid>https://skywind3000.com/blog/archives/1683/</guid>
-      <description>开源一个高性能位图库，之前对我的二维图形库 pixellib 进行了精简和重写，最终形成一个只包含两个文件（BasicBitmap.h, BasicBitmap.cpp）的图形基础库。 在今天 GPU 绘制横行天下的时候，任然有很多时候需要使用到纯 CPU实现的图形库，比如图像处理，视频预处理与合成，界面，以及GPU无法使用的情况（比如某个应用把gpu占满了，或者无法通过gpu做一些十分灵活的事情时），纹理处理，简单图片加载保存等。 支持 SSE2/AVX 优化，比 DirectDraw 快 40%（全系统内存绘制），比 SDL 快 10%，比GDI快 38%。如果你需要一个方便的高性能位图库，足够高性能的同时保证足够紧凑。 如果你有上述需求，那么你和我一样需要用到 BasicBitmap，只需要把 BasicBitmap.h/.cpp 两个文件拷贝到你的代码中即可。我正是为了这个目的编写了这两个文件。
-特性介绍  高度优化的 C++ 代码，可以在任意平台编译并运行 多重像素格式，从8位到32位：A8R8G8B8, R8G8B8, A4R4G4B4, R5G6B5, A8, 等. Blit (Bit Blt) ，包含透明和非透明的模式。 像素格式快速转换 使用不同的 Compositor 进行 Blending 使用不同的过滤器进行缩放（nearest, linear, bilinear） 高质量位图重采样（Bicubic/Box） 支持从内存或者文件直接读取 BMP/TGA 文件 支持从内存或者文件直接读取 PNG/JPEG 文件（Windows下） 保存图片为 BMP/PPM 文件 核心绘制函数可以被外部实现通过设置函数指针重载（比如 SSE2实现） 比 DirectDraw 快 40% 的性能进行绘制（打开 AVX/SSE2支持） 比 GDI 的 AlphaBlend 函数快34%的性能进行混色 Self-contained, 不依赖任何其他第三方库 高度紧凑，只需要拷贝 BasicBitmap.h/.cpp 两个文件到你项目即可  项目地址  https://github.com/skywind3000/BasicBitmap  Blit 性能比较 Full window (800x600) blitting (both opacity and transparent), compare to GDI/SDL/DirectDraw:
-32 Bits Blit Opacity Transparent
-BasicBitmap C++
-fps=2325
-fps=1368
-BasicBitmap AVX/SSE2
-fps=2904
-fps=2531
-GDI
-fps=2333
-fps=1167
-SDL
-fps=2671
-fps=1015
-DirectDraw
-fps=2695
-fps=2090
-Note: use BltFast with DirectDrawSurface7 in System Memory to perform Opacity &amp;amp; Transparent blit. BitBlt and TransparentBlt(msimg32.dll) are used in the GDI testing case.
-16 Bits Blit Opacity Transparent
-BasicBitmap C++
-fps=4494
-fps=1253
-BasicBitmap AVX/SSE2
-fps=9852
-fps=2909
-DirectDraw BltFast
-fps=5889
-fps=861
-Blitting performance in SDL &amp;amp; GDI are slower than DirectDraw, just compare to ddraw as well.
-8 Bits Blit Opacity Transparent
-BasicBitmap C++
-fps=11142
-fps=1503
-BasicBitmap AVX/SSE2
-fps=18181
-fps=5449
-DirectDraw BltFast
-fps=14705
-fps=4832
-DirectDrawSurface in Video Memory takes the benefit of hardware acceleration which is definitely faster than BasicBitmap.</description>
+      <description>&lt;p&gt;开源一个高性能位图库，之前对我的二维图形库 &lt;a href=&#34;https://github.com/skywind3000/pixellib&#34;&gt;pixellib&lt;/a&gt; 进行了精简和重写，最终形成一个只包含两个文件（BasicBitmap.h, BasicBitmap.cpp）的图形基础库。 在今天 GPU 绘制横行天下的时候，任然有很多时候需要使用到纯
+CPU实现的图形库，比如图像处理，视频预处理与合成，界面，以及GPU无法使用的情况（比如某个应用把gpu占满了，或者无法通过gpu做一些十分灵活的事情时），纹理处理，简单图片加载保存等。 支持 SSE2/AVX 优化，比 DirectDraw 快 40%（全系统内存绘制），比 SDL 快 10%，比GDI快 38%。如果你需要一个方便的高性能位图库，足够高性能的同时保证足够紧凑。
+如果你有上述需求，那么你和我一样需要用到 BasicBitmap，只需要把 BasicBitmap.h/.cpp 两个文件拷贝到你的代码中即可。我正是为了这个目的编写了这两个文件。&lt;/p&gt;</description>
     </item>
     
     <item>
@@ -80,44 +77,18 @@ DirectDrawSurface in Video Memory takes the benefit of hardware acceleration whi
       <pubDate>Sun, 20 Dec 2015 10:15:10 +0000</pubDate>
       
       <guid>https://skywind3000.com/blog/archives/1587/</guid>
-      <description>今天继续在原来内存拷贝代码上优化：
-1. 修改了小内存方案：由原来64字节扩大为128字节，由 int 改为 xmm，小内存性能提升 80%
-2. 修改了中内存方案：从4个xmm寄存器并行拷贝改为8个并行拷贝+prefetch，提升20%左右
-3. 去除目标地址头部对齐的分支判断，用一次xmm拷贝完成目标对齐，性能替升10%。
-4. 增加测试用例：为贴近实际，增加了随机访问，10MB空间内（绝对大于L2尺寸）随机位置和长度的测试
-为避免随机数生成影响结果，提前生成随机数，最终平均性能达到gcc4.9配套标准库的2倍以上：
-https://github.com/skywind3000/FastMemcpy
-最新代码测试结果（可以对比老的表看新版本性能是否有所提升）：
- benchmark(size=32 bytes, times=16777216):
-result(dst aligned, src aligned): memcpy_fast=78ms memcpy=260 ms
-result(dst aligned, src unalign): memcpy_fast=78ms memcpy=250 ms
-result(dst unalign, src aligned): memcpy_fast=78ms memcpy=266 ms
-result(dst unalign, src unalign): memcpy_fast=78ms memcpy=234 ms
-benchmark(size=64 bytes, times=16777216):
-result(dst aligned, src aligned): memcpy_fast=109ms memcpy=281 ms
-result(dst aligned, src unalign): memcpy_fast=109ms memcpy=328 ms
-result(dst unalign, src aligned): memcpy_fast=109ms memcpy=343 ms
-result(dst unalign, src unalign): memcpy_fast=93ms memcpy=344 ms
-benchmark(size=512 bytes, times=8388608):
-result(dst aligned, src aligned): memcpy_fast=125ms memcpy=218 ms
-result(dst aligned, src unalign): memcpy_fast=156ms memcpy=484 ms
-result(dst unalign, src aligned): memcpy_fast=172ms memcpy=546 ms
-result(dst unalign, src unalign): memcpy_fast=172ms memcpy=515 ms
-benchmark(size=1024 bytes, times=4194304):
-result(dst aligned, src aligned): memcpy_fast=109ms memcpy=172 ms
-result(dst aligned, src unalign): memcpy_fast=187ms memcpy=453 ms
-result(dst unalign, src aligned): memcpy_fast=172ms memcpy=437 ms
-result(dst unalign, src unalign): memcpy_fast=156ms memcpy=452 ms
-benchmark(size=4096 bytes, times=524288):
-result(dst aligned, src aligned): memcpy_fast=62ms memcpy=78 ms
-result(dst aligned, src unalign): memcpy_fast=109ms memcpy=202 ms
-result(dst unalign, src aligned): memcpy_fast=94ms memcpy=203 ms
-result(dst unalign, src unalign): memcpy_fast=110ms memcpy=218 ms
-benchmark(size=8192 bytes, times=262144):
-result(dst aligned, src aligned): memcpy_fast=62ms memcpy=78 ms
-result(dst aligned, src unalign): memcpy_fast=78ms memcpy=202 ms
-result(dst unalign, src aligned): memcpy_fast=78ms memcpy=203 ms
-result(dst unalign, src unalign): memcpy_fast=94ms memcpy=203 ms</description>
+      <description>&lt;p&gt;今天继续在原来内存拷贝代码上优化：&lt;/p&gt;
+
+&lt;p&gt;1. 修改了小内存方案：由原来64字节扩大为128字节，由 int 改为 xmm，小内存性能提升 80%&lt;br /&gt;
+2. 修改了中内存方案：从4个xmm寄存器并行拷贝改为8个并行拷贝+prefetch，提升20%左右&lt;br /&gt;
+3. 去除目标地址头部对齐的分支判断，用一次xmm拷贝完成目标对齐，性能替升10%。&lt;br /&gt;
+4. 增加测试用例：为贴近实际，增加了随机访问，10MB空间内（绝对大于L2尺寸）随机位置和长度的测试&lt;/p&gt;
+
+&lt;p&gt;为避免随机数生成影响结果，提前生成随机数，最终平均性能达到gcc4.9配套标准库的2倍以上：&lt;/p&gt;
+
+&lt;p&gt;&lt;a href=&#34;https://github.com/skywind3000/FastMemcpy&#34;&gt;https://github.com/skywind3000/FastMemcpy&lt;/a&gt;&lt;/p&gt;
+
+&lt;p&gt;最新代码测试结果（可以对比老的表看新版本性能是否有所提升）：&lt;/p&gt;</description>
     </item>
     
     <item>
@@ -126,19 +97,30 @@ result(dst unalign, src unalign): memcpy_fast=94ms memcpy=203 ms</description>
       <pubDate>Fri, 18 Dec 2015 06:15:17 +0000</pubDate>
       
       <guid>https://skywind3000.com/blog/archives/1573/</guid>
-      <description>四年前写过一篇小内存拷贝优化：http://www.skywind.me/blog/archives/143 纠结了一下还是把全尺寸拷贝优化代码发布出来吧，没啥好保密的， 如今总结一下全尺寸内存拷贝优化的要点： 1. 策略区别：64字节以内用小内存方案，64K以内用中尺寸方案，大于64K用大内存拷贝方案。 2. 查表跳转：拷贝不同小尺寸内存，直接跳转到相应地址解除循环。 3. 目标对齐：64字节以上拷贝的先用普通方法拷贝几个字节让目标地址对齐，好做后面的事情。 4. 矢量拷贝：并行一次性读入N个矢量到 sse2 寄存器，再并行写出。 5. 缓存预取：使用 prefetchnta ，提前预取数据，等到真的要用时数据已经到位。 6. 内存直写：使用 movntdq 来直写内存，避免缓存污染。 部分理论，见论文：《Using Block Prefetch for Optimized Memory Performance》 但论文考虑问题比较单一，所以实际代码写的比论文复杂不少，目前在各个尺寸上基本平均能够加速 40%，比较GCC 4.9, VS2012的 memcpy，不排除未来的 libc, crt库继续完善以后，能够达到下面代码的速度。但我看libc和crt的 memcpy代码已经很久没人更新了，不知道他们还愿意继续优化下去么？ 行了，具体实现各位读代码吧，需要 SSE2 指令集支持，gcc编译时需要 –msse2 一下，点击（more）展开代码，测试结果附在源文件最后注释部分：
-//===================================================================== // // FastMemcpy.c - skywind3000@163.com, 2012 // // feature: // 40% speed up in avg. vs standard memcpy (tested in vc2012/gcc4.9) // //===================================================================== #include &amp;lt;stdio.h&amp;gt; #include &amp;lt;stdlib.h&amp;gt; #include &amp;lt;string.h&amp;gt; #include &amp;lt;time.h&amp;gt; #include &amp;lt;windows.h&amp;gt; #include &amp;lt;emmintrin.h&amp;gt; void *memcpy_tiny(void *dst, const void *src, size_t len) { if (len &amp;lt;= 64) { register unsigned char *dd = (unsigned char*)dst + len; register const unsigned char *ss = (const unsigned char*)src + len; switch (len) { case 68: *((int*)(dd - 68)) = *((int*)(ss - 68)); case 64: *((int*)(dd - 64)) = *((int*)(ss - 64)); case 60: *((int*)(dd - 60)) = *((int*)(ss - 60)); case 56: *((int*)(dd - 56)) = *((int*)(ss - 56)); case 52: *((int*)(dd - 52)) = *((int*)(ss - 52)); case 48: *((int*)(dd - 48)) = *((int*)(ss - 48)); case 44: *((int*)(dd - 44)) = *((int*)(ss - 44)); case 40: *((int*)(dd - 40)) = *((int*)(ss - 40)); case 36: *((int*)(dd - 36)) = *((int*)(ss - 36)); case 32: *((int*)(dd - 32)) = *((int*)(ss - 32)); case 28: *((int*)(dd - 28)) = *((int*)(ss - 28)); case 24: *((int*)(dd - 24)) = *((int*)(ss - 24)); case 20: *((int*)(dd - 20)) = *((int*)(ss - 20)); case 16: *((int*)(dd - 16)) = *((int*)(ss - 16)); case 12: *((int*)(dd - 12)) = *((int*)(ss - 12)); case 8: *((int*)(dd - 8)) = *((int*)(ss - 8)); case 4: *((int*)(dd - 4)) = *((int*)(ss - 4)); break; case 67: *((int*)(dd - 67)) = *((int*)(ss - 67)); case 63: *((int*)(dd - 63)) = *((int*)(ss - 63)); case 59: *((int*)(dd - 59)) = *((int*)(ss - 59)); case 55: *((int*)(dd - 55)) = *((int*)(ss - 55)); case 51: *((int*)(dd - 51)) = *((int*)(ss - 51)); case 47: *((int*)(dd - 47)) = *((int*)(ss - 47)); case 43: *((int*)(dd - 43)) = *((int*)(ss - 43)); case 39: *((int*)(dd - 39)) = *((int*)(ss - 39)); case 35: *((int*)(dd - 35)) = *((int*)(ss - 35)); case 31: *((int*)(dd - 31)) = *((int*)(ss - 31)); case 27: *((int*)(dd - 27)) = *((int*)(ss - 27)); case 23: *((int*)(dd - 23)) = *((int*)(ss - 23)); case 19: *((int*)(dd - 19)) = *((int*)(ss - 19)); case 15: *((int*)(dd - 15)) = *((int*)(ss - 15)); case 11: *((int*)(dd - 11)) = *((int*)(ss - 11)); case 7: *((int*)(dd - 7)) = *((int*)(ss - 7)); *((int*)(dd - 4)) = *((int*)(ss - 4)); break; case 3: *((short*)(dd - 3)) = *((short*)(ss - 3)); dd[-1] = ss[-1]; break; case 66: *((int*)(dd - 66)) = *((int*)(ss - 66)); case 62: *((int*)(dd - 62)) = *((int*)(ss - 62)); case 58: *((int*)(dd - 58)) = *((int*)(ss - 58)); case 54: *((int*)(dd - 54)) = *((int*)(ss - 54)); case 50: *((int*)(dd - 50)) = *((int*)(ss - 50)); case 46: *((int*)(dd - 46)) = *((int*)(ss - 46)); case 42: *((int*)(dd - 42)) = *((int*)(ss - 42)); case 38: *((int*)(dd - 38)) = *((int*)(ss - 38)); case 34: *((int*)(dd - 34)) = *((int*)(ss - 34)); case 30: *((int*)(dd - 30)) = *((int*)(ss - 30)); case 26: *((int*)(dd - 26)) = *((int*)(ss - 26)); case 22: *((int*)(dd - 22)) = *((int*)(ss - 22)); case 18: *((int*)(dd - 18)) = *((int*)(ss - 18)); case 14: *((int*)(dd - 14)) = *((int*)(ss - 14)); case 10: *((int*)(dd - 10)) = *((int*)(ss - 10)); case 6: *((int*)(dd - 6)) = *((int*)(ss - 6)); case 2: *((short*)(dd - 2)) = *((short*)(ss - 2)); break; case 65: *((int*)(dd - 65)) = *((int*)(ss - 65)); case 61: *((int*)(dd - 61)) = *((int*)(ss - 61)); case 57: *((int*)(dd - 57)) = *((int*)(ss - 57)); case 53: *((int*)(dd - 53)) = *((int*)(ss - 53)); case 49: *((int*)(dd - 49)) = *((int*)(ss - 49)); case 45: *((int*)(dd - 45)) = *((int*)(ss - 45)); case 41: *((int*)(dd - 41)) = *((int*)(ss - 41)); case 37: *((int*)(dd - 37)) = *((int*)(ss - 37)); case 33: *((int*)(dd - 33)) = *((int*)(ss - 33)); case 29: *((int*)(dd - 29)) = *((int*)(ss - 29)); case 25: *((int*)(dd - 25)) = *((int*)(ss - 25)); case 21: *((int*)(dd - 21)) = *((int*)(ss - 21)); case 17: *((int*)(dd - 17)) = *((int*)(ss - 17)); case 13: *((int*)(dd - 13)) = *((int*)(ss - 13)); case 9: *((int*)(dd - 9)) = *((int*)(ss - 9)); case 5: *((int*)(dd - 5)) = *((int*)(ss - 5)); case 1: dd[-1] = ss[-1]; break; case 0: default: break; } return dd; } else { return memcpy(dst, src, len); } } void* memcpy_fast(void *destination, const void *source, size_t size) { unsigned char *dst = (unsigned char*)destination; const unsigned char *src = (const unsigned char*)source; static size_t cachesize = 0x10000; size_t diff; // small memory copy if (size &amp;lt; 64) { return memcpy_tiny(dst, src, size); } // align destination to 16 bytes boundary diff = (((size_t)dst + 15) &amp;amp; (~15)) - ((size_t)dst); if (diff &amp;gt; 0) { memcpy_tiny(dst, src, diff); dst += diff; src += diff; size -= diff; } // medium size copy if (size &amp;lt;= cachesize) { __m128i c1, c2, c3, c4; if ((((size_t)src) &amp;amp; 15) == 0) { // source aligned for (; size &amp;gt;= 64; size -= 64) { c1 = _mm_load_si128(((const __m128i*)src) + 0); c2 = _mm_load_si128(((const __m128i*)src) + 1); c3 = _mm_load_si128(((const __m128i*)src) + 2); c4 = _mm_load_si128(((const __m128i*)src) + 3); src += 64; _mm_store_si128((((__m128i*)dst) + 0), c1); _mm_store_si128((((__m128i*)dst) + 1), c2); _mm_store_si128((((__m128i*)dst) + 2), c3); _mm_store_si128((((__m128i*)dst) + 3), c4); dst += 64; } } else { // source un-aligned for (; size &amp;gt;= 64; size -= 64) { c1 = _mm_loadu_si128(((const __m128i*)src) + 0); c2 = _mm_loadu_si128(((const __m128i*)src) + 1); c3 = _mm_loadu_si128(((const __m128i*)src) + 2); c4 = _mm_loadu_si128(((const __m128i*)src) + 3); src += 64; _mm_store_si128((((__m128i*)dst) + 0), c1); _mm_store_si128((((__m128i*)dst) + 1), c2); _mm_store_si128((((__m128i*)dst) + 2), c3); _mm_store_si128((((__m128i*)dst) + 3), c4); dst += 64; } } } else { // big memory copy __m128i c1, c2, c3, c4; _mm_prefetch((const char*)(src), _MM_HINT_NTA); if ((((size_t)src) &amp;amp; 15) == 0) { // source aligned for (; size &amp;gt;= 64; size -= 64) { _mm_prefetch((const char*)(src + 128), _MM_HINT_NTA); c1 = _mm_load_si128(((const __m128i*)src) + 0); c2 = _mm_load_si128(((const __m128i*)src) + 1); c3 = _mm_load_si128(((const __m128i*)src) + 2); c4 = _mm_load_si128(((const __m128i*)src) + 3); src += 64; _mm_stream_si128((((__m128i*)dst) + 0), c1); _mm_stream_si128((((__m128i*)dst) + 1), c2); _mm_stream_si128((((__m128i*)dst) + 2), c3); _mm_stream_si128((((__m128i*)dst) + 3), c4); dst += 64; } } else { // source unaligned for (; size &amp;gt;= 64; size -= 64) { _mm_prefetch((const char*)(src + 128), _MM_HINT_NTA); c1 = _mm_loadu_si128(((const __m128i*)src) + 0); c2 = _mm_loadu_si128(((const __m128i*)src) + 1); c3 = _mm_loadu_si128(((const __m128i*)src) + 2); c4 = _mm_loadu_si128(((const __m128i*)src) + 3); src += 64; _mm_stream_si128((((__m128i*)dst) + 0), c1); _mm_stream_si128((((__m128i*)dst) + 1), c2); _mm_stream_si128((((__m128i*)dst) + 2), c3); _mm_stream_si128((((__m128i*)dst) + 3), c4); dst += 64; } } _mm_sfence(); } return memcpy_tiny(dst, src, size); } void benchmark(int dstalign, int srcalign, size_t size, int times) { char *DATA1 = (char*)malloc(size + 64); char *DATA2 = (char*)malloc(size + 64); size_t LINEAR1 = ((size_t)DATA1); size_t LINEAR2 = ((size_t)DATA2); char *ALIGN1 = (char*)(((64 - (LINEAR1 &amp;amp; 63)) &amp;amp; 63) + LINEAR1); char *ALIGN2 = (char*)(((64 - (LINEAR2 &amp;amp; 63)) &amp;amp; 63) + LINEAR2); char *dst = (dstalign)?</description>
+      <description>&lt;p&gt;四年前写过一篇小内存拷贝优化：&lt;a href=&#34;http://www.skywind.me/blog/archives/143&#34;&gt;http://www.skywind.me/blog/archives/143&lt;/a&gt; 纠结了一下还是把全尺寸拷贝优化代码发布出来吧，没啥好保密的， 如今总结一下全尺寸内存拷贝优化的要点：&lt;/p&gt;
+
+&lt;ul&gt;
+&lt;li&gt;策略区别：64字节以内用小内存方案，64K以内用中尺寸方案，大于64K用大内存拷贝方案。&lt;/li&gt;
+&lt;li&gt;查表跳转：拷贝不同小尺寸内存，直接跳转到相应地址解除循环。&lt;/li&gt;
+&lt;li&gt;目标对齐：64字节以上拷贝的先用普通方法拷贝几个字节让目标地址对齐，好做后面的事情。&lt;/li&gt;
+&lt;li&gt;矢量拷贝：并行一次性读入N个矢量到 sse2 寄存器，再并行写出。&lt;/li&gt;
+&lt;li&gt;缓存预取：使用 prefetchnta ，提前预取数据，等到真的要用时数据已经到位。&lt;/li&gt;
+&lt;li&gt;内存直写：使用 movntdq 来直写内存，避免缓存污染。&lt;/li&gt;
+&lt;/ul&gt;</description>
     </item>
     
     <item>
-      <title>转换 Intel汇编格式到 AT&amp;amp;T汇编风格</title>
+      <title>转换 Intel汇编格式到 AT&amp;T 汇编风格</title>
       <link>https://skywind3000.com/blog/archives/1244/</link>
       <pubDate>Fri, 10 Apr 2015 11:33:09 +0000</pubDate>
       
       <guid>https://skywind3000.com/blog/archives/1244/</guid>
-      <description>常用 MSVC写内嵌汇编需要兼容 GCC是一件头疼的事情，不是说你不会写 GCC的 AT&amp;amp;T风格汇编，而是说同一份代码写两遍，还要调试两遍，是一件头疼的事情，特别是汇编写了上百行的时候。于是五年前写过一个小工具，可以方便的进行转换，能把 MSVC/MASM的汇编转成纯 AT&amp;amp;T风格汇编，或者 GCC Inline风格汇编，自动识别寄存器和变量，还有跳转地址，并且自动导出。今天把他放上来，或许有用到的人吧。
-项目下载：https://github.com/skywind3000/Intel2GAS。
-支持GUI转换和命令行转换，GUI转换使用 intel2gui.py, 命令行使用 intel2gui.py，当年用 Python匆匆完成，代码写的比较烂，但是还是在我后面的项目中帮了比较大的忙，MSVC里面调试干净了，一次性转换到GCC，再也不用象以前一样人肉转换汇编，写两份代码了。</description>
+      <description>&lt;p&gt;常用 MSVC写内嵌汇编需要兼容 GCC是一件头疼的事情，不是说你不会写 GCC的 AT&amp;amp;T风格汇编，而是说同一份代码写两遍，还要调试两遍，是一件头疼的事情，特别是汇编写了上百行的时候。于是五年前写过一个小工具，可以方便的进行转换，能把 MSVC/MASM的汇编转成纯 AT&amp;amp;T风格汇编，或者 GCC
+Inline风格汇编，自动识别寄存器和变量，还有跳转地址，并且自动导出。今天把他放上来，或许有用到的人吧。&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&#34;https://raw.githubusercontent.com/skywind3000/Intel2GAS/master/images/intel2gas_1.png&#34; alt=&#34;&#34; /&gt;&lt;/p&gt;
+
+&lt;p&gt;项目下载：&lt;a href=&#34;https://github.com/skywind3000/Intel2GAS&#34;&gt;https://github.com/skywind3000/Intel2GAS&lt;/a&gt;。&lt;/p&gt;</description>
     </item>
     
     <item>
