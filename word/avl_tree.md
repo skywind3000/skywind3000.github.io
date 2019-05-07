@@ -12,7 +12,7 @@
 
 网上对 AVL被批的很惨，认为性能不如 rbtree，这里给 AVL 树平反昭雪。最近优化了一下我之前的 AVL 树，总体跑的和 linux 的 rbtree 一样快了：
 
-![](https://skywind3000.github.io/word/images/avl/compare.png)
+![](http://skywind3000.github.io/word/images/avl/compare.png)
 
 他们都比 std::map 快很多（即便使用动态内存分配，为每个新插入节点临时分配个新内存）。
 

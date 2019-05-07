@@ -16,7 +16,7 @@
 
 文字终端就没什么好拍的了，先上一张图形桌面的靓照吧：
 
-![](https://skywind3000.github.io/word/images/linux_aix_1.jpg)
+![](http://skywind3000.github.io/word/images/linux_aix_1.jpg)
 
 是的你没看错，这就是 AIX 7，2012年的操作系统，就是那么的霸道，四处透着古典 Unix的味道。这样的机器今天还跑在各大银行的机房里，AIX系统管理员也拿着比 Linux系统管理员多几倍的工资，虽然工作岗位比较稀少。
 
