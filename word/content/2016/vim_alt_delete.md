@@ -1,15 +1,10 @@
-"=========== Meta ============
-"StrID : 2021
-"Title : 终端软件里正确设置 ALT 键和 BACKSPACE 键
-"Slug  : 
-"Cats  : 随笔
-"Tags  : Vim
-"=============================
-"EditType   : post
-"EditFormat : Markdown
-"TextAttach : 
-"========== Content ==========
-
+---
+uuid: 2021
+title: 终端里正确设置 ALT 键和 BS 键
+status: publish
+categories: 随笔
+tags: Vim
+---
 不管你在终端下使用 vim/neovim, emacs, nano 或者 zsh，你都会碰到使用 ALT 键的情况（终端下叫做 meta键），而由于历史原因，大部分终端软件的默认设置都无法正确使用 ALT 键。
 
 要在终端下正确使用 ALT键最简单的做法是：首先将终端软件的 “使用 Alt键作为 Meta键” 的功能打开，意思是如果你在终端下按下 ALT+X，那么终端软件将会发送 `<ESC>x` 两个字节过去，字节码为：0x27, 0x78。
@@ -34,7 +29,7 @@
 
 这样的话，终端里的软件就能识别你的 ALT 组合键了，设置好以后，你可以在终端下使用命令：
 
-```text
+```bash
 showkey -a
 ```
 
@@ -48,13 +43,13 @@ showkey -a
 
 在 Vim/NeoVim 中你可以通过 ttimeoutlen 来设置功能键超时检测为 50 毫秒，比如：
 
-```text
+```vim
 :set ttimeout ttimeoutlen=50
 ```
 
 而 tmux 中，也有类似配置，比如：
 
-```text
+```
 set-option -g escape-time 50
 ```
 
@@ -68,7 +63,7 @@ set-option -g escape-time 50
 
 那么一个个设置可能有些麻烦，对于 SecureCRT 的话，我生成了一个配置文件：
 
-```text
+```
 A	VK_A                	"\033a"
 A	VK_D                	"\033d"
 A	VK_E                	"\033e"
@@ -91,7 +86,7 @@ AS	VK_D                	"\033D"
 
 前面在终端软件里配置好 ALT键，但是 Vim 的话，由于历史原因，需要在你的 vimrc 里加一段键盘码配置：
 
-```text
+```vim
 function! Terminal_MetaMode(mode)
 	set ttimeout
 	if $TMUX != ''
@@ -164,7 +159,7 @@ call Terminal_MetaMode(0)
 
 修改好以后可以继续运行：
 
-```text
+```bash
 showkey -a
 ```
 

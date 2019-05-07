@@ -1,15 +1,10 @@
-"=========== Meta ============
-"StrID : 2308
-"Title : kNN 的花式用法
-"Slug  : 
-"Cats  : 人工智能
-"Tags  : AI
-"=============================
-"EditType   : post
-"EditFormat : Markdown
-"TextAttach : vimpress_5cd14fc8_mkd.txt
-"========== Content ==========
-
+---
+uuid: 2308
+title: kNN 的花式用法
+status: publish
+Categories: 人工智能
+tags: AI
+---
 **kNN** （**k-nearest neighbors**）作为一个入门级模型，因为既简单又可靠，对非线性问题支持良好，虽然需要保存所有样本，但是仍然活跃在各个领域中，并提供比较稳健的识别结果。
 
 说到这里也许你会讲，kNN 我知道啊，不就是在特征空间中找出最靠近测试样本的 k 个训练样本，然后判断大多数属于某一个类别，那么将它识别为该类别。

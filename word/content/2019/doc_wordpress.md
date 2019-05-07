@@ -1,7 +1,7 @@
 ---
 uuid: 2343
 title: 博客升级
-status: private
+status: draft
 categories: 随笔
 tags: 
 slug: 
