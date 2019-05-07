@@ -1,15 +1,10 @@
-"=========== Meta ============
-"StrID : 1958
-"Title : 如何优雅的使用 Vim
-"Slug  : 
-"Cats  : 随笔
-"Tags  : Vim
-"=============================
-"EditType   : post
-"EditFormat : Markdown
-"TextAttach : 
-"========== Content ==========
-
+---
+uuid: 1958
+title: 如何优雅的使用 Vim
+status: publish
+categories: 随笔
+tags: vim
+---
 根据 Bram 前后几个关于高效使用 Vim的视频，大家每天需要花很多时间来编辑：代码、文档、邮件、日志 等等，除去这些外，还要分时间参加会议和人沟通，每个人的时间却都是不够的，优雅使用 Vim 无外乎：
 
 - 检测不高效的地方：你的整个工作流里，什么地方比较浪费时间？
@@ -25,7 +20,7 @@
 
 于是我用 VimScript + 内嵌 Python 写了一个功能，按快捷键可以让 GVim 在透明/不透明两种状态间自由切换：
 
-![](https://skywind3000.github.io/word/images/vim-demo-2.png)
+![](http://skywind3000.github.io/word/images/vim-demo-2.png)
 
 
 就是 VimScript 简单封装一个函数，里面用内嵌 Python 找到 GVim 的顶层 HWND，并设置透明度。平时默认不透明，需要参考其他资料时切换成透明，参考完了又快捷键切换回来，感觉比缘来切来切去顺畅很多。
@@ -35,7 +30,7 @@
 
 比如你在抄写或者改写一段代码，窗口分为左右两个，左边是你引用参考的源代码，右边是你正在编辑的源代码。你抄着抄着，抄到左边最后一行了，或者你想前后看看正在引用的文本，你就需要将焦点从右边切换到左边，滚动，再切换交点回来，十分麻烦，于是撸一小段 VimScript 来解决这个问题：
 
-```text
+```vim
 " 0:up, 1:down, 2:pgup, 3:pgdown, 4:top, 5:bottom
 function! Tools_PreviousCursor(mode)
 	if winnr('$') <= 1
@@ -79,7 +74,7 @@ endfunc
 
 用了一段时间又发现两个问题：每次 `<c-w><c-]>` 如果有多处定义，vim会打印显示一大串定义位置，让你选择要看哪个，比较讨厌，而且开始预览时是默认上下分屏，现在都是宽屏显示器时代了，上下分屏十分影响观感。于是自己用 VimScript 重新撸了 Tag Preview：
 
-![](https://skywind3000.github.io/word/images/vim-demo-3.png)
+![](http://skywind3000.github.io/word/images/vim-demo-3.png)
 
 
 需要预览时按下 “ALT+;”，右边弹出预览窗口，并且高亮符号名称，下面显示该 tag一共有 3处定义，现在正在查看第1个定义，连续按下 "ALT+;" 可以将右边预览窗口切换到下一处定义，切换到最后一个了又会折头到第一个。
@@ -93,7 +88,7 @@ endfunc
 
 后面继续迭代，有时在函数调用时候，想不起该函数的参数了，需要查看一下原型（声明和参数），不需要打开整个预览窗口查看实现，我就又开发了一个查看函数原型的 VimScript 函数，绑定到 ALT_Q 上，同样不需要退出插入模式：
 
-![](https://skywind3000.github.io/word/images/vim-demo-4.png)
+![](http://skywind3000.github.io/word/images/vim-demo-4.png)
 
 
 按 ALT_Q 可以循环显示该函数原型的多处定义，就在最下面一行，连 Preview 窗口都不需要。有的自动补全插件可以显示函数的原型，比如 YCM，但是支持的语言很少，你换个语言，YCM就不能帮你显示原型了，这时 ALT_Q 来查看原型支持多达 85 种 Universal Ctags 支持的语言，基本满足我的需求，我平时主要用的编程语言大概有 4种，如今不管写什么但凡想不起定义来的时候，ALT_Q 一下就出来了，简洁明了。
@@ -103,7 +98,7 @@ endfunc
 
 个人编码习惯，经常输入一些格式化注释：
 
-```text
+```cpp
 //---------------------------------------------------------------------
 // 这里是注释
 //---------------------------------------------------------------------
@@ -124,13 +119,13 @@ endfunc
 
 然后设置了 F7 编译 MinGW 程序：
 
-```text
+```vim
 :noremap <F7> :AsyncRun gcc "%" -o "%<" <cr> 
 ```
 
 并设置了 F8 编译 Cygwin 程序：
 
-```text
+```vim
 :noremap <F8> :AsyncRun d:\cygwin\bin\bash --login -c "gcc % -o %<"
 ```
 
@@ -147,7 +142,7 @@ endfunc
 
 于是结合前面的 AsyncRun 插件和一些少量的 Python + VimScript 脚本，实现了编译和运行：
 
-![](https://skywind3000.github.io/word/images/vim-demo-5.png)
+![](http://skywind3000.github.io/word/images/vim-demo-5.png)
 
 
 F9 按 Android 命令行程序编译 NDK代码或者工程，并异步调用 adb 上传到设备的 /data/local/tmp/ 下设置好 755
@@ -165,7 +160,7 @@ F10 打开 cmd窗口，调用 adb 运行刚才编译的文件，然后退出。
 
 在工程中查找字符串，对于特定语言使用 gtags / cscope 之外，对于通用语言，传统的 grep 用的也比较多。传统 vim 内 grep 不支持异步， 需要等待 Grep 结束后才能返回，并没有很好的跟进 Vim8/ NeoVim 的异步机制，于是用我前面前面定义的 AsyncRun 插件来配合使用：
 
-```text
+```vim
 :AsyncRun! grep -R word . 
 :AsyncRun! grep -R <cword> . 
 ```
@@ -177,7 +172,7 @@ F10 打开 cmd窗口，调用 adb 运行刚才编译的文件，然后退出。
 
 之前学习做爬虫时，经常从网上复制一些 html 片段，都是挤在一起的，需要格式化后查看的更清楚一点，类似这种小功能，基本懒得再去找专门的格式化工具，三分钟几行 VimScript 就搞定了：
 
-```text
+```vim
 function! asclib#html_prettify()
 	if &ft != 'html'
 		echo "not a html file"
