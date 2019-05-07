@@ -15,11 +15,11 @@
 
 **XShell4 终端设置：**
 
-![](https://skywind3000.github.io/word/images/vim_altmap_1.png)
+![](http://skywind3000.github.io/word/images/vim_altmap_1.png)
 
 **SecureCRT：终端设置**
 
-![](https://skywind3000.github.io/word/images/vim_altmap_2.png)
+![](http://skywind3000.github.io/word/images/vim_altmap_2.png)
 
 其他终端软件里：
 

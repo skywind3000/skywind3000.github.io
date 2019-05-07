@@ -1,14 +1,10 @@
-"=========== Meta ============
-"StrID : 1813
-"Title : Vim 异步编译插件 vimmake
-"Slug  : 
-"Cats  : 随笔
-"Tags  : vim
-"=============================
-"EditType   : post
-"EditFormat : Markdown
-"TextAttach : vimpress_578a2ec0_mkd.txt
-"========== Content ==========
+---
+uuid: 1813
+title: Vim 异步编译插件 vimmake
+status: publish
+categories: 随笔
+tags: vim
+---
 推荐下自己写的用了好几年的编程插件：vimmake ？完美支持 vim的异步模式：
 [GitHub - skywind3000/vimmake: Customize shell commands in vim](https://github.com/skywind3000/vimmake)
 
@@ -28,7 +24,7 @@ gcc "$VIM_FILEPATH" -o "$VIM_FILEDIR/$VIM_FILENOEXT"
 
 就这么短短的两行，当你把它设置成 0755的权限时，就可以在 Vim中通过下面语句运行了：
 
-```text
+```vim
 :VimTool gcc
 ```
 
@@ -43,13 +39,13 @@ gcc "$VIM_FILEPATH" -o "$VIM_FILEDIR/$VIM_FILENOEXT"
 
 记得将 vimmake.run 的模式设置成 0755，如今有了两个可以直接在 Vim里通过 VimTool命令启动的工具（gcc 和 run），接下来我们需要设置 run 这个工具的模式为默认运行模式，而 gcc 为 quickfix模式（输出会被捕获并重定向到 quickfix窗口），现在打开 .vimrc 添加一行：
 
-```text
+```vim
 let g:vimmake_mode = { 'gcc':'quickfix', 'run':'normal' }
 ```
 
 而如果我们能够使用到较新版本的 vim（7.4.1829或者更高），我们就可以使用异步方式在后台启动 gcc，并且将后台进程的输出实时重定向到界面下端的 quickfix 窗口：
 
-```text
+```vim
 let g:vimmake_mode = { 'gcc':'async', 'run':'normal' }
 ```
 
@@ -59,7 +55,7 @@ let g:vimmake_mode = { 'gcc':'async', 'run':'normal' }
 
 vimmake 可以让你在不需要掌握晦涩的 VimScript 和繁琐的异步编程接口的情况下，直接方便的使用vim 异步功能来完成各种长时间编译任务。同时为了加快你的：编译-编辑-编译 工作流的流畅度，我们需要配置一两个热键来调用 `:VimTool` 命令：
 
-```text
+```vim
 noremap <F7> :VimTool gcc<cr>
 noremap <F5> :VimTool run<cr>
 inoremap <F7> <ESC>:VimTool gcc<cr>
@@ -78,7 +74,7 @@ inoremap <F5> <ESC>:VimTool run<cr>
 
 下面这条命令会运行名为 "~/.vim/vimmake.{name}" 的脚本：
 
-```text
+```
 :VimTool {name}
 ```
 
@@ -86,7 +82,7 @@ inoremap <F5> <ESC>:VimTool run<cr>
 
 {name} 后面还可以跟随一个名为 {target} 的参数：
 
-```text
+```
 :VimTool {name} {target}
 ```
 
@@ -123,7 +119,7 @@ g:vimmake_mode (dictionary) - 运行模式
 
 g:vimmake_mode 是一个字典，你可以在 .vimrc中这样初始化不同工具的运行模式：
 
-```text
+```vim
 let g:vimmake_mode = {}
 let g:vimmake_mode['gcc'] = 'async'
 let g:vimmake_mode['run'] = 'normal'
@@ -131,7 +127,7 @@ let g:vimmake_mode['run'] = 'normal'
 
 运行模式可以有下面几种:
 
-```text
+```
 normal   默认模式，运行工具并等待结束后返回vim（win下弹出窗口运行，不必等待）
 quickfix 运行工具并等待结束后返回vim，把结果输出到 quickfix
 bg       在后台运行工具，并且忽略任何输出。
@@ -146,7 +142,7 @@ g:vimmake_path (string) - 设置工具脚本路径
 
 默认工具脚本都是保存在 ~/.vim/ 目录下面，你可以通过修改这个变量更改成其他位置：
 
-```text
+```vim
 let g:vimmake_path = '/home/myname/github/config/tools'
 ``` 
 
@@ -161,7 +157,7 @@ g:vimmake_build_scroll (int) - 是否自动滚动 quickfix 窗口 ?
 g:vimmake_build_post (string) - 异步任务结束后会触发什么命令？
 当异步任务执行完后, g:vimmake_build_post 中保存的 VimScript 会被自动执行，可以被用来调用外部工具，比如在编译结束后调用 afplay来播放一个wav文件:
 
-```text
+```vim
 let g:vimmake_build_post = "silent call system('afplay ~/.vim/notify.wav &')"
 ```
 
@@ -247,7 +243,7 @@ go build "$VIM_FILEPATH"
 
 同样很简单，使用 `:VimTool go` 来编译当前go代码，并将输出导向 quickfix，一个新的工具链就这么简单几下设置好了，最后别忘记记再仿照前面设置一下我们的热键：
 
-```text
+```vim
 noremap <F7> :VimTool gcc<cr>
 noremap <F5> :VimTool run<cr>
 noremap <F8> :VimTool go<cr>
@@ -260,10 +256,9 @@ inoremap <F8> <ESC>:VimTool go<cr>
 
 由于大量使用 quickfix 来查看工具输出，我们需要直接用<F10> 来切换显示：
 
-```text
+```vim
 noremap <F10> :silent call vimmake#Toggle_Quickfix()<cr>
 inoremap <F10> <ESC>:silent call vimmake#Toggle_Quickfix()<cr>
-
 ```
 
 因为高频使用，所以我在 vimmake 里面提供了这个切换函数，直接配置到你喜欢的热键上，使用即可。
@@ -272,7 +267,7 @@ inoremap <F10> <ESC>:silent call vimmake#Toggle_Quickfix()<cr>
 
 如果在 Windows下，我们可以用编写 “vimmake.run.cmd” 这个批处理来完成：
 
-```text
+```bat
 @ECHO OFF
 if "%VIM_FILENAME%" == "" GOTO ERROR_NO_FILE
 CD /D "%VIM_FILEDIR%"
@@ -319,7 +314,7 @@ GOTO END
 
 在 "C:\Users\YourName\.vim" 下面新建批处理文件 vimmake.gcc.cmd：
 
-```text
+```bat
 @ECHO OFF
 if "%VIM_FILENAME%" == "" GOTO ERROR_NO_FILE
 
@@ -330,7 +325,6 @@ GOTO END
 echo missing file name
 
 :END
-
 ```
 
 这样即可，记得把 g:vimmake_mode['gcc'] 的值设置成 async 或者 quickfix，这样编译错误才能保证输出到 quickfix 窗口。
@@ -342,22 +336,21 @@ echo missing file name
 
 异步任务有三种状态: running, success 和 failure。可以编辑 .vimrc 在 quickfix的 statusline上面显示编译的状态：
 
-```text
+```vim
 augroup QuickfixStatus
     au! BufWinEnter quickfix setlocal 
         \ statusline=%t\ [%{g:vimmake_build_status}]\ %{exists('w:quickfix_title')?\ '\ '.w:quickfix_title\ :\ ''}\ %=%-15(%l,%c%V%)\ %P
 augroup END
-
 ```
 
 全局变量 g:vimmake_build_status 用来实时表示异步任务状态:
 
-```text
+```
 running: 异步任务开始时被设置
 success: 异步任务成功时被设置（工具脚本返回 0的进程结束码）
 failure: 异步任务失败时被设置（工具脚本返回非 0的进程结束码）
-
 ```
+
 这样你就可以在 quickfix 窗口的 statusline上实时查看编译进度了，返回值不用特异处理，调用完 gcc后正常结束你的工具脚本即可，bash 或者批处理会自动继承上一次外部进程的返回值作为自己进程结束的返回值，gcc在成功后会自动返回0，失败自动返回非零，这样会正确的影响到我们的 g:vimmake_build_status 变量。
 
 **使用案例：在新窗口中运行程序**
@@ -366,7 +359,7 @@ failure: 异步任务失败时被设置（工具脚本返回非 0的进程结束
 
 当你在 windows 的 gvim里面下使用 vimmake 来运行工具的话，默认的 normal模式每次都会打开一个新窗口来运行（使用 gvim里面的 `:!start`命令，而不是 windows 下面弱智的 `:!`命令）：
 
-![](https://skywind3000.github.io/word/images/screen2.gif)
+![](http://skywind3000.github.io/word/images/screen2.gif)
 
 但如果你跑在 ubuntu 下，就需要写几行代码了，新建并编辑脚本 "~/.vim/vimmake.1"：
 
@@ -394,7 +387,7 @@ let g:vimmake_mode['1']='bg'
 
 运行模式 ‘bg' 的意思前面意境提到过，vimmake.1 这个 python脚本会在后台执行并且忽略任何输出（并不需要新版本vim支持，只是使用传统的 system('...&') 实现），这样你运行它时从vim的界面上就不会看到任何变化，只是弹出了我们需要的 gnome-terminal 窗口并运行给定的命令，当然你也可以设置成 async 模式，然后输出一行：xxxx 正在 running的文字到 quickfix窗口：
 
-![](https://skywind3000.github.io/word/images/screen3.jpg)
+![](http://skywind3000.github.io/word/images/screen3.jpg)
 
 嗯，这样把 `:VimTool 1` 命令 map 到 F6后，我们就可以在 ubuntu 的 vim 里直接 F6弹出新的 gnome-terminal 来跑我们的程序了，就和 Visual Studio 运行控制台程序一样，即便是长时间运行的程序，也不需要额外再开一个终端窗口，然后每次重新输入运行命令那么笨重。
 
