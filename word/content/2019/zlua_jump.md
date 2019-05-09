@@ -1,14 +1,10 @@
-"=========== Meta ============
-"StrID : 2229
-"Title : 别让 cd 浪费你的时间
-"Slug  : 2229
-"Cats  : 随笔
-"Tags  : Linux
-"=============================
-"EditType   : post
-"EditFormat : Markdown
-"TextAttach : vimpress_5c5da2fe_mkd.txt
-"========== Content ==========
+---
+uuid: 2229
+title: 别让 cd 浪费你的时间
+status: publish
+categories: 随笔
+tags: Linux, bash
+---
 终端下工作最烦躁的就是路径切换，没有自动路径切换的帮助，就像在泥里走路，于是大家发明了各种 autojump / z / fasd 等工具来提升路径切换的效率，今天向大家介绍一个更好用的工具：[z.lua](https://github.com/skywind3000/z.lua)，用熟练了以后就像终端里溜冰，路劲切换从此指哪打哪。
 
 [z.lua](https://github.com/skywind3000/z.lua) 是一个会学习你使用习惯的 `cd` 命令，它会跟踪你在 shell 下访问过的路径，通过一套称为 Frecent 的机制（源自 Mozilla），经过一段简短的学习之后，`z.lua` 会帮你跳转到所有匹配正则关键字的路径里 Frecent 值最高的那条路径去。
