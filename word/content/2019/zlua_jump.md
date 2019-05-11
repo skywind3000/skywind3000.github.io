@@ -3,7 +3,7 @@ uuid: 2229
 title: 别让 cd 浪费你的时间
 status: publish
 categories: 随笔
-tags: Linux, bash
+tags: 命令行
 ---
 终端下工作最烦躁的就是路径切换，没有自动路径切换的帮助，就像在泥里走路，于是大家发明了各种 autojump / z / fasd 等工具来提升路径切换的效率，今天向大家介绍一个更好用的工具：[z.lua](https://github.com/skywind3000/z.lua)，用熟练了以后就像终端里溜冰，路劲切换从此指哪打哪。
 
@@ -64,8 +64,10 @@ z foo$
 对长路径使用多个关键字进行匹配：
 假设路径历史数据库（~/.zlua）中有两条记录：
 
-    10   /home/user/work/inbox
-    30   /home/user/mail/inbox
+```
+10   /home/user/work/inbox
+30   /home/user/mail/inbox
+```
 
 "z in"将会跳转到 /home/user/mail/inbox 因为它有更高的权重，同时你可以传递更多参数给 z.lua 来更加精确的指明，如 "z w in" 则会让你跳到 /home/user/work/inbox。
 

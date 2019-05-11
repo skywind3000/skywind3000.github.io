@@ -1,14 +1,10 @@
-"=========== Meta ============
-"StrID : 2060
-"Title : 为什么说 zsh 是 shell 中的极品？
-"Slug  : 
-"Cats  : 随笔
-"Tags  : Linux
-"=============================
-"EditType   : post
-"EditFormat : Markdown
-"TextAttach : vimpress_5a9f6089_mkd.txt
-"========== Content ==========
+---
+uuid: 2060
+title: 为什么说 zsh 是 shell 中的极品？
+status: publish
+categories: 未分类
+tags: 命令行
+---
 
 （这是之前我在知乎上回答的一个可能对大家有点用处的答案，关于 zsh 的一些演示）
 
@@ -124,7 +120,7 @@ $ cd -5 <回车>
 
 比如我们查询包含关键字为 c 的所有历史路径和他们的权重，有时你搞不清楚权重，可能会跳转错了，比如有两个路径：
 
-```text
+```
 project1/src
 project2/src
 ```
