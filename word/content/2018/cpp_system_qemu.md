@@ -1,9 +1,9 @@
 ---
 uuid: 2449
-title: 如何用 C语言编译出一个不需要操作系统的程序
+title: C语言如何编译出一个不需要操作系统的程序
 status: publish
 categories: 编程技术
-tags: C++
+tags: C++,系统开发
 date: 2018-01-03 21:18
 slug: 
 ---
