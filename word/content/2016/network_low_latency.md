@@ -1,6 +1,6 @@
 ---
 uuid: 2475
-title: 如何在丢包率 30% 的链路上建立低延迟连接？
+title: 如何在高丢包率的链路上建立低延迟连接？
 status: publish
 categories: 网络编程
 tags: Udp, 网络
