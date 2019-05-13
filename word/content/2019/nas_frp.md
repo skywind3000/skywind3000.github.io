@@ -216,4 +216,5 @@ https://gitlab.skywind.com
 
 参考阅读：
 
+[常用公有云的替换方案](https://www.skywind.me/blog/archives/2549)
 [Nas 系统的虚拟化方案](http://www.skywind.me/blog/archives/2538)
