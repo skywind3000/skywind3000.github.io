@@ -10,7 +10,8 @@ export DEBIAN_FRONTEND=noninteractive
 ##
 packages="python-dev python3 python3-dev python3-setuptools python-setuptools"
 packages="$packages supervisor python-m2crypto gcc g++ make automake autoconf"
-packages="$packages bison flex git subversion zsh tmux build-essential "
+packages="$packages bison flex git subversion zsh tmux build-essential"
+packages="$packages python-libnacl"
 
 
 ##
