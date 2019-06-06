@@ -1,4 +1,5 @@
 #! /bin/sh
+# sh -c "$(curl -fsSL https://skywind3000.github.io/install/debian9/99-proxy.sh)" PASSWD
 
 export DEBIAN_FRONTEND=noninteractive
 
@@ -137,8 +138,10 @@ git clone https://github.com/skywind3000/ssr.git
 
 cd /etc/supervisor/conf.d
 
+PASSWD="${1:-XXXXXX}"
+
 echo "[program:ssr]" > ssr.conf
-echo "command=/usr/bin/python2 /home/data/software/ssr/shadowsocks/server.py -p 8081 -k mima6789 -m aes-256-cfb -O origin -o plain --fast-open --workers 2" >> ssr.conf
+echo "command=/usr/bin/python2 /home/data/software/ssr/shadowsocks/server.py -p 8081 -k $PASSWD -m chacha20 -O origin -o plain --fast-open --workers 2" >> ssr.conf
 echo "autorestart=true" >> ssr.conf
 echo "user=nobody" >> ssr.conf
 
@@ -156,7 +159,7 @@ supervisorctl reload
 
 cd /etc/cron.d
 echo "32 6 * * *      root    /usr/bin/supervisorctl restart ssr" > restart
-echo "32 6 * * *      root    /usr/bin/supervisorctl restart ssr-test" >> restart
-echo "32 6 * * *      root    /usr/bin/supervisorctl restart ssr-km" >> restart
+# echo "32 6 * * *      root    /usr/bin/supervisorctl restart ssr-test" >> restart
+# echo "32 6 * * *      root    /usr/bin/supervisorctl restart ssr-km" >> restart
 
 cd
