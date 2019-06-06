@@ -115,7 +115,7 @@ chown -R skywind:skywind vim
 
 su skywind -l -c "sh ~skywind/.vim/vim/etc/init.sh"
 su skywind -l -c "touch ~skywind/.vimrc"
-su skywind -l -c "sh ~skywind/.vim/vim/etc/update.sh"
+su skywind -l -c "cd ~skywind/.vim/vim/etc; sh update.sh"
 
 cd ~skywind
 
