@@ -1,5 +1,6 @@
 #! /bin/sh
-# sh -c "$(curl -fsSL https://skywind3000.github.io/install/debian9/99-proxy.sh)" PASSWD
+# wget https://skywind3000.github.io/install/debian9/99-proxy.sh
+# sh 99-proxy.sh PASSWD
 
 export DEBIAN_FRONTEND=noninteractive
 
