@@ -28,15 +28,7 @@ slug:
 sudo /etc/init.wsl [start|stop|restart]
 ```
 
-来启停我们需要的服务，但是 sudo 时还是会需要我们输入密码，于是我们在 /etc/sudoers.d 目录下面建立 nopasswd 文件，内容为：
-
-```
-%sudo ALL=NOPASSWD: /etc/init.wsl
-```
-
-这时，sudo 调用该脚本就无需要输入密码了。
-
-那么最后剩下在 Windows 启动或者登陆的时候执行该脚本的事情了，在 Windows 中，开始-运行，输入：
+来启停我们需要的服务，接着在 Windows 中，开始-运行，输入：
 
 ```
 shell: startup
@@ -46,26 +38,17 @@ shell: startup
 
 ```vbs
 Set ws = CreateObject("Wscript.Shell")
-ws.run "debian run sudo /etc/init.wsl start", vbhide
+ws.run "wsl -d debian -u root /etc/init.wsl start", vbhide
 ```
 
-这个脚本就会在你登陆的时候自动在 debian/wsl 中执行 /etc/init.wsl 启动我们的服务了。
-
-如果你用的是 ubuntu18.04 的发行版，那么修改上面脚本为 ubuntu1804.vbs：
+这个脚本就会在你登陆的时候自动在名字为 "debian" 的 wsl 发行版中执行 /etc/init.wsl 启动我们的服务了，如果你用的是 ubuntu18.04 的发行版，那么修改上面脚本里的 debian 为 ubuntu1804.vbs：
 
 ```vbs
 Set ws = CreateObject("Wscript.Shell")
-ws.run "ubuntu1804 run sudo /etc/init.wsl start", vbhide
+ws.run "wsl -d ubuntu1804 -u root /etc/init.wsl start", vbhide
 ```
 
-而如果你用的是 wsl 下面最老的 ubuntu 16.04 ，就是以前输入 "bash" 启动的那个的话，它的启动方法和其他发行版稍微有点不一样，编辑 ubuntu1604.vbs：
-
-```vbs
-Set ws = CreateObject("Wscript.Shell") 
-ws.run "bash -c 'sudo /etc/init.wsl start'", vbhide
-```
-
-如此，不管你用最初的 bash (ubuntu 16.04) 还是商店里下载的 debian/ubuntu1804 都能顺利启动服务了。
+而如果你不知道自己的 WSL 发行版叫做什么名字，可以用 “wsl -l" 来查看。不管你用最初的 bash (ubuntu 16.04) 还是商店里下载的 debian/ubuntu1804 都能顺利启动服务了。
 
 WSL 中有很多有用的服务，你可以按需删改 /etc/init.wsl ，但没必要塞很多东西进去影响你的启动速度，比如 mysql/mongodb 这些重度服务，可以需要的时候再启动，用完就停了。
 
