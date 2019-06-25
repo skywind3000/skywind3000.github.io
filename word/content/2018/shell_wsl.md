@@ -45,7 +45,7 @@ ws.run "wsl -d debian -u root /etc/init.wsl start", vbhide
 
 ```vbs
 Set ws = CreateObject("Wscript.Shell")
-ws.run "wsl -d ubuntu1804 -u root /etc/init.wsl start", vbhide
+ws.run "wsl -d Ubuntu-18.04 -u root /etc/init.wsl start", vbhide
 ```
 
 而如果你不知道自己的 WSL 发行版叫做什么名字，可以用 “wsl -l" 来查看。不管你用最初的 bash (ubuntu 16.04) 还是商店里下载的 debian/ubuntu1804 都能顺利启动服务了。
