@@ -11,7 +11,7 @@ export DEBIAN_FRONTEND=noninteractive
 packages="python-dev python3 python3-dev python3-setuptools python-setuptools"
 packages="$packages supervisor python-m2crypto gcc g++ make automake autoconf"
 packages="$packages bison flex git subversion zsh tmux build-essential"
-packages="$packages python-libnacl"
+packages="$packages python-libnacl pkg-config"
 
 
 ##
@@ -22,14 +22,18 @@ apt-get install -y --no-install-recommends --auto-remove --purge ${packages}
 ##
 ## pip
 ##
-easy_install3 pip
-easy_install pip
+cd ~root
+mkdir -p install
+cd install
 
-pip3 install --upgrade pip
-pip install --upgrade pip
+wget https://bootstrap.pypa.io/get-pip.py
 
-pip3 install requests flask
-pip install requests flask
+python2 get-pip.py
+python3 get-pip.py
+
+
+pip2 install requests flask requests[socks] pygments
+pip3 install requests flask requests[socks] pygments
 
 cd ~root
 mkdir -p software github tmp install
