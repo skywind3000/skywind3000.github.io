@@ -3,7 +3,7 @@ uuid: 2607
 title: CD1：BORLAND 宝典
 status: publish
 categories: 大浪淘沙
-tags: 随笔
+tags: GUI
 slug: 
 date: 2022-04-06 17:45
 ---
