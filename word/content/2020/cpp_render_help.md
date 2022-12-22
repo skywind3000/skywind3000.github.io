@@ -11,7 +11,7 @@ slug:
 
 因此，为了让希望学习渲染的人更快入门，我开源了一个 C++ 实现可编程渲染管线的教程：
 
-- [skywind3000/RenderHelp](https://github.com/skywind3000/RenderHelp)
+- [https://github.com/skywind3000/RenderHelp](https://github.com/skywind3000/RenderHelp)
 
 那么网上软件渲染器其实不少，这个 RenderHelp 和他们有什么区别么？区别有三：
 
