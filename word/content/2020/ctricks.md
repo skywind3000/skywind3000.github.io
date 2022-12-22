@@ -1,11 +1,11 @@
 ---
 uuid: 2622
 title: C 语言有什么奇技淫巧？
-status: draft
+status: publish
 categories: 编程技术
 tags: 优化
 slug: 
-date: 2020-06-10 16:03
+date: 2020-05-29 16:03
 ---
 C 语言的技巧有很多，列一些和性能有关的：
 
@@ -53,7 +53,7 @@ if (( (x - minx) | (maxx - x) | (y - miny) | (maxy - y) ) >= 0) ...
 
 补充：加了个性能评测
 
-![](https://skywind3000.github.io/images/blog/2020/ctrick_1.jpg)
+![](http://skywind3000.github.io/images/blog/2020/ctrick_1.jpg)
 
 性能提升 37%。快速范围判断还有第二个性能更均衡的版本：
 
@@ -61,7 +61,7 @@ if (( (x - minx) | (maxx - x) | (y - miny) | (maxy - y) ) >= 0) ...
 if ((unsigned)(x - minx) <= (unsigned)(maxx - minx)) ...
 ```
 
-快速范围判断的原理和评测详细见：《快速范围判断：再来一种新写法》。
+快速范围判断的原理和评测详细见：《[快速范围判断：再来一种新写法](/blog/archives/2626)》。
 
 #### 更好的循环展开
 
@@ -105,9 +105,9 @@ CPU_LOOP_UNROLL_4X(
 
 这样比 duff's device 这种飞线的写法更规范，并且，duff's device 并不能允许你针对 “四倍工作”进行优化，比如上面 actionx4 部分直接试用 uint32_t 来进行一次性运算，在 duff's device 中并没有办法这么做。
 
-补充：《循环展开性能评测》：
+补充：《[循环展开性能评测](http://quick-bench.com/RzDK1PTIciupI5aCq5esaPADGLU)》：
 
-![](https://skywind3000.github.io/images/blog/2020/ctrick_2.jpg)
+![](http://skywind3000.github.io/images/blog/2020/ctrick_2.jpg)
 
 性能提升 12% 。
 
@@ -159,9 +159,9 @@ static inline uint32_t fast_div_255_accurate (uint32_t n) {
 
 且 SIMD 没有除法，如果想用 SIMD 做除法的话，可用上面的两种方法翻译成 SIMD 指令。
 
-255 快除法的《性能评测》：
+255 快除法的《[性能评测](http://quick-bench.com/t3Y2-b4isYIwnKwMaPQi3n9dmtQ)》：
 
-![](https://skywind3000.github.io/images/blog/2020/ctrick_3.jpg)
+![](http://skywind3000.github.io/images/blog/2020/ctrick_3.jpg)
 
 提升一倍的性能。
 
