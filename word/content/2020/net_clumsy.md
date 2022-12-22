@@ -13,7 +13,7 @@ date: 2020-04-13 23:15
 
 唯一问题是不支持模拟带宽，那么平时要模拟一些糟糕的网络情况的话，是不太方便的，而开虚拟机用 Linux tc 或者设置个远程 linux 网关又很蛋疼，于是我顺便给他加了个带宽模拟功能：
 
-![](http://skywind3000.github.io/images/blog/2020/clumsy_2.gif)
+![](http://skywind3000.github.io/images/blog/2020/clumsy_2.jpg)
 
 注意最下面的 "Bandwidth" 选项，打上勾的话，就能顺利限速了，注意上面的 Filtering 需要填写正确的 WinDivert 规则。
 
