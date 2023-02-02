@@ -52,7 +52,7 @@ item_pair: STRING ':' value                 {item_pair}
 @ignore //.*
 
 # 词法：匹配 NUMBER 和 STRING
-@match NUMBER \d+(\.\d*)?
+@match NUMBER [+-]?\d+(\.\d*)?
 @match STRING "(?:\\.|[^"\\])*"
 ```
 
