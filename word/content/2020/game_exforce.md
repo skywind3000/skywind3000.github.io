@@ -162,3 +162,4 @@ void draw_image(int x, int y, const uint8_t *image, int w, int h) {
 - [计算机底层是如何访问显卡的？](https://www.skywind.me/blog/archives/1774)
 
 
+（完）
