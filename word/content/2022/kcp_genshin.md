@@ -12,7 +12,11 @@ date: 2022-11-08 10:28
 
 ![](https://skywind3000.github.io/images/blog/2022/genshin.jpg)
 
-于是找米哈游的同学求证了一下，果然他们在游戏里使用 KCP 来保证游戏消息可以以较低的延迟进行传输，这里还有[一篇文章](https://forum.ragezone.com/f861/genshin-impact-private-server-1191004/index7.html)专门分析《原神》的 KCP 使用方式。
+于是找米哈游的同学求证了一下，果然他们在游戏里使用 KCP 来保证游戏消息可以以较低的延迟进行传输，这里还有一篇文章分析了原神使用 KCP 的具体细节：
+
+![](https://skywind3000.github.io/images/blog/2022/genshi2.png)
+
+文章见：https://forum.ragezone.com/f861/genshin-impact-private-server-1191004/index7.html
 
 KCP 是我之前开源的一套低延迟可靠传输协议，能够有比 TCP/QUIC 更快的端到端传输效果，适合游戏、音视频以及各类延迟敏感的应用。
 
@@ -32,5 +36,7 @@ KCP 是我之前开源的一套低延迟可靠传输协议，能够有比 TCP/QU
 - 云帆加速：使用 KCP 加速文件传输和视频推流，优化了台湾主播推流的流畅度。
 - 明日帝国：Game K17 的 《明日帝国》，使用 KCP 加速游戏消息，让全球玩家流畅联网
 - 仙灵大作战：4399 的 MOBA游戏，使用 KCP 优化游戏同步
+
+KCP 成功的运行在多个用户规模上亿的项目上，为他们提供了更加灵敏和丝滑网络体验。
 
 
