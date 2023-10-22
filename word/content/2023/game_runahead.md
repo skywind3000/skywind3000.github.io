@@ -1,7 +1,7 @@
 ---
 uuid: 2746
 title: 帧同步游戏中使用 Run-Ahead 隐藏输入延迟
-status: draft
+status: publish
 categories: 游戏开发
 tags: 同步
 slug: 
@@ -23,18 +23,20 @@ RetroArch 使用 Run-Ahead 隐藏输入延迟，一般需要设置一下 Run-Ahe
 
 理解了模拟器的 Run-Ahead 实现，其实在帧同步里的原理也就差不多了，无外乎是用远程的旧输入，搭配本地刚采集到的新输入，作为预测帧的输入值，产生新帧，不匹配了再回滚。
 
-帧同步里引入类似 Run-Ahead 的机制，要求游戏最近所有状态都可以被快速保存、复制和恢复，实现有很多种，你可以用状态的反复前进、后退来实现，但是 BUG 率太高了，这里给出一个更简易的实现方式：（点击 more 展开）
+帧同步里引入类似 Run-Ahead 的机制，要求游戏最近所有状态都可以被快速保存、复制和恢复，实现有很多种，你可以用状态的反复前进、后退来实现，但是 BUG 率太高了，这里给出一个更简易的实现方式：
+
+（点击 more 展开）
 
 <!--more-->
 
 1. 主逻辑沿用旧的帧同步逻辑：收到服务端第 N 帧的更新消息 `Update N` 后，游戏才往前播放，否则等待。
 2. 游戏第 N 帧的状态为 `S(N)`，当收到 `Update N` 时从 `S(N-1)` 计算得到。
-3. 计算 `预测输入`= `Update N` 中其他玩家的旧输入+本地刚采集到的本地玩家最新输入。
-4. 每次得到一个新的 `S(N)` 时，复制出一个副本 `S'(N)` 来，并在其基础上用`预测输入`，产生 `S'(N+1)` 用于显示。
+3. 计算**预测输入**= `Update N` 中其他玩家的旧输入+本地刚采集到的本地玩家最新输入。
+4. 每次得到一个新的 `S(N)` 时，复制出一个副本 `S'(N)` 来，并在其基础上用**预测输入**，产生 `S'(N+1)` 用于显示。
 
 给一个图示：
 
-![](https://skywind3000.github.io/images/blog/2023/runahead1.png)
+![](https://skywind3000.github.io/images/blog/2023/runahead2.png)
 
 其实就是维护两条状态线索，主线索：`S(N-2)`, `S(N-1)`, `S(N)` ... 同老的帧同步一样单向前进，用作胜负判断，但不用于显示，用于显示的是每帧的状态 `S(N)` 的副本 `S'(N)` 的下一个预测副本 `S'(N+1)`。
 
@@ -91,11 +93,18 @@ RetroArch 使用 Run-Ahead 隐藏输入延迟，一般需要设置一下 Run-Ahe
 最后，这个算法不是降低延迟，而是隐藏/掩盖延迟，让用户可以像本地游戏一样立马看到自己的输入反馈。
 
 
+<br/>
 
 --
 
 相关阅读：
 
-再谈网络游戏同步 - Skywind Inside
-帧锁定同步算法 - Skywind Inside
-网络游戏同步法则 - Skywind Inside
+- [再谈网络游戏同步 - Skywind Inside](https://www.skywind.me/blog/archives/1343)
+- [帧锁定同步算法 - Skywind Inside](https://www.skywind.me/blog/archives/131)
+- [网络游戏同步法则 - Skywind Inside](https://www.skywind.me/blog/archives/112)
+- [影子跟随算法 - Skywind Inside](https://www.skywind.me/blog/archives/1145)
+- [关于 “帧同步” 说法的历史由来 - Skywind Inside](https://www.skywind.me/blog/archives/2651)
+
+
+
+--
