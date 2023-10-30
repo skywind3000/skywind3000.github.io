@@ -56,7 +56,7 @@ def tokenize(code):
 - 规则支持传入函数，这样可以根据结果进行二次判断。
 - 更好的行和列信息统计，不依赖 NEWLINE 规则的存在。
 - 支持 flex/lex 中的 “忽略”规则，比如忽略空格和换行，或者忽略注释。
-- 支持在流末尾添加一个 EOF 符号，即 BNF 里面的 $ 符号。
+- 支持在流末尾添加一个 EOF 符号，某些 parsing 技术需要输入流末尾插入一个名为 \$ 的结束符。
 
 对文档中的简陋例子做完上面五项修改，我们即可得到一个通用的基于规则的词法分析器。
 
@@ -169,7 +169,7 @@ for token in tokenize(code, rules, None):
 
 输出如下：
 
-```text
+```python
 ('NEWLINE', '\n', 1, 1)
 ('IF', 'IF', 2, 5)
 ('NAME', 'quantity', 2, 8)
@@ -286,7 +286,7 @@ for token in tokenize(code, rules, None):
 
 运行输出 token：
 
-```text
+```python
 ('int', 'int', 3, 1)
 ('NAME', 'main', 3, 5)
 ('(', '(', 3, 9)
